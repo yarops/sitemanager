@@ -1,0 +1,86 @@
+# yii console commands
+/yii
+/yii_test
+/yii_test.bat
+
+# phpstorm project files
+.idea
+
+# netbeans project files
+nbproject
+
+# zend studio for eclipse project files
+.buildpath
+.project
+.settings
+
+# windows thumbnail cache
+Thumbs.db
+
+# composer vendor dir
+/vendor
+
+# composer itself is not needed
+composer.phar
+
+# Mac DS_Store Files
+.DS_Store
+
+# phpunit itself is not needed
+phpunit.phar
+# local phpunit config
+/phpunit.xml
+
+tests/_output/*
+
+# docker tmp dir
+/docker
+
+# runtime directories
+*/runtime/*
+!*/runtime/.gitkeep
+
+# web assets
+*/web/assets/*
+!*/web/assets/.gitkeep
+
+# environment files
+.env
+.env.local
+.env.*.local
+
+# log files
+*.log
+
+# cache files
+*.cache
+
+# temporary files
+*.tmp
+*.temp
+
+# database files
+*.sqlite
+*.sqlite3
+*.db
+
+# node modules (if using npm/yarn)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# compiled assets
+*.min.js
+*.min.css
+*.map
+
+# backup files
+*.bak
+*.backup
+*~
+
+# system files
+.DS_Store
+Thumbs.db
+desktop.ini
