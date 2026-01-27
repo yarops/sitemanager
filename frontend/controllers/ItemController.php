@@ -157,12 +157,16 @@ class ItemController extends Controller
         $model = new UserItemRelation();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            if ($model->save()) {
-                return $this->redirect(['index']);
-            }
-
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->item_id]);
         }
+
+        // On failure, redirect back to the item page if possible.
+        $itemId = $model->item_id ?: Yii::$app->request->post('UserItemRelation')['item_id'] ?? null;
+        if ($itemId) {
+            return $this->redirect(['view', 'id' => $itemId]);
+        }
+
+        return $this->redirect(['index']);
     }
 
     /**
@@ -175,11 +179,10 @@ class ItemController extends Controller
         $model = Item::findById($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            if ($model->save()) {
-                return $this->redirect(['index']);
-            }
-
             return $this->redirect(['view', 'id' => $model->id]);
         }
+
+        // On failure, redirect back to the item's view page.
+        return $this->redirect(['index']);
     }
 }

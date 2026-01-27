@@ -26,7 +26,10 @@ class SiteNotification extends Component
         $subject = "Сайт недоступен: {$item->domain}";
         $html = $this->renderDownAlertTemplate($item, $check, $url);
 
-        return $this->sendEmail($subject, $html);
+        $emailSent = $this->sendEmail($subject, $html);
+        $telegramSent = $this->sendTelegramNotification($item, $check);
+
+        return $emailSent || $telegramSent;
     }
 
     /**
@@ -54,7 +57,7 @@ class SiteNotification extends Component
      */
     public function sendDailyReport(array $stats): bool
     {
-        $subject = "📊 Ежедневный отчет мониторинга сайтов";
+        $subject = '📊 Ежедневный отчет мониторинга сайтов';
         $html = $this->renderDailyReportTemplate($stats);
 
         return $this->sendEmail($subject, $html);
@@ -75,7 +78,7 @@ class SiteNotification extends Component
                 <div style='background-color: #dc3545; color: white; padding: 20px; text-align: center;'>
                     <h2 style='margin: 0;'>Сайт недоступен!</h2>
                 </div>
-                
+
                 <div style='padding: 20px; background-color: #f8f9fa;'>
                     <h3>Детали инцидента:</h3>
                     <table style='width: 100%; border-collapse: collapse;'>
@@ -105,7 +108,7 @@ class SiteNotification extends Component
                         </tr>
                     </table>
                 </div>
-                
+
                 <div style='padding: 20px; background-color: #e9ecef; text-align: center;'>
                     <p style='margin: 0; color: #6c757d; font-size: 14px;'>
                         Это автоматическое уведомление от системы мониторинга сайтов.
@@ -130,7 +133,7 @@ class SiteNotification extends Component
                 <div style='background-color: #28a745; color: white; padding: 20px; text-align: center;'>
                     <h2 style='margin: 0;'>Сайт восстановлен!</h2>
                 </div>
-                
+
                 <div style='padding: 20px; background-color: #f8f9fa;'>
                     <h3>Детали восстановления:</h3>
                     <table style='width: 100%; border-collapse: collapse;'>
@@ -156,7 +159,7 @@ class SiteNotification extends Component
                         </tr>
                     </table>
                 </div>
-                
+
                 <div style='padding: 20px; background-color: #e9ecef; text-align: center;'>
                     <p style='margin: 0; color: #6c757d; font-size: 14px;'>
                         Это автоматическое уведомление от системы мониторинга сайтов.
@@ -179,7 +182,7 @@ class SiteNotification extends Component
                 <div style='background-color: #007bff; color: white; padding: 20px; text-align: center;'>
                     <h2 style='margin: 0;'>Ежедневный отчет мониторинга</h2>
                 </div>
-                
+
                 <div style='padding: 20px; background-color: #f8f9fa;'>
                     <h3>Статистика за " . date('d.m.Y') . ":</h3>
                     <table style='width: 100%; border-collapse: collapse;'>
@@ -201,7 +204,7 @@ class SiteNotification extends Component
                         </tr>
                     </table>
                 </div>
-                
+
                 <div style='padding: 20px; background-color: #e9ecef; text-align: center;'>
                     <p style='margin: 0; color: #6c757d; font-size: 14px;'>
                         Это автоматический отчет от системы мониторинга сайтов.
@@ -230,8 +233,104 @@ class SiteNotification extends Component
                 ->setHtmlBody($html)
                 ->send();
         } catch (\Exception $e) {
-            Yii::error("Failed to send notification: " . $e->getMessage());
+            Yii::error('Failed to send notification: ' . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Send Telegram notification when site check fails.
+     *
+     * @param Item $item
+     * @param Check $check
+     * @return bool
+     */
+    public function sendTelegramNotification(Item $item, Check $check): bool
+    {
+        $botToken = Yii::$app->params['telegram_bot_token'] ?? null;
+        $chatId = Yii::$app->params['telegram_chat_id'] ?? null;
+
+        if (empty($botToken) || empty($chatId)) {
+            Yii::warning('Telegram bot token or chat_id is not configured');
+            return false;
+        }
+
+        $url = $item->protocol . '://' . $item->domain;
+        $message = $this->formatTelegramMessage($item, $check, $url);
+
+        $apiUrl = "https://api.telegram.org/bot{$botToken}/sendMessage";
+        $data = [
+            'chat_id' => $chatId,
+            'text' => $message,
+            'parse_mode' => 'HTML',
+        ];
+
+        try {
+            $ch = curl_init($apiUrl);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($httpCode !== 200) {
+                Yii::error("Telegram API error: HTTP {$httpCode}, Response: {$response}");
+                return false;
+            }
+
+            if (!empty($curlError)) {
+                Yii::error("Telegram cURL error: {$curlError}");
+                return false;
+            }
+
+            $result = json_decode($response, true);
+            if (isset($result['ok']) && $result['ok'] === true) {
+                Yii::info("Telegram notification sent successfully for {$item->domain}");
+                return true;
+            } else {
+                Yii::error('Telegram API returned error: ' . json_encode($result));
+                return false;
+            }
+        } catch (\Exception $e) {
+            Yii::error('Failed to send Telegram notification: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Format message for Telegram.
+     *
+     * @param Item $item
+     * @param Check $check
+     * @param string $url
+     * @return string
+     */
+    private function formatTelegramMessage(Item $item, Check $check, string $url): string
+    {
+        $status = $check->check_status;
+        $emoji = $status === '200' ? '✅' : '❌';
+        $title = $status === '200' ? 'Сайт восстановлен' : 'Сайт недоступен';
+
+        $message = "<b>{$emoji} {$title}</b>\n\n";
+        $message .= "<b>Сайт:</b> {$item->domain}\n";
+        $message .= "<b>URL:</b> <a href=\"{$url}\">{$url}</a>\n";
+        $message .= "<b>Статус:</b> {$check->check_status}\n";
+
+        if ($check->response_time !== null) {
+            $message .= "<b>Время отклика:</b> {$check->response_time}ms\n";
+        }
+
+        if ($check->error_message) {
+            $message .= '<b>Ошибка:</b> ' . htmlspecialchars($check->error_message) . "\n";
+        }
+
+        $message .= "<b>Время проверки:</b> {$check->check_date}\n";
+
+        return $message;
     }
 }

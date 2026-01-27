@@ -1,8 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\widgets\LinkPager;
+use yii\bootstrap5\LinkPager;
 
 /* @var $this yii\web\View */
 /* @var $items yii\data\ActiveDataProvider */
@@ -68,17 +67,16 @@ $this->title = Yii::t('frontend', 'Items');
         ]);
     }
     ?>
-
     <div>
         <?= LinkPager::widget([
-        'pagination' => $items->getPagination()
-]) ?>
+            'pagination' => $items->getPagination()
+        ]) ?>
     </div>
 </div>
 
 <div class="col-sm-3 blog-sidebar">
-    <h1><?= Yii::t('frontend', 'Servers') ?></h1>
-    <ul>
+    <h1 class="side-title"><?= Yii::t('frontend', 'Servers') ?></h1>
+    <ul class="list-group">
     <?php
     foreach ($servers->models as $server) {
         echo $this->render('//server/shortViewServer', [

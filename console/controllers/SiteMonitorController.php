@@ -4,6 +4,7 @@ namespace console\controllers;
 
 use common\models\Item;
 use common\models\Check;
+use common\components\SiteNotification;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use yii\helpers\Console;
@@ -45,16 +46,16 @@ class SiteMonitorController extends Controller
             $checkedSites++;
 
             if ($result['status'] === '200') {
-                $this->stdout("UP", Console::FG_GREEN);
+                $this->stdout('UP', Console::FG_GREEN);
                 $this->stdout(" ({$result['response_time']}ms)\n");
             } else {
-                $this->stdout("DOWN", Console::FG_RED);
+                $this->stdout('DOWN', Console::FG_RED);
                 $this->stdout(" ({$result['error']})\n");
                 $downSites++;
             }
 
-            // Save check result (temporarily disabled).
-            // $this->saveCheckResult($item, $result);
+            // Save check result.
+            $this->saveCheckResult($item, $result);
         }
 
         $this->stdout("\nCheck completed!\n", Console::FG_GREEN);
@@ -89,14 +90,14 @@ class SiteMonitorController extends Controller
         $this->stdout("Checking site: {$item->domain} ({$url})\n", Console::FG_CYAN);
 
         $result = $this->checkSite($url);
-        // $this->saveCheckResult($item, $result);
+        $this->saveCheckResult($item, $result);
 
         if ($result['status'] === '200') {
-            $this->stdout("✅ Site is UP", Console::FG_GREEN);
+            $this->stdout('✅ Site is UP', Console::FG_GREEN);
             $this->stdout(" (Response time: {$result['response_time']}ms)\n");
             return ExitCode::OK;
         } else {
-            $this->stdout("❌ Site is DOWN", Console::FG_RED);
+            $this->stdout('❌ Site is DOWN', Console::FG_RED);
             $this->stdout(" (Error: {$result['error']})\n");
             return ExitCode::UNSPECIFIED_ERROR;
         }
@@ -131,7 +132,7 @@ class SiteMonitorController extends Controller
             if ($latestCheck) {
                 $status = $latestCheck->check_status;
                 $color = $status === '200' ? Console::FG_GREEN : Console::FG_RED;
-                $this->stdout("  Status: ", Console::FG_CYAN);
+                $this->stdout('  Status: ', Console::FG_CYAN);
                 $this->stdout($status, $color);
                 $this->stdout("\n");
                 $this->stdout("  Last check: {$latestCheck->check_date}\n");
@@ -140,8 +141,8 @@ class SiteMonitorController extends Controller
                     $this->stdout("  Error: {$latestCheck->error_message}\n");
                 }
             } else {
-                $this->stdout("  Status: ", Console::FG_CYAN);
-                $this->stdout("Never checked", Console::FG_YELLOW);
+                $this->stdout('  Status: ', Console::FG_CYAN);
+                $this->stdout('Never checked', Console::FG_YELLOW);
                 $this->stdout("\n");
             }
 
@@ -186,7 +187,7 @@ class SiteMonitorController extends Controller
             $color = $status === '200' ? Console::FG_GREEN : Console::FG_RED;
 
             $this->stdout("{$check->check_date} - {$item->domain} ({$url})\n");
-            $this->stdout("  Status: ", Console::FG_CYAN);
+            $this->stdout('  Status: ', Console::FG_CYAN);
             $this->stdout($status, $color);
             $this->stdout(" | Response: {$check->response_time}ms");
             if ($check->error_message) {
@@ -355,6 +356,17 @@ class SiteMonitorController extends Controller
 
         if (!$check->save()) {
             $this->stdout("Warning: Failed to save check result for {$item->domain}\n", Console::FG_YELLOW);
+            return;
+        }
+
+        // Send Telegram notification if check failed.
+        if ($check->check_status !== '200') {
+            try {
+                $notification = new SiteNotification();
+                $notification->sendTelegramNotification($item, $check);
+            } catch (\Exception $e) {
+                $this->stdout("Warning: Failed to send Telegram notification: {$e->getMessage()}\n", Console::FG_YELLOW);
+            }
         }
     }
 }

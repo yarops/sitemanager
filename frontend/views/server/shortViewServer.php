@@ -8,10 +8,10 @@
 
 /* @var $model common\models\Server */
 ?>
-<li>
+<li class="list-group-item">
 <?php
 echo \yii\helpers\Html::a(
-	$model->title,
+	$model->title . ' [' . $model->ip . ']',
 	array(
 		'server/view',
 		'id' => $model->id,

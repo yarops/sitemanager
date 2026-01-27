@@ -23,7 +23,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php
     $report = json_decode($model->report, true);
-    asort($report);
+    // Сортируем так, чтобы ответы 200 были в конце, остальные - вверху
+    uasort($report, function ($a, $b) {
+        if ($a == 200 && $b != 200) {
+            return 1; // a=200, b!=200 - a должен идти после b
+        }
+        if ($a != 200 && $b == 200) {
+            return -1; // a!=200, b=200 - a должен идти перед b
+        }
+        // Если оба 200 или оба не 200 - сортируем по значению
+        return $a <=> $b;
+    });
 
     ?>
     <div>
@@ -35,13 +45,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php foreach ($report as $key => $value):
             switch ((int)$value) {
                 case 200:
-                    $classes = 'success';
+                    $classes = 'table-success';
                     break;
                 case 0:
-                    $classes = 'danger';
+                    $classes = 'table-danger';
                     break;
                 default:
-                    $classes = 'warning';
+                    $classes = 'table-warning';
             }
 
             ?>

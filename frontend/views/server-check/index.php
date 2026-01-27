@@ -8,7 +8,7 @@
  */
 
 use yii\helpers\Html;
-use yii\widgets\LinkPager;
+use yii\bootstrap5\LinkPager;
 
 /** @var $this yii\web\View */
 /** @var $items \yii\data\ActiveDataProvider список категорий */

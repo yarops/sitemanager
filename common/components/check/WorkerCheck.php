@@ -3,6 +3,8 @@
 namespace common\components\check;
 
 use common\models\Check;
+use common\models\Item;
+use common\components\SiteNotification;
 use yii\queue\JobInterface;
 
 class WorkerCheck implements JobInterface
@@ -54,6 +56,19 @@ class WorkerCheck implements JobInterface
 
             if ($check->save()) {
                 \Yii::info("WorkerCheck: Check result saved successfully with ID: {$check->id}", 'queue');
+
+                // Send notification if check failed.
+                if ($check->check_status !== '200') {
+                    $item = Item::findOne($this->item_id);
+                    if ($item) {
+                        try {
+                            $notification = new SiteNotification();
+                            $notification->sendTelegramNotification($item, $check);
+                        } catch (\Exception $e) {
+                            \Yii::error('WorkerCheck: Failed to send Telegram notification: ' . $e->getMessage(), 'queue');
+                        }
+                    }
+                }
             } else {
                 \Yii::error('WorkerCheck: Failed to save check result: ' . json_encode($check->errors), 'queue');
             }
