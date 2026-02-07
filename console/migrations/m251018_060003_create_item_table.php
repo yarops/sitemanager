@@ -12,7 +12,7 @@ class m251018_060003_create_item_table extends Migration
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }
 
         $this->createTable('{{%item}}', [
@@ -28,7 +28,7 @@ class m251018_060003_create_item_table extends Migration
             'template_id' => $this->integer()->null(),
             'check_enabled' => $this->smallInteger()->notNull()->defaultValue(0),
             'author_id' => $this->integer()->null(),
-            'publish_status' => $this->enum(['draft', 'publish'])->notNull()->defaultValue('draft'),
+            'publish_status' => "ENUM('draft', 'publish') NOT NULL DEFAULT 'draft'",
             'publish_date' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
         ], $tableOptions);
 
@@ -64,9 +64,7 @@ class m251018_060003_create_item_table extends Migration
             '{{%item}}',
             'parent_id',
             '{{%item}}',
-            'id',
-            'SET NULL',
-            'CASCADE'
+            'id'
         );
 
         $this->addForeignKey(

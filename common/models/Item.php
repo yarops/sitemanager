@@ -23,6 +23,9 @@ use yii\web\NotFoundHttpException;
  * @property string $server_user_id
  * @property string $template_id
  * @property integer $check_enabled
+ * @property integer $check_interval
+ * @property string $notify_strategy
+ * @property string $next_check_at
  * @property string $author_id
  * @property string $publish_status
  * @property string $publish_date
@@ -39,7 +42,10 @@ class Item extends ActiveRecord
 {
     public const STATUS_PUBLISH = 'publish';
     public const STATUS_DRAFT   = 'draft';
-    private $task_sended       = false;
+
+    public const NOTIFY_IMMEDIATE = 'immediate';
+    public const NOTIFY_SUMMARY   = 'summary';
+    public const NOTIFY_DISABLED  = 'disabled';
 
     /**
      * Table name.
@@ -63,7 +69,7 @@ class Item extends ActiveRecord
             [ [ 'alias' ], 'string' ],
             [ [ 'parent_id', 'server_id', 'server_user_id', 'template_id', 'author_id' ], 'integer' ],
             [ [ 'admin_link', 'content', 'publish_status' ], 'string' ],
-            [ [ 'publish_date' ], 'safe' ],
+            [ [ 'publish_date', 'next_check_at' ], 'safe' ],
             [
                 [ 'protocol' ],
                 'string',
@@ -75,6 +81,9 @@ class Item extends ActiveRecord
                 'max' => 255,
             ],
             [ [ 'check_enabled' ], 'integer' ],
+            [ [ 'check_interval' ], 'integer', 'min' => 1 ],
+            [ [ 'notify_strategy' ], 'string', 'max' => 32 ],
+            [ [ 'notify_strategy' ], 'in', 'range' => [self::NOTIFY_IMMEDIATE, self::NOTIFY_SUMMARY, self::NOTIFY_DISABLED] ],
         ];
     }
 
@@ -100,6 +109,9 @@ class Item extends ActiveRecord
             'template_id'    => Yii::t('backend', 'Template ID'),
             'template'       => Yii::t('backend', 'Template'),
             'check_enabled'  => Yii::t('backend', 'Check enabled'),
+            'check_interval' => Yii::t('backend', 'Check interval (minutes)'),
+            'notify_strategy' => Yii::t('backend', 'Notification strategy'),
+            'next_check_at'  => Yii::t('backend', 'Next check time'),
             'author'         => Yii::t('backend', 'Author'),
             'author_id'      => Yii::t('backend', 'Author ID'),
             'publish_status' => Yii::t('backend', 'Publish status'),
@@ -274,16 +286,12 @@ class Item extends ActiveRecord
     {
         parent::afterSave($insert, $changedAttributes);
 
-        if ($this->check_enabled && ! $this->task_sended) {
-            $this->task_sended = true;
-
-            $url = $this->protocol . '://' . $this->domain;
-
-            // $queueName = 'check_' . $this->id;
-            $job = Yii::$app->queue->push(new \common\components\check\WorkerCheck([
-                'item_id' => $this->id,
-                'url'     => $url,
-            ]));
+        // Инициализируем next_check_at при первом включении мониторинга или изменении интервала
+        if ($this->check_enabled && ($insert || isset($changedAttributes['check_enabled']) || isset($changedAttributes['check_interval']))) {
+            if (empty($this->next_check_at)) {
+                $this->next_check_at = date('Y-m-d H:i:s');
+                $this->updateAttributes(['next_check_at' => $this->next_check_at]);
+            }
         }
     }
 }

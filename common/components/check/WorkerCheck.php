@@ -57,16 +57,19 @@ class WorkerCheck implements JobInterface
             if ($check->save()) {
                 \Yii::info("WorkerCheck: Check result saved successfully with ID: {$check->id}", 'queue');
 
-                // Send notification if check failed.
+                // Отправляет уведомление только для стратегии 'immediate'
                 if ($check->check_status !== '200') {
                     $item = Item::findOne($this->item_id);
-                    if ($item) {
+                    if ($item && $item->notify_strategy === Item::NOTIFY_IMMEDIATE) {
                         try {
                             $notification = new SiteNotification();
                             $notification->sendTelegramNotification($item, $check);
+                            \Yii::info("WorkerCheck: Immediate notification sent for {$item->domain}", 'queue');
                         } catch (\Exception $e) {
                             \Yii::error('WorkerCheck: Failed to send Telegram notification: ' . $e->getMessage(), 'queue');
                         }
+                    } elseif ($item && $item->notify_strategy === Item::NOTIFY_SUMMARY) {
+                        \Yii::info("WorkerCheck: Failure logged for daily summary report: {$item->domain}", 'queue');
                     }
                 }
             } else {

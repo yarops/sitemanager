@@ -1,7 +1,7 @@
 <?php
 
-use yii\helpers\Html;
 use yii\bootstrap5\LinkPager;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $items yii\data\ActiveDataProvider */
@@ -68,9 +68,11 @@ $this->title = Yii::t('frontend', 'Items');
     }
     ?>
     <div>
-        <?= LinkPager::widget([
+        <?=
+        LinkPager::widget([
             'pagination' => $items->getPagination()
-        ]) ?>
+        ]);
+        ?>
     </div>
 </div>
 

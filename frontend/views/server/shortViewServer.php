@@ -11,11 +11,11 @@
 <li class="list-group-item">
 <?php
 echo \yii\helpers\Html::a(
-	$model->title . ' [' . $model->ip . ']',
-	array(
-		'server/view',
-		'id' => $model->id,
-	)
+    $model->title . ' [' . $model->ip . ']',
+    [
+        'server/view',
+        'id' => $model->id,
+    ]
 )
 ?>
 </li>

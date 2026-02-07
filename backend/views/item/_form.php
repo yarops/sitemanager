@@ -26,9 +26,9 @@ use kartik\depdrop\DepDrop;
         <div class="row">
             <div class="col-xs-2">
                 <?= $form->field($model, 'protocol')->dropDownList([
-                    'https' => 'https',
-                    'http' => 'http',
-                ]) ?>
+                'https' => 'https',
+                'http' => 'http',
+]) ?>
             </div>
             <div class="col-xs-4">
                 <?= $form->field($model, 'domain')->textInput(['maxlength' => 255]) ?>
@@ -110,10 +110,24 @@ use kartik\depdrop\DepDrop;
 
         <div class="row">
             <div class="col-xs-4">
-                <?php echo $form->field($model, 'check_enabled')->checkbox() ?>
+                <?= $form->field($model, 'check_interval')->dropDownList([
+                5 => '5 минут (критичные)',
+                15 => '15 минут',
+                60 => '1 час',
+                360 => '6 часов',
+                720 => '12 часов',
+                1440 => '1 день (по умолчанию)',
+], ['prompt' => 'Выберите интервал']) ?>
             </div>
-            <div class="col-xs-8">
-
+            <div class="col-xs-4">
+                <?= $form->field($model, 'notify_strategy')->dropDownList([
+                Item::NOTIFY_IMMEDIATE => 'Мгновенно (в Telegram)',
+                Item::NOTIFY_SUMMARY => 'Ежедневный отчет',
+                Item::NOTIFY_DISABLED => 'Отключено',
+]) ?>
+            </div>
+            <div class="col-xs-4">
+                <?php echo $form->field($model, 'check_enabled')->checkbox() ?>
             </div>
         </div>
 
