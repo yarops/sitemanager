@@ -1,22 +1,23 @@
 # Механизм проверок доступности сайтов
 
-Система мониторинга предназначена для регулярной проверки доступности сайтов (объектов `Item`) и уведомления администраторов в случае возникновения проблем.
+Система мониторинга предназначена для регулярной проверки доступности сайтов (объектов `Item`) с настраиваемой частотой и гибкими стратегиями уведомлений.
 
 ## Обзор архитектуры
 
 Процесс мониторинга построен на базе очередей Yii2 (`yii2-queue`) и состоит из следующих уровней:
-1. **Инициация (Trigger)**: Момент, когда проверка ставится в очередь.
+1. **Планирование (Tick)**: Ежеминутный процесс, который находит сайты, требующие проверки.
 2. **Исполнение (Worker)**: Фоновый процесс, выполняющий HTTP-запрос.
-3. **Хранение (Storage)**: Сохранение результатов в базу данных.
-4. **Уведомление (Notification)**: Оповещение через Telegram/Email при сбое.
-5. **Визуализация (UI)**: Отображение статусов в панели управления.
+3. **Хранение (Storage)**: Сохранение результатов в базу данных (`Check`).
+4. **Уведомление (Notification)**: Оповещение через Telegram в зависимости от стратегии (мгновенно или сводный отчет).
+5. **Визуализация (UI)**: Отображение статусов и истории в панели управления.
 
 ### Схема процесса (Sequence Diagram)
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Admin as Admin/CLI
+    participant Cron as Cron (Every Minute)
+    participant Tick as MonitoringController::actionTick
     participant Item as Item Model
     participant Queue as Queue (Redis)
     participant Worker as WorkerCheck
@@ -24,10 +25,12 @@ sequenceDiagram
     participant DB as Database (Check)
     participant Notif as SiteNotification
 
-    Admin->>Item: Save (check_enabled=1)
-    Item->>Queue: Push Job (WorkerCheck)
-    
-    Note over Queue: Процесс ожидания в очереди
+    Cron->>Tick: Run Command
+    Tick->>Item: Find items where next_check_at <= now
+    loop Each Item
+        Tick->>Queue: Push Job (WorkerCheck)
+        Tick->>Item: Update next_check_at (now + interval)
+    end
     
     Queue->>Worker: Execute Job
     activate Worker
@@ -35,36 +38,34 @@ sequenceDiagram
     Site-->>Worker: Status Code (e.g. 200, 404, 500)
     Worker->>DB: Save Check Results
     
-    alt Status != 200
+    alt Status != 200 AND notify_strategy == 'immediate'
         Worker->>Notif: sendTelegramNotification()
         Notif-->>Admin: Telegram Alert ❌
-    else Status == 200
-        Note over Worker: Уведомление не требуется
     end
     deactivate Worker
 ```
-
 
 ---
 
 ## Основные компоненты
 
-### 1. WorkerCheck (`common\components\check\WorkerCheck`)
-Класс задания для очереди, реализующий `JobInterface`. Это "сердце" системы.
+### 1. Monitoring Controller (`console\controllers\MonitoringController`)
+Новый "мозг" системы:
+- `actionTick`: Основной планировщик. Проверяет время `next_check_at` в БД.
+- `actionDailyReport`: Формирует и отправляет сводный отчет по сайтам со стратегией `summary`.
+
+### 2. WorkerCheck (`common\components\check\WorkerCheck`)
+Задание для очереди:
 - **Действие**: Выполняет метод `HEAD` к сайту.
-- **Эндпоинты**: Пытается обратиться к `/wp-json/custom/v1/status` (для WordPress) перед тем, как считать сайт недоступным.
-- **Таймаут**: 30 секунд.
-- **Результат**: Фиксирует HTTP-код ответа, время отклика (`response_time`) и сообщение об ошибке.
+- **Логика**: Пытается обратиться к нескольким эндпоинтам (для WP), если основной URL не отвечает 200.
+- **Уведомления**: Если сайт упал, проверяет `notify_strategy`. Если `immediate`, отправляет алерты в Telegram.
 
-### 2. Check Controller (`frontend\controllers\CheckController`)
-Предоставляет интерфейс для просмотра истории и текущего состояния:
-- `actionIndex`: Список всех проверок.
-- `actionSite(id)`: История проверок для конкретного сайта.
-- `actionDashboard`: Общая панель с текущими статусами всех активных сайтов.
-
-### 3. Модели
-- `common\models\Check`: AR-модель для таблицы `check`. Хранит лог каждой проверки.
-- `common\models\Item`: Представляет сайт. Содержит флаг `check_enabled` и связь `lastCheck` для получения актуального статуса.
+### 3. Модель Item (`common\models\Item`)
+- `check_enabled`: Включение мониторинга.
+- `check_interval`: Интервал в минутах (5, 15, 60 и т.д.).
+- `notify_strategy`: `immediate` (алерты сразу), `summary` (в ежедневном отчете), `disabled`.
+- `next_check_at`: Точное время следующей запланированной проверки.
+- `afterSave()`: Автоматически сбрасывает `next_check_at` на "сейчас" при изменении любых настроек мониторинга, чтобы изменения вступили в силу мгновенно.
 
 ---
 
@@ -72,44 +73,29 @@ sequenceDiagram
 
 ### Как запускаются проверки
 
-1. **Автоматически при сохранении**:
-   В методе `Item::afterSave()`, если у сайта включен мониторинг (`check_enabled`), новая задача `WorkerCheck` немедленно помещается в очередь.
+1. **Планировщик (Cron)**:
+   Каждую минуту запускается комбинированная команда:
+   `php yii monitoring/tick && php yii queue/run`
+   Это гарантирует, что задачи сначала планируются, а затем сразу выполняются тем же процессом.
 
-2. **Консольные команды (Cron)**:
-   Класс `console\controllers\QueueController` содержит команды для массового управления:
-   - `php yii queue/setup-daily-monitoring`: Ставит в очередь проверку всех активных сайтов. Обычно запускается по крону раз в сутки (в 6:00 утра).
-   - `php yii queue/run-immediate-checks`: Немедленный запуск проверки всех сайтов.
-
-### Выполнение в очереди
-
-Когда воркер очереди подхватывает задачу `WorkerCheck`:
-1. Измеряется время начала.
-2. Выполняется `HEAD` запрос через `get_headers`.
-3. Создается запись в таблице `check`.
-4. **Если статус не 200**: Инициируется отправка уведомления через `SiteNotification`.
-
----
-
-## Уведомления
-
-За отправку отвечает компонент `common\components\SiteNotification`.
-- **Telegram**: Отправляет сообщение с деталями ошибки (URL, статус, время, текст ошибки) в чат, указанный в параметрах `telegram_chat_id`.
-- **Email**: (Опционально) Отправляет HTML-письмо администратору.
+2. **Массовое управление (`QueueController`)**:
+   - `php yii queue/enable-all-monitoring`: Включает мониторинг для всех опубликованных сайтов.
+   - `php yii queue/run-immediate-checks`: Форсирует проверку всех сайтов прямо сейчас.
 
 ---
 
 ## Полезные команды для разработчика
 
 ```bash
-# Проверить статус очереди
-php yii queue/info
+# Основной цикл (настроен в Cron)
+php yii monitoring/tick && php yii queue/run
 
-# Очистить очередь
-php yii queue/clear
+# Ручной запуск планировщика (без выполнения задач)
+php yii monitoring/tick
 
-# Запустить воркер для обработки задач
-php yii queue/listen
+# Выполнить задачи из очереди
+php yii queue/run
 
-# Проверить текущий статус всех сайтов в консоли
-php yii queue/monitoring-status
+# Логирование (смотреть в реальном времени)
+tail -f runtime/logs/app.log | grep monitoring
 ```

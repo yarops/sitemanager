@@ -286,12 +286,19 @@ class Item extends ActiveRecord
     {
         parent::afterSave($insert, $changedAttributes);
 
-        // Инициализируем next_check_at при первом включении мониторинга или изменении интервала
-        if ($this->check_enabled && ($insert || isset($changedAttributes['check_enabled']) || isset($changedAttributes['check_interval']))) {
-            if (empty($this->next_check_at)) {
-                $this->next_check_at = date('Y-m-d H:i:s');
-                $this->updateAttributes(['next_check_at' => $this->next_check_at]);
+        // Инициализируем или сбрасываем next_check_at при изменении настроек мониторинга
+        $monitoringFields = ['check_enabled', 'check_interval', 'notify_strategy'];
+        $isChanged = false;
+        foreach ($monitoringFields as $field) {
+            if (isset($changedAttributes[$field])) {
+                $isChanged = true;
+                break;
             }
+        }
+
+        if ($this->check_enabled && ($insert || $isChanged)) {
+            $this->next_check_at = date('Y-m-d H:i:s');
+            $this->updateAttributes(['next_check_at' => $this->next_check_at]);
         }
     }
 }

@@ -20,6 +20,7 @@ class MonitoringController extends Controller
     public function actionTick(): int
     {
         $now = date('Y-m-d H:i:s');
+        Yii::info("Запуск планировщика мониторинга. Текущее время: $now", 'monitoring');
 
         $items = Item::find()
             ->where(['check_enabled' => 1])
@@ -38,7 +39,13 @@ class MonitoringController extends Controller
                 'url' => $url,
             ]);
 
-            Yii::$app->queue->push($job);
+            try {
+                Yii::$app->queue->push($job);
+                Yii::info("Запланирована проверка для сайта: {$item->domain} (ID: {$item->id})", 'monitoring');
+            } catch (\Exception $e) {
+                Yii::error("Ошибка постановки в очередь для {$item->domain}: " . $e->getMessage(), 'monitoring');
+                continue;
+            }
 
             // Вычисляет время следующей проверки
             $nextCheckTime = date('Y-m-d H:i:s', strtotime("+{$item->check_interval} minutes"));
@@ -49,8 +56,10 @@ class MonitoringController extends Controller
         }
 
         if ($scheduled === 0) {
+            Yii::info('Нет сайтов для проверки в данный момент.', 'monitoring');
             $this->stdout("Нет сайтов для проверки в данный момент.\n");
         } else {
+            Yii::info("Успешно запланировано проверок: {$scheduled}", 'monitoring');
             $this->stdout("\n✅ Запланировано проверок: {$scheduled}\n");
         }
 

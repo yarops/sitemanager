@@ -19,13 +19,13 @@ class QueueController extends Controller
      */
     public function actionRun()
     {
-        $this->stdout("Processing one job from queue...\n");
+        $this->stdout("Обработка задач из очереди...\n");
 
         /** @var Queue $queue */
         $queue = \Yii::$app->queue;
         $result = $queue->run(false);
 
-        $this->stdout('Job processing completed. Result: ' . ($result ? 'success' : 'no jobs') . "\n");
+        $this->stdout('Обработка завершена. Результат: ' . ($result ? 'задачи выполнены' : 'очередь пуста') . "\n");
     }
 
     /**
@@ -135,38 +135,7 @@ class QueueController extends Controller
 
 
 
-    /**
-     * Setup daily monitoring for all enabled sites.
-     *
-     * Usage: php yii queue/setup-daily-monitoring
-     */
-    public function actionSetupDailyMonitoring()
-    {
-        $this->stdout("Setting up daily monitoring for all enabled sites...\n");
 
-        $items = \common\models\Item::find()
-            ->where(['check_enabled' => 1, 'publish_status' => \common\models\Item::STATUS_PUBLISH])
-            ->all();
-
-        $count = 0;
-        foreach ($items as $item) {
-            $url = $item->protocol . '://' . $item->domain;
-
-            $job = new \common\components\check\WorkerCheck([
-                'item_id' => $item->id,
-                'url' => $url
-            ]);
-
-            $id = \Yii::$app->queue->push($job);
-            $count++;
-
-            $this->stdout("Scheduled daily check for {$item->domain} (ID: {$item->id})\n");
-        }
-
-        $this->stdout("\n✅ Daily monitoring setup completed!\n");
-        $this->stdout("Scheduled {$count} sites for daily monitoring at 6:00 AM\n");
-        $this->stdout("Next checks will be scheduled automatically after each check.\n");
-    }
 
     /**
      * Run immediate checks for all enabled sites (bypass delayed scheduling).
@@ -244,7 +213,7 @@ class QueueController extends Controller
         $this->stdout('  Total sites: ' . count($items) . "\n");
 
         if ($enabled > 0) {
-            $this->stdout("\n💡 Tip: Run 'php yii queue/setup-daily-monitoring' to schedule checks for newly enabled sites.\n");
+            $this->stdout("\n💡 Tip: Мониторинг включен. Теперь тикер (monitoring/tick) начнет планировать проверки.\n");
         }
     }
 
@@ -341,7 +310,7 @@ class QueueController extends Controller
         if ($enabled > 0) {
             $this->stdout("\n💡 Commands:\n");
             $this->stdout("  Disable all: php yii queue/disable-all-monitoring\n");
-            $this->stdout("  Setup daily checks: php yii queue/setup-daily-monitoring\n");
+            $this->stdout("  Run tick now: php yii monitoring/tick\n");
         } else {
             $this->stdout("\n💡 Commands:\n");
             $this->stdout("  Enable all: php yii queue/enable-all-monitoring\n");
