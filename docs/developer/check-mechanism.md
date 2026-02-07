@@ -87,8 +87,12 @@ sequenceDiagram
 ## Полезные команды для разработчика
 
 ```bash
-# Основной цикл (настроен в Cron)
+# Основной цикл (настроен в Cron раз в минуту)
 php yii monitoring/tick && php yii queue/run
+
+# Формирование ежедневного отчета (настроен в Cron раз в сутки)
+# Собирает все ошибки по сайтам со стратегией summary за 24 часа
+php yii monitoring/daily-report
 
 # Ручной запуск планировщика (без выполнения задач)
 php yii monitoring/tick

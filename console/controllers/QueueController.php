@@ -286,16 +286,16 @@ class QueueController extends Controller
             $this->stdout("  {$item->domain} - ");
 
             if (!$item->check_enabled) {
-                $this->stdout('DISABLED', 'red');
+                $this->stdout('DISABLED');
                 $disabled++;
             } elseif (!$item->lastCheck) {
-                $this->stdout('ENABLED (Never checked)', 'yellow');
+                $this->stdout('ENABLED (Never checked)');
                 $enabled++;
             } elseif ($item->lastCheck->check_status === '200') {
-                $this->stdout("UP ({$item->lastCheck->check_status})", 'green');
+                $this->stdout("UP ({$item->lastCheck->check_status})");
                 $enabled++;
             } else {
-                $this->stdout("DOWN ({$item->lastCheck->check_status})", 'red');
+                $this->stdout("DOWN ({$item->lastCheck->check_status})");
                 $enabled++;
             }
 
