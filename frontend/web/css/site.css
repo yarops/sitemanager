@@ -60,10 +60,6 @@ h4 {
     font-style: italic;
 }
 
-.breadcrumb {
-    background: #fff;
-}
-
 /* add sorting icons to gridview sort links */
 a.asc:after, a.desc:after {
     position: relative;
@@ -322,6 +318,18 @@ a.desc:after {
 
 .monitoring-details small {
     color: #6c757d;
+}
+
+.server-sites-list {
+    max-height: 420px;
+    overflow: auto;
+    padding-right: 4px;
+}
+
+.server-sites-list__link {
+    display: block;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .monitoring-details strong {

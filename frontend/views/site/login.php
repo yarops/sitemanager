@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div style="color:#999;margin:1em 0">
                     <?= Yii::t('frontend', 'If you forgot your password you can') ?> <?= Html::a('reset it', ['site/request-password-reset']) ?>.
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <?= Html::submitButton(Yii::t('frontend', 'Login'), ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
                 </div>
             <?php ActiveForm::end(); ?>

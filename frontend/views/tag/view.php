@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 
-<div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+<div class="col-sm-3 offset-sm-1 blog-sidebar">
     <h1><?= Yii::t('frontend', 'Categories') ?></h1>
     <ul>
         <?php

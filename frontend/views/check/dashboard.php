@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <h2 class="box__title">Статус мониторинга</h2>
                     <div>
                         <?= Html::a('Обновить', ['check/dashboard'], ['class' => 'btn btn-primary']) ?>
-                        <?= Html::a('Все проверки', ['check/index'], ['class' => 'btn btn-default']) ?>
+                        <?= Html::a('Все проверки', ['check/index'], ['class' => 'btn btn-secondary']) ?>
                     </div>
                 </div>
                 
@@ -88,8 +88,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <?= Html::a('История', ['check/site', 'id' => $item->id], ['class' => 'btn btn-xs btn-info']) ?>
-                                        <?= Html::a('Сайт', $item->protocol . '://' . $item->domain, ['class' => 'btn btn-xs btn-success', 'target' => '_blank']) ?>
+                                        <?= Html::a('История', ['check/site', 'id' => $item->id], ['class' => 'btn btn-sm btn-info']) ?>
+                                        <?= Html::a('Сайт', $item->protocol . '://' . $item->domain, ['class' => 'btn btn-sm btn-success', 'target' => '_blank']) ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

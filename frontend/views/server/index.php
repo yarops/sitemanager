@@ -17,7 +17,7 @@ $this->title                   = Yii::t('frontend', 'Servers');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="col-sm-8 item-index">
+<div class="col-md-12 item-index mx-auto">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -31,11 +31,11 @@ $this->params['breadcrumbs'][] = $this->title;
         echo '<tr>';
         echo '<td>' . $server->title . ' <b>' . $server->ip . '</b> [' . $server->getItems()->query->count() . ']</td>';
         echo '<td>';
-        echo \yii\helpers\Html::a('View', ['server/view', 'id' => $server->id], ['class' => 'btn btn-default btn-xs']) . '&nbsp;';
-        echo \yii\helpers\Html::a('Checks', ['server-check/server', 'id' => $server->id], ['class' => 'btn btn-default btn-xs']) . '&nbsp;';
-        echo \yii\helpers\Html::a('Check diff', ['server/check-diff', 'id' => $server->id], ['class' => 'btn btn-success btn-xs']) . '&nbsp;';
+        echo \yii\helpers\Html::a('View', ['server/view', 'id' => $server->id], ['class' => 'btn btn-secondary btn-sm']) . '&nbsp;';
+        echo \yii\helpers\Html::a('Checks', ['server-check/server', 'id' => $server->id], ['class' => 'btn btn-secondary btn-sm']) . '&nbsp;';
+        echo \yii\helpers\Html::a('Check diff', ['server/check-diff', 'id' => $server->id], ['class' => 'btn btn-success btn-sm']) . '&nbsp;';
         echo \yii\helpers\Html::a('Check online', ['server/check-online', 'id' => $server->id], [
-            'class' => 'btn btn-success btn-xs',
+            'class' => 'btn btn-success btn-sm',
             'data-method' => 'post',
             'data-confirm' => 'Run manual online check for this server?',
         ]);
@@ -60,20 +60,4 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </div>
 
-</div>
-
-<div class="col-sm-3 col-sm-offset-1 blog-sidebar">
-    <h1><?php echo Yii::t('frontend', 'Servers'); ?></h1>
-    <ul>
-        <?php
-        foreach ($servers->models as $server) {
-            echo $this->render(
-                'shortViewServer',
-                array(
-                    'model' => $server,
-                )
-            );
-        }
-        ?>
-    </ul>
 </div>

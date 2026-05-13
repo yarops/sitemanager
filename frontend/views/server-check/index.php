@@ -27,27 +27,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a('Active', ['server-check/index'], ['class' => 'btn btn-default btn-xs']) ?>
-        <?= Html::a('Archive', ['server-check/index', 'archived' => 1], ['class' => 'btn btn-default btn-xs']) ?>
+        <?= Html::a('Active', ['server-check/index'], ['class' => 'btn btn-secondary btn-sm']) ?>
+        <?= Html::a('Archive', ['server-check/index', 'archived' => 1], ['class' => 'btn btn-secondary btn-sm']) ?>
         <?php if (!$isArchived): ?>
             <?php if ($server): ?>
                 <?= Html::a('Архивировать все на сервере', ['server-check/archive-all', 'serverId' => $server->id], [
-                    'class' => 'btn btn-warning btn-xs',
+                    'class' => 'btn btn-warning btn-sm',
                     'data-method' => 'post',
                     'data-confirm' => 'Архивировать все активные проверки этого сервера?',
                 ]) ?>
             <?php else: ?>
                 <?= Html::a('Архивировать все', ['server-check/archive-all'], [
-                    'class' => 'btn btn-warning btn-xs',
+                    'class' => 'btn btn-warning btn-sm',
                     'data-method' => 'post',
                     'data-confirm' => 'Архивировать все активные проверки?',
                 ]) ?>
             <?php endif; ?>
         <?php endif; ?>
         <?php if ($server): ?>
-            <?= Html::a('Server active', ['server-check/server', 'id' => $server->id], ['class' => 'btn btn-default btn-xs']) ?>
-            <?= Html::a('Server archive', ['server-check/server', 'id' => $server->id, 'archived' => 1], ['class' => 'btn btn-default btn-xs']) ?>
-            <?= Html::a('Back to server', ['server/view', 'id' => $server->id], ['class' => 'btn btn-default btn-xs']) ?>
+            <?= Html::a('Server active', ['server-check/server', 'id' => $server->id], ['class' => 'btn btn-secondary btn-sm']) ?>
+            <?= Html::a('Server archive', ['server-check/server', 'id' => $server->id, 'archived' => 1], ['class' => 'btn btn-secondary btn-sm']) ?>
+            <?= Html::a('Back to server', ['server/view', 'id' => $server->id], ['class' => 'btn btn-secondary btn-sm']) ?>
         <?php endif; ?>
     </p>
 
@@ -91,23 +91,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td><?= Html::encode($item->publish_date) ?></td>
                 <td><?= $badCount ?>/<?= $total ?></td>
                 <td>
-                    <?= Html::a('Open report', ['server-check/view', 'id' => $item->id], ['class' => 'btn btn-primary btn-xs']) ?>
+                    <?= Html::a('Open report', ['server-check/view', 'id' => $item->id], ['class' => 'btn btn-primary btn-sm']) ?>
                     <?php if ($item->server): ?>
                         <?= Html::a(
                             'Server checks',
                             ['server-check/server', 'id' => $item->server->id, 'archived' => $isArchived ? 1 : 0],
-                            ['class' => 'btn btn-default btn-xs']
+                            ['class' => 'btn btn-secondary btn-sm']
                         ) ?>
                     <?php endif; ?>
                     <?php if (!$isArchived): ?>
                         <?= Html::a('Архивировать', ['server-check/archive', 'id' => $item->id], [
-                            'class' => 'btn btn-warning btn-xs',
+                            'class' => 'btn btn-warning btn-sm',
                             'data-method' => 'post',
                             'data-confirm' => 'Архивировать эту проверку?',
                         ]) ?>
                     <?php else: ?>
                         <?= Html::a('Восстановить', ['server-check/restore', 'id' => $item->id], [
-                            'class' => 'btn btn-success btn-xs',
+                            'class' => 'btn btn-success btn-sm',
                             'data-method' => 'post',
                             'data-confirm' => 'Восстановить эту проверку из архива?',
                         ]) ?>

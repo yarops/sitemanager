@@ -23,10 +23,10 @@ $has_subdomains = is_array($model->childs) && !empty($model->childs);
 ?>
 <h1 class="page-title">
     <?= $model->domain ?>
-    <a href="<?= $model->protocol . '://' . $model->domain; ?>" target="_blank" class="btn btn-success btn-xs"
+    <a href="<?= $model->protocol . '://' . $model->domain; ?>" target="_blank" class="btn btn-success btn-sm"
        style="margin-right: 8px;">To site</a>
     <a href="<?= $model->protocol . '://' . $model->domain . $model->admin_link; ?>" target="_blank"
-       class="btn btn-success btn-xs">To admin</a>
+       class="btn btn-success btn-sm">To admin</a>
 </h1>
 
 <div class="row">
@@ -381,10 +381,24 @@ $has_subdomains = is_array($model->childs) && !empty($model->childs);
     <div class="col-sm-3 sidebar">
         <div class="widget">
             <p class="widget__title">Сайты на этом сервере</p>
+            <div class="mb-2">
+                <input
+                    type="text"
+                    class="form-control form-control-sm js-server-sites-filter"
+                    placeholder="Найти сайт по домену..."
+                    aria-label="Найти сайт по домену"
+                >
+            </div>
 
-            <?php foreach ($model->findByServerId($model->server_id) as $item) : ?>
-                <?= Html::a($item->domain, ['item/view', 'id' => $item->id]) ?>
-            <?php endforeach; ?>
+            <div class="server-sites-list">
+                <ul class="list-group list-group-flush js-server-sites-list">
+                    <?php foreach ($model->findByServerId($model->server_id) as $item) : ?>
+                        <li class="list-group-item py-1 px-0 border-0 js-server-site-item">
+                            <?= Html::a($item->domain, ['item/view', 'id' => $item->id], ['class' => 'server-sites-list__link']) ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
         </div>
 
         <div class="widget">
@@ -410,3 +424,21 @@ $has_subdomains = is_array($model->childs) && !empty($model->childs);
 
     </div>
 </div>
+
+<?php
+$this->registerJs(<<<JS
+const filterInput = document.querySelector('.js-server-sites-filter');
+const siteItems = document.querySelectorAll('.js-server-site-item');
+
+if (filterInput && siteItems.length) {
+    filterInput.addEventListener('input', function () {
+        const query = this.value.trim().toLowerCase();
+        siteItems.forEach(function (item) {
+            const text = item.textContent.trim().toLowerCase();
+            item.style.display = text.indexOf(query) !== -1 ? '' : 'none';
+        });
+    });
+}
+JS
+);
+?>

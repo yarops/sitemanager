@@ -23,7 +23,7 @@ use \yii\helpers\ArrayHelper;
         ArrayHelper::map($users, 'id', 'title')
     ) ?>
 
-    <div class="form-group">
+    <div class="mb-3">
         <?= Html::submitButton(Yii::t('frontend', 'Add user'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
     <?php ActiveForm::end(); ?>

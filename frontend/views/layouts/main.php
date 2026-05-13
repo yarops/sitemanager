@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
-use yii\widgets\Breadcrumbs;
+use yii\bootstrap5\Breadcrumbs;
 use frontend\assets\AppAsset;
 use frontend\widgets\Alert;
 
@@ -65,8 +65,15 @@ AppAsset::register($this);
 
         <div class="container">
         <?= Breadcrumbs::widget([
-    'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-]) ?>
+            'links' => $this->params['breadcrumbs'] ?? [],
+            'homeLink' => [
+                'label' => Yii::t('frontend', 'Home'),
+                'url' => Yii::$app->homeUrl,
+            ],
+            'itemTemplate' => "<li class=\"breadcrumb-item\">{link}</li>\n",
+            'activeItemTemplate' => "<li class=\"breadcrumb-item active\" aria-current=\"page\">{link}</li>\n",
+            'options' => ['class' => 'breadcrumb mb-3'],
+        ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
         </div>

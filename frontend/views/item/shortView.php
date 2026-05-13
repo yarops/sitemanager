@@ -51,10 +51,10 @@ $has_subdomains = is_array($model->childs) && !empty($model->childs);
         ?>
 
         <a href="<?php echo $model->protocol . '://' . $model->domain; ?>" target="_blank"
-           class="btn btn-success btn-xs">To site</a>
+           class="btn btn-success btn-sm">To site</a>
         <a href="<?php echo $model->protocol . '://' . $model->domain . $model->admin_link; ?>" target="_blank"
-           class="btn btn-success btn-xs">To admin</a>
-        <a href="<?php echo $model->server->link; ?>" target="_blank" class="btn btn-success btn-xs">To ispmanager</a>
+           class="btn btn-success btn-sm">To admin</a>
+        <a href="<?php echo $model->server->link; ?>" target="_blank" class="btn btn-success btn-sm">To ispmanager</a>
     </div>
 
     <div class="meta">
@@ -87,7 +87,7 @@ $has_subdomains = is_array($model->childs) && !empty($model->childs);
                         <?php if ($model->lastCheck->error_message): ?>
                             <strong>Ошибка:</strong> <span class="text-danger"><?= Html::encode($model->lastCheck->error_message) ?></span><br>
                         <?php endif; ?>
-                        <?= Html::a('История проверок', ['check/site', 'id' => $model->id], ['class' => 'btn btn-xs btn-info']) ?>
+                        <?= Html::a('История проверок', ['check/site', 'id' => $model->id], ['class' => 'btn btn-sm btn-info']) ?>
                     </small>
                 </p>
             <?php else: ?>

@@ -56,8 +56,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         </table>
                     </div>
                     <div class="col-md-6">
-                        <div class="text-right">
-                            <?= Html::a('Назад к дашборду', ['check/dashboard'], ['class' => 'btn btn-default']) ?>
+                        <div class="text-end">
+                            <?= Html::a('Назад к дашборду', ['check/dashboard'], ['class' => 'btn btn-secondary']) ?>
                             <?= Html::a('Все проверки', ['check/index'], ['class' => 'btn btn-primary']) ?>
                         </div>
                     </div>
