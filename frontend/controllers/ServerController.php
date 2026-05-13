@@ -26,6 +26,7 @@ class ServerController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
+                'only' => ['check-online'],
                 'rules' => [
                     [
                         'actions' => ['check-online'],
