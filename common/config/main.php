@@ -39,5 +39,15 @@ return [
         'check' => [
             'class' => 'common\components\check\Check',
         ],
+        'log' => [
+            'targets' => [
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info', 'error', 'warning'],
+                    'categories' => ['queue', 'monitoring'],
+                    'logFile' => '@runtime/logs/monitoring_app.log',
+                ],
+            ],
+        ],
     ],
 ];

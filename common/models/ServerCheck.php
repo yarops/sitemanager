@@ -16,6 +16,9 @@ use yii\web\NotFoundHttpException;
  * @property string $title
  * @property string $report
  * @property string $publish_date
+ * @property int $is_archived
+ * @property string|null $archived_at
+ * @property int|null $archived_by
  *
  * @property ServerCheck $template
  */
@@ -37,9 +40,9 @@ class ServerCheck extends ActiveRecord
         return [
             [['title'], 'required'],
             [['title'], 'string', 'max' => 255],
-            [['server_id'], 'integer'],
+            [['server_id', 'is_archived', 'archived_by'], 'integer'],
             [['report'], 'string'],
-            [['publish_date'], 'safe'],
+            [['publish_date', 'archived_at'], 'safe'],
         ];
     }
 
@@ -54,6 +57,9 @@ class ServerCheck extends ActiveRecord
             'title' => Yii::t('backend', 'Title'),
             'report' => Yii::t('backend', 'Report'),
             'publish_date'   => Yii::t('backend', 'Publish date'),
+            'is_archived' => Yii::t('backend', 'Archived'),
+            'archived_at' => Yii::t('backend', 'Archived at'),
+            'archived_by' => Yii::t('backend', 'Archived by'),
         ];
     }
 
@@ -68,6 +74,14 @@ class ServerCheck extends ActiveRecord
             'query' => ServerCheck::find(),
             'pagination' => false
         ]);
+    }
+
+    /**
+     * Linked server.
+     */
+    public function getServer(): ActiveQuery
+    {
+        return $this->hasOne(Server::class, ['id' => 'server_id']);
     }
 
     /**

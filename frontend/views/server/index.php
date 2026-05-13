@@ -32,8 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
         echo '<td>' . $server->title . ' <b>' . $server->ip . '</b> [' . $server->getItems()->query->count() . ']</td>';
         echo '<td>';
         echo \yii\helpers\Html::a('View', ['server/view', 'id' => $server->id], ['class' => 'btn btn-default btn-xs']) . '&nbsp;';
+        echo \yii\helpers\Html::a('Checks', ['server-check/server', 'id' => $server->id], ['class' => 'btn btn-default btn-xs']) . '&nbsp;';
         echo \yii\helpers\Html::a('Check diff', ['server/check-diff', 'id' => $server->id], ['class' => 'btn btn-success btn-xs']) . '&nbsp;';
-        echo \yii\helpers\Html::a('Check online', ['server/check-online', 'id' => $server->id], ['class' => 'btn btn-success btn-xs']);
+        echo \yii\helpers\Html::a('Check online', ['server/check-online', 'id' => $server->id], [
+            'class' => 'btn btn-success btn-xs',
+            'data-method' => 'post',
+            'data-confirm' => 'Run manual online check for this server?',
+        ]);
         echo '</td>';
         echo '</tr>';
     }

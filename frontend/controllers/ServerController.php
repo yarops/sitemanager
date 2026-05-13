@@ -13,12 +13,35 @@ use common\models\Server;
 use common\models\ServerCheck;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use DOMDocument;
 use yii\web\Response;
 
 class ServerController extends Controller
 {
+    public function behaviors(): array
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['check-online'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'check-online' => ['post'],
+                ],
+            ],
+        ];
+    }
 
 
     public function actionIndex(): string
