@@ -249,6 +249,7 @@ class SiteNotification extends Component
     {
         $botToken = Yii::$app->params['telegram_bot_token'] ?? null;
         $chatId = Yii::$app->params['telegram_chat_id'] ?? null;
+        $messageThreadId = Yii::$app->params['message_thread_id'] ?? null;
 
         if (empty($botToken) || empty($chatId)) {
             Yii::warning('Telegram bot token or chat_id is not configured');
@@ -264,6 +265,10 @@ class SiteNotification extends Component
             'text' => $message,
             'parse_mode' => 'HTML',
         ];
+
+        if (!empty($messageThreadId)) {
+            $data['message_thread_id'] = $messageThreadId;
+        }
 
         try {
             $ch = curl_init($apiUrl);
