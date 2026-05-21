@@ -24,7 +24,7 @@ class SiteMonitorController extends Controller
         $this->stdout("Starting manual site monitoring check...\n", Console::FG_GREEN);
 
         $items = Item::find()
-            ->where(['check_enabled' => 1, 'publish_status' => Item::STATUS_PUBLISH])
+            ->where(['check_enabled' => 1, 'publish_status' => Item::STATUS_PUBLISH, 'is_archived' => 0])
             ->all();
 
         $totalSites = count($items);
@@ -81,7 +81,7 @@ class SiteMonitorController extends Controller
     {
         $item = Item::findOne($itemId);
 
-        if (!$item) {
+        if (!$item || $item->isArchived()) {
             $this->stdout("Site with ID {$itemId} not found.\n", Console::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;
         }
@@ -111,7 +111,7 @@ class SiteMonitorController extends Controller
     public function actionStatus()
     {
         $items = Item::find()
-            ->where(['check_enabled' => 1, 'publish_status' => Item::STATUS_PUBLISH])
+            ->where(['check_enabled' => 1, 'publish_status' => Item::STATUS_PUBLISH, 'is_archived' => 0])
             ->with('lastCheck')
             ->all();
 
@@ -209,7 +209,7 @@ class SiteMonitorController extends Controller
     {
         $item = Item::findOne($itemId);
 
-        if (!$item) {
+        if (!$item || $item->isArchived()) {
             $this->stdout("Site with ID {$itemId} not found.\n", Console::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;
         }
@@ -234,7 +234,7 @@ class SiteMonitorController extends Controller
     {
         $item = Item::findOne($itemId);
 
-        if (!$item) {
+        if (!$item || $item->isArchived()) {
             $this->stdout("Site with ID {$itemId} not found.\n", Console::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;
         }
@@ -341,6 +341,10 @@ class SiteMonitorController extends Controller
      */
     private function saveCheckResult(Item $item, array $result): void
     {
+        if ($item->isArchived()) {
+            return;
+        }
+
         $check = new Check();
         $check->item_id = $item->id;
         $check->check_status = $result['status'];

@@ -19,6 +19,9 @@ use yii\web\NotFoundHttpException;
  * @property string $ftp_pass
  * @property string $editor_ftp_login
  * @property string $editor_ftp_pass
+ * @property int $is_archived
+ * @property string|null $archived_at
+ * @property int|null $archived_by
  *
  * @property Server $server
  */
@@ -41,8 +44,9 @@ class ServerUser extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['id', 'server_id'], 'integer'],
+            [['id', 'server_id', 'is_archived', 'archived_by'], 'integer'],
             [['title', 'user_login', 'user_pass'], 'required'],
+            [['archived_at'], 'safe'],
             [['title'], 'string', 'max' => 255],
             [['user_login', 'user_pass', 'ftp_login', 'ftp_pass', 'editor_ftp_login', 'editor_ftp_pass'], 'string', 'max' => 128]
         ];
@@ -63,6 +67,9 @@ class ServerUser extends ActiveRecord
             'ftp_pass' => Yii::t('backend', 'FTP pass'),
             'editor_ftp_login' => Yii::t('backend', 'Editor FTP login'),
             'editor_ftp_pass' => Yii::t('backend', 'Editor FTP pass'),
+            'is_archived' => Yii::t('backend', 'Archived'),
+            'archived_at' => Yii::t('backend', 'Archived at'),
+            'archived_by' => Yii::t('backend', 'Archived by'),
         ];
     }
 
@@ -88,10 +95,38 @@ class ServerUser extends ActiveRecord
      */
     public static function findByServerId(int $server_id, bool $ignorePublishStatus = false): array
     {
-        if (($server_users = ServerUser::find()->where(['server_id' => $server_id])->all()) !== null) {
+        $query = ServerUser::find()->where(['server_id' => $server_id]);
+        if (!$ignorePublishStatus) {
+            $query->andWhere(['is_archived' => 0]);
+        }
+
+        if (($server_users = $query->all()) !== null) {
             return $server_users;
         }
 
         throw new NotFoundHttpException('The requested ServerUser does not exist.');
+    }
+
+    public function isArchived(): bool
+    {
+        return (int)$this->is_archived === 1;
+    }
+
+    public function archive(?int $userId = null): bool
+    {
+        $this->is_archived = 1;
+        $this->archived_at = date('Y-m-d H:i:s');
+        $this->archived_by = $userId;
+
+        return $this->save(false);
+    }
+
+    public function restore(): bool
+    {
+        $this->is_archived = 0;
+        $this->archived_at = null;
+        $this->archived_by = null;
+
+        return $this->save(false);
     }
 }

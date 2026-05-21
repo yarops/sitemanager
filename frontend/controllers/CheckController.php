@@ -19,6 +19,8 @@ class CheckController extends Controller
     public function actionIndex(): string
     {
         $query = Check::find()
+            ->joinWith('item')
+            ->andWhere(['item.is_archived' => 0])
             ->with('item')
             ->orderBy(['check_date' => SORT_DESC]);
 
@@ -64,7 +66,7 @@ class CheckController extends Controller
     public function actionDashboard(): string
     {
         $items = Item::find()
-            ->where(['check_enabled' => 1, 'publish_status' => Item::STATUS_PUBLISH])
+            ->where(['check_enabled' => 1, 'publish_status' => Item::STATUS_PUBLISH, 'is_archived' => 0])
             ->with('lastCheck')
             ->orderBy(['domain' => SORT_ASC])
             ->all();

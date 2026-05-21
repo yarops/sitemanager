@@ -12,6 +12,7 @@ use yii\helpers\Url;
  * @var yii\web\View $this
  * @var backend\models\search\ItemSearch $searchModel
  * @var yii\data\ActiveDataProvider $dataProvider
+ * @var string $archiveFilter
  */
 
 $gridColumns = [
@@ -76,6 +77,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div style="display: flex;flex-flow:row nowrap;align-items: center;justify-content: space-between;margin: 0 0 40px;">
         <?= Html::a(Yii::t('backend', 'Create Item'), ['create'], ['class' => 'btn btn-success']) ?>
+        <div>
+            <?= Html::a('Active', ['index', 'archive' => 'active'], [
+                'class' => 'btn btn-sm ' . ($archiveFilter === 'active' ? 'btn-primary' : 'btn-outline-secondary')
+            ]) ?>
+            <?= Html::a('Archive', ['index', 'archive' => 'archived'], [
+                'class' => 'btn btn-sm ' . ($archiveFilter === 'archived' ? 'btn-primary' : 'btn-outline-secondary')
+            ]) ?>
+            <?= Html::a('All', ['index', 'archive' => 'all'], [
+                'class' => 'btn btn-sm ' . ($archiveFilter === 'all' ? 'btn-primary' : 'btn-outline-secondary')
+            ]) ?>
+        </div>
 
         <?= ExportMenu::widget([
             'dataProvider' => $dataProvider,
@@ -175,7 +187,40 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]
                     );
                 },
+                'archive' => function ($url, $model) {
+                    if ($model->isArchived()) {
+                        return '';
+                    }
+
+                    return Html::a(
+                        'Archive',
+                        ['archive', 'id' => $model->id],
+                        [
+                            'class' => 'btn btn-outline-warning btn-sm',
+                            'data-method' => 'post',
+                            'title' => 'Archive',
+                            'data-confirm' => 'Archive this item and disable monitoring?'
+                        ]
+                    );
+                },
+                'restore' => function ($url, $model) {
+                    if (!$model->isArchived()) {
+                        return '';
+                    }
+
+                    return Html::a(
+                        'Restore',
+                        ['restore', 'id' => $model->id],
+                        [
+                            'class' => 'btn btn-outline-success btn-sm',
+                            'data-method' => 'post',
+                            'title' => 'Restore',
+                            'data-confirm' => 'Restore this item from archive?'
+                        ]
+                    );
+                },
               ],
+              'template' => '{view} {update} {archive} {restore} {delete}',
             ],
         ],
     ]) ?>

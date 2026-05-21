@@ -29,6 +29,9 @@ use yii\web\NotFoundHttpException;
  * @property string $author_id
  * @property string $publish_status
  * @property string $publish_date
+ * @property int $is_archived
+ * @property string|null $archived_at
+ * @property int|null $archived_by
  *
  * @property Item $parent
  * @property Item $childs
@@ -67,9 +70,9 @@ class Item extends ActiveRecord
         return [
             [ [ 'domain', 'protocol' ], 'required' ],
             [ [ 'alias' ], 'string' ],
-            [ [ 'parent_id', 'server_id', 'server_user_id', 'template_id', 'author_id' ], 'integer' ],
+            [ [ 'parent_id', 'server_id', 'server_user_id', 'template_id', 'author_id', 'is_archived', 'archived_by' ], 'integer' ],
             [ [ 'admin_link', 'content', 'publish_status' ], 'string' ],
-            [ [ 'publish_date', 'next_check_at' ], 'safe' ],
+            [ [ 'publish_date', 'next_check_at', 'archived_at' ], 'safe' ],
             [
                 [ 'protocol' ],
                 'string',
@@ -116,6 +119,9 @@ class Item extends ActiveRecord
             'author_id'      => Yii::t('backend', 'Author ID'),
             'publish_status' => Yii::t('backend', 'Publish status'),
             'publish_date'   => Yii::t('backend', 'Publish date'),
+            'is_archived'     => Yii::t('backend', 'Archived'),
+            'archived_at'     => Yii::t('backend', 'Archived at'),
+            'archived_by'     => Yii::t('backend', 'Archived by'),
         ];
     }
 
@@ -159,6 +165,7 @@ class Item extends ActiveRecord
     {
         $query = self::find()
             ->where([ 'publish_status' => self::STATUS_PUBLISH ])
+            ->andWhere([ 'is_archived' => 0 ])
             ->with('lastCheck');
 
         // Apply status filter if specified
@@ -215,6 +222,7 @@ class Item extends ActiveRecord
                     [
                         'publish_status' => self::STATUS_PUBLISH,
                         'author_id'      => Yii::$app->user->id,
+                        'is_archived'    => 0,
                     ]
                 )
                 ->orderBy([ 'publish_date' => SORT_DESC ]),
@@ -234,7 +242,7 @@ class Item extends ActiveRecord
     public static function findById(int $id, bool $ignorePublishStatus = false): Item
     {
         if (( $model = self::findOne($id) ) !== null) {
-            if ($model->isPublished() || $ignorePublishStatus) {
+            if (($model->isPublished() && !$model->isArchived()) || $ignorePublishStatus) {
                 return $model;
             }
         }
@@ -280,6 +288,31 @@ class Item extends ActiveRecord
     protected function isPublished(): bool
     {
         return $this->publish_status === self::STATUS_PUBLISH;
+    }
+
+    public function isArchived(): bool
+    {
+        return (int)$this->is_archived === 1;
+    }
+
+    public function archive(?int $userId = null): bool
+    {
+        $this->is_archived = 1;
+        $this->archived_at = date('Y-m-d H:i:s');
+        $this->archived_by = $userId;
+        $this->check_enabled = 0;
+        $this->next_check_at = null;
+
+        return $this->save(false);
+    }
+
+    public function restore(): bool
+    {
+        $this->is_archived = 0;
+        $this->archived_at = null;
+        $this->archived_by = null;
+
+        return $this->save(false);
     }
 
     public function afterSave($insert, $changedAttributes)

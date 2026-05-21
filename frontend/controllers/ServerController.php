@@ -82,6 +82,8 @@ class ServerController extends Controller
                     'query' => Item::find()
                         ->where([ 'protocol' => 'http' ])
                         ->andWhere([ 'server_id' => $server->id ])
+                        ->andWhere([ 'publish_status' => Item::STATUS_PUBLISH ])
+                        ->andWhere([ 'is_archived' => 0 ])
                         ->orderBy([ 'publish_date' => SORT_DESC ]),
                 ]
             );

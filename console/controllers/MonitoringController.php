@@ -23,10 +23,16 @@ class MonitoringController extends Controller
         Yii::info("Запуск планировщика мониторинга. Текущее время: $now", 'monitoring');
 
         $items = Item::find()
-            ->where(['check_enabled' => 1])
-            ->andWhere(['<=', 'next_check_at', $now])
-            ->orWhere(['next_check_at' => null])
-            ->andWhere(['check_enabled' => 1])
+            ->where([
+                'check_enabled' => 1,
+                'is_archived' => 0,
+                'publish_status' => Item::STATUS_PUBLISH,
+            ])
+            ->andWhere([
+                'or',
+                ['<=', 'next_check_at', $now],
+                ['next_check_at' => null],
+            ])
             ->all();
 
         $scheduled = 0;
@@ -77,7 +83,11 @@ class MonitoringController extends Controller
 
         // Находит все сайты со стратегией summary
         $items = Item::find()
-            ->where(['notify_strategy' => Item::NOTIFY_SUMMARY])
+            ->where([
+                'notify_strategy' => Item::NOTIFY_SUMMARY,
+                'is_archived' => 0,
+                'publish_status' => Item::STATUS_PUBLISH,
+            ])
             ->with([
                 'lastCheck' => function ($query) use ($yesterday) {
                     $query->where(['>=', 'check_date', $yesterday]);

@@ -147,7 +147,11 @@ class QueueController extends Controller
         $this->stdout("Running immediate checks for all enabled sites...\n");
 
         $items = \common\models\Item::find()
-            ->where(['check_enabled' => 1, 'publish_status' => \common\models\Item::STATUS_PUBLISH])
+            ->where([
+                'check_enabled' => 1,
+                'publish_status' => \common\models\Item::STATUS_PUBLISH,
+                'is_archived' => 0,
+            ])
             ->all();
 
         if (empty($items)) {
@@ -186,7 +190,10 @@ class QueueController extends Controller
         $this->stdout("Enabling monitoring for all published sites...\n");
 
         $items = \common\models\Item::find()
-            ->where(['publish_status' => \common\models\Item::STATUS_PUBLISH])
+            ->where([
+                'publish_status' => \common\models\Item::STATUS_PUBLISH,
+                'is_archived' => 0,
+            ])
             ->all();
 
         $enabled = 0;
@@ -227,7 +234,7 @@ class QueueController extends Controller
         $this->stdout("Disabling monitoring for all sites...\n");
 
         $items = \common\models\Item::find()
-            ->where(['check_enabled' => 1])
+            ->where(['check_enabled' => 1, 'is_archived' => 0])
             ->all();
 
         $disabled = 0;
@@ -262,7 +269,10 @@ class QueueController extends Controller
         $this->stdout("=======================\n\n");
 
         $allItems = \common\models\Item::find()
-            ->where(['publish_status' => \common\models\Item::STATUS_PUBLISH])
+            ->where([
+                'publish_status' => \common\models\Item::STATUS_PUBLISH,
+                'is_archived' => 0,
+            ])
             ->with('lastCheck')
             ->all();
 

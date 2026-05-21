@@ -38,6 +38,12 @@ class WorkerCheck implements JobInterface
                 return;
             }
 
+            $item = Item::findOne($this->item_id);
+            if (!$item || $item->isArchived()) {
+                \Yii::info("WorkerCheck: Skipping archived or missing item_id: {$this->item_id}", 'queue');
+                return;
+            }
+
             $startTime = microtime(true);
             $checkResult = $this->performSiteCheck($this->url);
             $endTime = microtime(true);
@@ -59,7 +65,6 @@ class WorkerCheck implements JobInterface
 
                 // Отправляет уведомление только для стратегии 'immediate'
                 if ($check->check_status !== '200') {
-                    $item = Item::findOne($this->item_id);
                     if ($item && $item->notify_strategy === Item::NOTIFY_IMMEDIATE) {
                         try {
                             $notification = new SiteNotification();

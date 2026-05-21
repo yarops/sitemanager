@@ -10,6 +10,7 @@ namespace backend\controllers;
 
 use common\models\ServerUser;
 use backend\models\ServerUserForm;
+use common\models\Item;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -30,7 +31,7 @@ class ServerUserController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['create', 'update', 'delete', 'server-user'],
+                        'actions' => ['create', 'update', 'delete', 'archive', 'restore', 'server-user'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -40,6 +41,8 @@ class ServerUserController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['post'],
+                    'archive' => ['post'],
+                    'restore' => ['post'],
                 ],
             ],
         ];
@@ -83,5 +86,37 @@ class ServerUserController extends Controller
         $serverUser->delete();
 
         return $this->redirect(['server/update', 'id' => $serverUser->server_id]);
+    }
+
+    public function actionArchive(int $id): Response
+    {
+        $serverUser = ServerUser::findById($id, true);
+        $activeItemsCount = Item::find()
+            ->where([
+                'server_user_id' => $serverUser->id,
+                'is_archived' => 0,
+            ])
+            ->count();
+
+        if ((int)$activeItemsCount > 0) {
+            Yii::$app->session->setFlash(
+                'error',
+                Yii::t('backend', 'Server user has active sites and cannot be archived.')
+            );
+
+            return $this->redirect(['server/update', 'id' => $serverUser->server_id]);
+        }
+
+        $serverUser->archive(Yii::$app->user->id);
+
+        return $this->redirect(['server/update', 'id' => $serverUser->server_id]);
+    }
+
+    public function actionRestore(int $id): Response
+    {
+        $serverUser = ServerUser::findById($id, true);
+        $serverUser->restore();
+
+        return $this->redirect(['server/update', 'id' => $serverUser->server_id, 'serverUserArchive' => 1]);
     }
 }

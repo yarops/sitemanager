@@ -37,7 +37,11 @@ class ItemSearch extends Item
      */
     public function search($params)
     {
-        $query = Item::find();
+        $query = Item::find()
+            ->where([
+                'publish_status' => Item::STATUS_PUBLISH,
+                'is_archived' => 0,
+            ]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -27,7 +27,7 @@ class ItemController extends Controller
                 'rules' => [
                     [
                         'actions' => [
-                            'index', 'view', 'create', 'update', 'delete', 'search', 'server-user'
+                            'index', 'view', 'create', 'update', 'delete', 'archive', 'restore', 'search', 'server-user'
                         ],
                         'allow' => true,
                         'roles' => ['admin'],
@@ -38,6 +38,8 @@ class ItemController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['post'],
+                    'archive' => ['post'],
+                    'restore' => ['post'],
                 ],
             ],
         ];
@@ -47,12 +49,21 @@ class ItemController extends Controller
     {
         $searchModel = new ItemSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $archiveFilter = Yii::$app->request->get('archive', 'active');
+
+        if ($archiveFilter === 'archived') {
+            $dataProvider->query->andWhere(['item.is_archived' => 1]);
+        } elseif ($archiveFilter !== 'all') {
+            $archiveFilter = 'active';
+            $dataProvider->query->andWhere(['item.is_archived' => 0]);
+        }
 
         return $this->render(
             'index',
             [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
+                'archiveFilter' => $archiveFilter,
             ]
         );
     }
@@ -108,7 +119,7 @@ class ItemController extends Controller
         return $this->render('update', [
             'model' => $item,
             'server' => Server::find()->all(),
-            'serverUsers' => self::getServerUsersByServerId($item->server_id),
+            'serverUsers' => self::getServerUsersByServerId($item->server_id, $item->isArchived()),
             'template' => Template::find()->orderBy(['id' => SORT_DESC])->all(),
             'authors' => User::find()->all()
         ]);
@@ -119,6 +130,20 @@ class ItemController extends Controller
         Item::findById($id, true)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionArchive(int $id): Response
+    {
+        Item::findById($id, true)->archive(Yii::$app->user->id);
+
+        return $this->redirect(Yii::$app->request->referrer ?: ['index']);
+    }
+
+    public function actionRestore(int $id): Response
+    {
+        Item::findById($id, true)->restore();
+
+        return $this->redirect(Yii::$app->request->referrer ?: ['index', 'archive' => 'archived']);
     }
 
   /**
@@ -183,13 +208,13 @@ class ItemController extends Controller
         return ['output' => '', 'selected' => ''];
     }
 
-    public function getServerUsersByServerId($server_id)
+    public function getServerUsersByServerId($server_id, bool $includeArchived = false)
     {
         if (!$server_id) {
             return false;
         }
 
-        if ($server_users = ServerUser::findByServerId($server_id)) {
+        if ($server_users = ServerUser::findByServerId($server_id, $includeArchived)) {
             $data = ArrayHelper::toArray($server_users, [
                 'common\models\ServerUser' => [
                     'id',

@@ -67,7 +67,8 @@ class Server extends ActiveRecord
             'query' => Item::find()
                 ->where([
                     'server_id' => $this->id,
-                    'publish_status' => Item::STATUS_PUBLISH
+                    'publish_status' => Item::STATUS_PUBLISH,
+                    'is_archived' => 0,
                 ])
         ]);
     }
@@ -100,7 +101,8 @@ class Server extends ActiveRecord
     public function getServerUsers(): ActiveDataProvider
     {
         return new ActiveDataProvider([
-            'query' => $this->hasMany(ServerUser::class, ['server_id' => 'id']),
+            'query' => $this->hasMany(ServerUser::class, ['server_id' => 'id'])
+                ->andWhere(['is_archived' => 0]),
             'pagination' => false,
             'sort'=> ['defaultOrder' => ['id' => SORT_DESC]],
         ]);

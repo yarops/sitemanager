@@ -16,10 +16,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('backend', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?php if ($model->isArchived()): ?>
+            <?= Html::a(Yii::t('backend', 'Restore'), ['restore', 'id' => $model->id], [
+                'class' => 'btn btn-success',
+                'data' => [
+                    'confirm' => Yii::t('backend', 'Restore this item from archive?'),
+                    'method' => 'post',
+                ],
+            ]) ?>
+        <?php else: ?>
+            <?= Html::a(Yii::t('backend', 'Archive'), ['archive', 'id' => $model->id], [
+                'class' => 'btn btn-warning',
+                'data' => [
+                    'confirm' => Yii::t('backend', 'Archive this item and disable monitoring?'),
+                    'method' => 'post',
+                ],
+            ]) ?>
+        <?php endif; ?>
         <?= Html::a(Yii::t('backend', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => Yii::t('backend', 'Are you sure you want to delete this item?'),
+                'confirm' => Yii::t('backend', 'Hard delete this item? Use archive for historical records.'),
                 'method' => 'post',
             ],
         ]) ?>
@@ -60,6 +77,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'content:ntext',
             'publish_status',
+            [
+                'attribute' => 'is_archived',
+                'value' => $model->isArchived() ? 'Yes' : 'No',
+            ],
+            'archived_at',
+            'archived_by',
             'publish_date',
         ],
     ]) ?>

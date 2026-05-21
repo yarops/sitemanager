@@ -78,7 +78,8 @@ class Template extends ActiveRecord
             'query' => Item::find()
                 ->where([
                     'template_id' => $this->id,
-                    'publish_status' => Item::STATUS_PUBLISH
+                    'publish_status' => Item::STATUS_PUBLISH,
+                    'is_archived' => 0,
                 ])
         ]);
     }
