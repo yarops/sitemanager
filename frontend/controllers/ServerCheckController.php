@@ -10,6 +10,7 @@ namespace frontend\controllers;
 
 use common\models\Server;
 use common\models\ServerCheck;
+use common\models\Item;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
@@ -24,10 +25,10 @@ class ServerCheckController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['archive', 'restore'],
+                'only' => ['archive', 'restore', 'archive-all', 'archive-item'],
                 'rules' => [
                     [
-                        'actions' => ['archive', 'restore', 'archive-all'],
+                        'actions' => ['archive', 'restore', 'archive-all', 'archive-item'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -39,6 +40,7 @@ class ServerCheckController extends Controller
                     'archive' => ['post'],
                     'restore' => ['post'],
                     'archive-all' => ['post'],
+                    'archive-item' => ['post'],
                 ],
             ],
         ];
@@ -105,10 +107,22 @@ class ServerCheckController extends Controller
     public function actionView(int $id): string
     {
         $serverCheck = ServerCheck::findById($id);
+        $report = json_decode($serverCheck->report, true);
+        if (!is_array($report)) {
+            $report = [];
+        }
 
         return $this->render('view', [
             'model' => $serverCheck,
+            'itemsByUrl' => $this->findItemsByReportUrls($serverCheck, array_keys($report)),
         ]);
+    }
+
+    public function actionArchiveItem(int $id): Response
+    {
+        Item::findById($id, true)->archive(Yii::$app->user->id);
+
+        return $this->redirect(Yii::$app->request->referrer ?: ['index']);
     }
 
     public function actionArchive(int $id): Response
@@ -164,5 +178,33 @@ class ServerCheckController extends Controller
         }
 
         return $this->redirect(['index']);
+    }
+
+    private function findItemsByReportUrls(ServerCheck $serverCheck, array $urls): array
+    {
+        $domains = [];
+        foreach ($urls as $url) {
+            $host = parse_url($url, PHP_URL_HOST);
+            if (!empty($host)) {
+                $domains[] = $host;
+            }
+        }
+
+        $domains = array_values(array_unique($domains));
+        if (empty($domains)) {
+            return [];
+        }
+
+        $query = Item::find()->where(['domain' => $domains]);
+        if (!empty($serverCheck->server_id)) {
+            $query->andWhere(['server_id' => $serverCheck->server_id]);
+        }
+
+        $itemsByUrl = [];
+        foreach ($query->all() as $item) {
+            $itemsByUrl[$item->protocol . '://' . $item->domain] = $item;
+        }
+
+        return $itemsByUrl;
     }
 }

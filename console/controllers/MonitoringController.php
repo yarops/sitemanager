@@ -88,22 +88,19 @@ class MonitoringController extends Controller
                 'is_archived' => 0,
                 'publish_status' => Item::STATUS_PUBLISH,
             ])
-            ->with([
-                'lastCheck' => function ($query) use ($yesterday) {
-                    $query->where(['>=', 'check_date', $yesterday]);
-                }
-            ])
             ->all();
 
         $failedSites = [];
 
         foreach ($items as $item) {
-            if ($item->lastCheck && $item->lastCheck->check_status !== '200') {
+            $lastCheck = $item->lastCheck;
+
+            if ($lastCheck && $lastCheck->check_date >= $yesterday && $lastCheck->check_status !== '200') {
                 $failedSites[] = [
                     'domain' => $item->domain,
-                    'status' => $item->lastCheck->check_status,
-                    'error' => $item->lastCheck->error_message,
-                    'time' => $item->lastCheck->check_date,
+                    'status' => $lastCheck->check_status,
+                    'error' => $lastCheck->error_message,
+                    'time' => $lastCheck->check_date,
                 ];
             }
         }

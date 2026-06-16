@@ -112,7 +112,6 @@ class SiteMonitorController extends Controller
     {
         $items = Item::find()
             ->where(['check_enabled' => 1, 'publish_status' => Item::STATUS_PUBLISH, 'is_archived' => 0])
-            ->with('lastCheck')
             ->all();
 
         if (empty($items)) {

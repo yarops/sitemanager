@@ -158,15 +158,15 @@ class Item extends ActiveRecord
     public function getLastCheck(): ActiveQuery
     {
         return $this->hasOne(Check::class, [ 'item_id' => 'id' ])
-            ->orderBy(['check_date' => SORT_DESC]);
+            ->orderBy(['check_date' => SORT_DESC, 'id' => SORT_DESC])
+            ->limit(1);
     }
 
     public static function findPublished(string $statusFilter = null): ActiveDataProvider
     {
         $query = self::find()
             ->where([ 'publish_status' => self::STATUS_PUBLISH ])
-            ->andWhere([ 'is_archived' => 0 ])
-            ->with('lastCheck');
+            ->andWhere([ 'is_archived' => 0 ]);
 
         // Apply status filter if specified
         if ($statusFilter) {

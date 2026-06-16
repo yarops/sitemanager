@@ -273,7 +273,6 @@ class QueueController extends Controller
                 'publish_status' => \common\models\Item::STATUS_PUBLISH,
                 'is_archived' => 0,
             ])
-            ->with('lastCheck')
             ->all();
 
         $enabled = 0;

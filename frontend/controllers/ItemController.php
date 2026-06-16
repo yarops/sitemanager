@@ -50,8 +50,7 @@ class ItemController extends Controller
             $query = Item::find()
                 ->where(['protocol' => 'http'])
                 ->andWhere(['publish_status' => Item::STATUS_PUBLISH])
-                ->andWhere(['is_archived' => 0])
-                ->with('lastCheck');
+                ->andWhere(['is_archived' => 0]);
 
             // Apply status filter if specified
             if ($filter_status) {
