@@ -29,6 +29,7 @@ use yii\web\NotFoundHttpException;
  * @property string $author_id
  * @property string $publish_status
  * @property string $publish_date
+ * @property string|null $updated_at
  * @property int $is_archived
  * @property string|null $archived_at
  * @property int|null $archived_by
@@ -72,7 +73,7 @@ class Item extends ActiveRecord
             [ [ 'alias' ], 'string' ],
             [ [ 'parent_id', 'server_id', 'server_user_id', 'template_id', 'author_id', 'is_archived', 'archived_by' ], 'integer' ],
             [ [ 'admin_link', 'content', 'publish_status' ], 'string' ],
-            [ [ 'publish_date', 'next_check_at', 'archived_at' ], 'safe' ],
+            [ [ 'publish_date', 'updated_at', 'next_check_at', 'archived_at' ], 'safe' ],
             [
                 [ 'protocol' ],
                 'string',
@@ -119,6 +120,7 @@ class Item extends ActiveRecord
             'author_id'      => Yii::t('backend', 'Author ID'),
             'publish_status' => Yii::t('backend', 'Publish status'),
             'publish_date'   => Yii::t('backend', 'Publish date'),
+            'updated_at'     => Yii::t('backend', 'Updated at'),
             'is_archived'     => Yii::t('backend', 'Archived'),
             'archived_at'     => Yii::t('backend', 'Archived at'),
             'archived_by'     => Yii::t('backend', 'Archived by'),
@@ -313,6 +315,19 @@ class Item extends ActiveRecord
         $this->archived_by = null;
 
         return $this->save(false);
+    }
+
+    public function beforeSave($insert): bool
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        if (!$insert) {
+            $this->updated_at = date('Y-m-d H:i:s');
+        }
+
+        return true;
     }
 
     public function afterSave($insert, $changedAttributes)
