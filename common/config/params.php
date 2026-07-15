@@ -7,4 +7,3 @@ return [
     'telegram_chat_id' => null,
     'message_thread_id' => null,
 ];
-s
