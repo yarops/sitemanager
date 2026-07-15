@@ -46,6 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <tr>
             <th>Host</th>
             <th>Http response</th>
+            <th>Дата публикации</th>
             <th>Actions</th>
         </tr>
         <?php foreach ($report as $key => $value):
@@ -80,7 +81,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     </button>
                 </td>
                 <td><?php echo $value; ?></td>
+                <td><?= $item ? Html::encode($item->publish_date ?: '—') : '—' ?></td>
                 <td>
+                    <?= Html::a('Перепроверить', ['server-check/recheck-site', 'id' => $model->id, 'url' => $key], [
+                        'class' => 'btn btn-primary btn-sm',
+                        'data-method' => 'post',
+                        'data-confirm' => 'Перепроверить доступность сайта?',
+                    ]) ?>
                     <?php if ($item && !$item->isArchived()): ?>
                         <?= Html::a('Архивировать сайт', ['server-check/archive-item', 'id' => $item->id], [
                             'class' => 'btn btn-warning btn-sm',

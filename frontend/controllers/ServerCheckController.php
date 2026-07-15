@@ -15,6 +15,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -25,10 +26,10 @@ class ServerCheckController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['archive', 'restore', 'archive-all', 'archive-item'],
+                'only' => ['archive', 'restore', 'archive-all', 'archive-item', 'recheck-site'],
                 'rules' => [
                     [
-                        'actions' => ['archive', 'restore', 'archive-all', 'archive-item'],
+                        'actions' => ['archive', 'restore', 'archive-all', 'archive-item', 'recheck-site'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -41,6 +42,7 @@ class ServerCheckController extends Controller
                     'restore' => ['post'],
                     'archive-all' => ['post'],
                     'archive-item' => ['post'],
+                    'recheck-site' => ['post'],
                 ],
             ],
         ];
@@ -125,6 +127,26 @@ class ServerCheckController extends Controller
         return $this->redirect(Yii::$app->request->referrer ?: ['index']);
     }
 
+    /**
+     * Recheck one URL from a saved server-check report and update its response code.
+     */
+    public function actionRecheckSite(int $id): Response
+    {
+        $serverCheck = ServerCheck::findById($id);
+        $url = (string)Yii::$app->request->get('url', '');
+        $report = json_decode($serverCheck->report, true);
+
+        if (!is_array($report) || $url === '' || !array_key_exists($url, $report)) {
+            throw new BadRequestHttpException('URL is not present in this server check report.');
+        }
+
+        $report[$url] = $this->checkUrl($url);
+        $serverCheck->report = json_encode($report);
+        $serverCheck->save(false, ['report']);
+
+        return $this->redirect(['view', 'id' => $serverCheck->id]);
+    }
+
     public function actionArchive(int $id): Response
     {
         $serverCheck = ServerCheck::findById($id);
@@ -206,5 +228,23 @@ class ServerCheckController extends Controller
         }
 
         return $itemsByUrl;
+    }
+
+    private function checkUrl(string $url): string
+    {
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        curl_setopt($curl, CURLOPT_NOBODY, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($curl);
+        $statusCode = !curl_errno($curl) && $response
+            ? (string)curl_getinfo($curl, CURLINFO_HTTP_CODE)
+            : '0';
+
+        curl_close($curl);
+
+        return $statusCode;
     }
 }
