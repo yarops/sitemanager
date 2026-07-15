@@ -43,38 +43,25 @@ class ItemController extends Controller
 
     public function actionIndex(): string
     {
-        $filter_https = Yii::$app->request->get('http');
-        $filter_status = Yii::$app->request->get('status'); // filter by monitoring status
-
-        if ($filter_https == 'on') {
-            $query = Item::find()
-                ->where(['protocol' => 'http'])
-                ->andWhere(['is_archived' => 0]);
-
-            // Apply status filter if specified
-            if ($filter_status) {
-                $query = $this->applyStatusFilter($query, $filter_status);
-            }
-
-            $items = new ActiveDataProvider([
-                'query' => $query->orderBy(['publish_date' => SORT_DESC]),
-            ]);
-
-            $items->setPagination([
-                'pageSize' => Yii::$app->params['pageSize']
-            ]);
-
-            return $this->render('index', [
-                'items' => $items,
-                'servers' => Server::findServers(),
-                'current_status_filter' => $filter_status
-            ]);
+        $filterHttp = Yii::$app->request->get('http') === 'on';
+        $filterStatus = Yii::$app->request->get('status');
+        $filterPublication = Yii::$app->request->get('publication');
+        if (!in_array($filterStatus, ['enabled', 'disabled', 'up', 'down', 'never_checked'], true)) {
+            $filterStatus = null;
+        }
+        if (!in_array($filterPublication, [Item::STATUS_DRAFT, Item::STATUS_PUBLISH], true)) {
+            $filterPublication = null;
         }
 
-        //$items = Item::findByCurrentUser();
         $query = Item::find()->where(['is_archived' => 0]);
-        if ($filter_status) {
-            $query = $this->applyStatusFilter($query, $filter_status);
+        if ($filterHttp) {
+            $query->andWhere(['protocol' => 'http']);
+        }
+        if ($filterPublication !== null) {
+            $query->andWhere(['publish_status' => $filterPublication]);
+        }
+        if ($filterStatus) {
+            $query = $this->applyStatusFilter($query, $filterStatus);
         }
         $query->orderBy(['publish_date' => SORT_DESC]);
 
@@ -86,7 +73,9 @@ class ItemController extends Controller
         return $this->render('index', [
             'items' => $items,
             'servers' => Server::findServers(),
-            'current_status_filter' => $filter_status
+            'current_status_filter' => $filterStatus,
+            'current_publication_filter' => $filterPublication,
+            'current_http_filter' => $filterHttp,
         ]);
     }
 
