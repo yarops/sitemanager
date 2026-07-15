@@ -18,7 +18,7 @@ $this->title = Yii::t('frontend', 'Server check: ' . $model->title);
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="col-sm-8 item-index">
+<div class="col-12 item-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -28,16 +28,16 @@ $this->params['breadcrumbs'][] = $this->title;
         $report = [];
     }
 
-    // Сортируем так, чтобы ответы 200 были в конце, остальные - вверху
+    // Сортируем так, чтобы полностью успешные проверки были в конце.
     uasort($report, function ($a, $b) {
-        if ($a == 200 && $b != 200) {
-            return 1; // a=200, b!=200 - a должен идти после b
-        }
-        if ($a != 200 && $b == 200) {
-            return -1; // a!=200, b=200 - a должен идти перед b
-        }
-        // Если оба 200 или оба не 200 - сортируем по значению
-        return $a <=> $b;
+        $aStatus = is_array($a) ? ($a['status'] ?? 0) : $a;
+        $bStatus = is_array($b) ? ($b['status'] ?? 0) : $b;
+        $aAliasStatus = is_array($a) ? ($a['alias_status'] ?? null) : null;
+        $bAliasStatus = is_array($b) ? ($b['alias_status'] ?? null) : null;
+        $aIsOk = (int)$aStatus === 200 && ($aAliasStatus === null || (int)$aAliasStatus === 200);
+        $bIsOk = (int)$bStatus === 200 && ($bAliasStatus === null || (int)$bAliasStatus === 200);
+
+        return $aIsOk === $bIsOk ? (int)$aStatus <=> (int)$bStatus : ($aIsOk ? 1 : -1);
     });
 
     ?>
@@ -46,14 +46,18 @@ $this->params['breadcrumbs'][] = $this->title;
         <tr>
             <th>Host</th>
             <th>Http response</th>
+            <th>Http response alias</th>
             <th>Дата публикации</th>
             <th>Статус</th>
             <th>Actions</th>
         </tr>
-        <?php foreach ($report as $key => $value):
+        <?php foreach ($report as $key => $result):
+            $value = is_array($result) ? ($result['status'] ?? 0) : $result;
+            $aliasStatus = is_array($result) ? ($result['alias_status'] ?? null) : null;
+            $hasAliasError = $aliasStatus !== null && (int)$aliasStatus !== 200;
             switch ((int)$value) {
                 case 200:
-                    $classes = 'table-success';
+                    $classes = $hasAliasError ? 'table-warning' : 'table-success';
                     break;
                 case 0:
                     $classes = 'table-danger';
@@ -82,6 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </button>
                 </td>
                 <td><?php echo $value; ?></td>
+                <td><?= $aliasStatus === null ? '—' : Html::encode($aliasStatus) ?></td>
                 <td><?= $item ? Html::encode($item->publish_date ?: '—') : '—' ?></td>
                 <td>
                     <?php if ($item && $item->isArchived()): ?>

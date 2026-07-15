@@ -68,8 +68,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             $total = count($report);
             $okCount = 0;
-            foreach ($report as $code) {
-                if ((int)$code === 200) {
+            foreach ($report as $result) {
+                $status = is_array($result) ? ($result['status'] ?? 0) : $result;
+                $aliasStatus = is_array($result) ? ($result['alias_status'] ?? null) : null;
+                if ((int)$status === 200 && ($aliasStatus === null || (int)$aliasStatus === 200)) {
                     $okCount++;
                 }
             }

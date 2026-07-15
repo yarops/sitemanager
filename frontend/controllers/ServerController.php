@@ -199,8 +199,15 @@ class ServerController extends Controller
 
         foreach ($domains as $domain) {
             $host = $domain->protocol . '://' . $domain->domain;
+            $result[$host] = [
+                'status' => $this->checkOnline($host),
+            ];
 
-            $result[ $host ] = $this->checkOnline($host);
+            if (!empty($domain->alias) && $domain->alias !== $domain->domain) {
+                $aliasUrl = $domain->protocol . '://' . $domain->alias;
+                $result[$host]['alias_url'] = $aliasUrl;
+                $result[$host]['alias_status'] = $this->checkOnline($aliasUrl);
+            }
         }
 
         $serverCheckModel = new ServerCheck();

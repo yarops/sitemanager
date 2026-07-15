@@ -140,7 +140,20 @@ class ServerCheckController extends Controller
             throw new BadRequestHttpException('URL is not present in this server check report.');
         }
 
-        $report[$url] = $this->checkUrl($url);
+        $result = [
+            'status' => $this->checkUrl($url),
+        ];
+        $itemsByUrl = $this->findItemsByReportUrls($serverCheck, [$url]);
+        $item = $itemsByUrl[$url] ?? null;
+        $aliasUrl = $item && !empty($item->alias) && $item->alias !== $item->domain
+            ? $item->protocol . '://' . $item->alias
+            : (is_array($report[$url]) ? ($report[$url]['alias_url'] ?? null) : null);
+
+        if ($aliasUrl) {
+            $result['alias_url'] = $aliasUrl;
+            $result['alias_status'] = $this->checkUrl($aliasUrl);
+        }
+        $report[$url] = $result;
         $serverCheck->report = json_encode($report);
         $serverCheck->save(false, ['report']);
 
