@@ -50,6 +50,10 @@ $has_subdomains = is_array($model->childs) && !empty($model->childs);
         )
         ?>
 
+        <?php if ($model->publish_status === \common\models\Item::STATUS_DRAFT): ?>
+            <span class="badge bg-secondary">Черновик</span>
+        <?php endif; ?>
+
         <a href="<?php echo $model->protocol . '://' . $model->domain; ?>" target="_blank"
            class="btn btn-success btn-sm">To site</a>
         <a href="<?php echo $model->protocol . '://' . $model->domain . $model->admin_link; ?>" target="_blank"

@@ -29,7 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
     foreach ($servers->models as $server) {
         echo '<tr>';
-        echo '<td>' . $server->title . ' <b>' . $server->ip . '</b> [' . $server->getItems()->query->count() . ']</td>';
+        $includeDrafts = !Yii::$app->user->isGuest;
+        echo '<td>' . $server->title . ' <b>' . $server->ip . '</b> [' . $server->getItems($includeDrafts)->query->count() . ']</td>';
         echo '<td>';
         echo \yii\helpers\Html::a('View', ['server/view', 'id' => $server->id], ['class' => 'btn btn-secondary btn-sm']) . '&nbsp;';
         echo \yii\helpers\Html::a('Checks', ['server-check/server', 'id' => $server->id], ['class' => 'btn btn-secondary btn-sm']) . '&nbsp;';

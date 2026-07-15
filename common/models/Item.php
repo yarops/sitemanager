@@ -51,6 +51,16 @@ class Item extends ActiveRecord
     public const NOTIFY_SUMMARY   = 'summary';
     public const NOTIFY_DISABLED  = 'disabled';
 
+    public function init(): void
+    {
+        parent::init();
+
+        // A newly created site is a working draft until an editor publishes it.
+        if ($this->isNewRecord && $this->publish_status === null) {
+            $this->publish_status = self::STATUS_DRAFT;
+        }
+    }
+
     /**
      * Table name.
      *
@@ -73,6 +83,7 @@ class Item extends ActiveRecord
             [ [ 'alias' ], 'string' ],
             [ [ 'parent_id', 'server_id', 'server_user_id', 'template_id', 'author_id', 'is_archived', 'archived_by' ], 'integer' ],
             [ [ 'admin_link', 'content', 'publish_status' ], 'string' ],
+            [ [ 'publish_status' ], 'in', 'range' => [self::STATUS_DRAFT, self::STATUS_PUBLISH] ],
             [ [ 'publish_date', 'updated_at', 'next_check_at', 'archived_at' ], 'safe' ],
             [
                 [ 'protocol' ],
@@ -325,6 +336,11 @@ class Item extends ActiveRecord
 
         if (!$insert) {
             $this->updated_at = date('Y-m-d H:i:s');
+        }
+
+        $wasPublished = !$insert && $this->getOldAttribute('publish_status') === self::STATUS_PUBLISH;
+        if ($this->publish_status === self::STATUS_PUBLISH && !$wasPublished && $this->publish_date === null) {
+            $this->publish_date = date('Y-m-d H:i:s');
         }
 
         return true;

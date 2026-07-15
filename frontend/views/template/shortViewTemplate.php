@@ -21,6 +21,6 @@
             ['template/view', 'id' => $model->id],
             ['class' => 'template-card__title']
         ) ?>
-        <div class="template-card__count"><?= $model->getItems()->query->count() ?> sites</div>
+        <div class="template-card__count"><?= $model->getItems(!Yii::$app->user->isGuest)->query->count() ?> sites</div>
     </div>
 </div>

@@ -85,6 +85,7 @@ class MonitoringController extends Controller
         $items = Item::find()
             ->where([
                 'notify_strategy' => Item::NOTIFY_SUMMARY,
+                'check_enabled' => 1,
                 'is_archived' => 0,
                 'publish_status' => Item::STATUS_PUBLISH,
             ])

@@ -73,18 +73,23 @@ class ServerController extends Controller
     public function actionView(int $id): string
     {
         $server = Server::findById($id);
+        $includeDrafts = !Yii::$app->user->isGuest;
 
         $filter_https = Yii::$app->request->get('http');
 
         if ($filter_https == 'on') {
+            $query = Item::find()
+                ->where([ 'protocol' => 'http' ])
+                ->andWhere([ 'server_id' => $server->id ])
+                ->andWhere([ 'is_archived' => 0 ]);
+
+            if (!$includeDrafts) {
+                $query->andWhere([ 'publish_status' => Item::STATUS_PUBLISH ]);
+            }
+
             $items = new ActiveDataProvider(
                 [
-                    'query' => Item::find()
-                        ->where([ 'protocol' => 'http' ])
-                        ->andWhere([ 'server_id' => $server->id ])
-                        ->andWhere([ 'publish_status' => Item::STATUS_PUBLISH ])
-                        ->andWhere([ 'is_archived' => 0 ])
-                        ->orderBy([ 'publish_date' => SORT_DESC ]),
+                    'query' => $query->orderBy([ 'publish_date' => SORT_DESC ]),
                 ]
             );
 
@@ -104,7 +109,7 @@ class ServerController extends Controller
             );
         }
 
-        $items = $server->getItems();
+        $items = $server->getItems($includeDrafts);
         $items->setPagination(
             [
                 'pageSize' => Yii::$app->params['pageSize'],

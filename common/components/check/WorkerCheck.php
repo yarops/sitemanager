@@ -39,8 +39,13 @@ class WorkerCheck implements JobInterface
             }
 
             $item = Item::findOne($this->item_id);
-            if (!$item || $item->isArchived()) {
-                \Yii::info("WorkerCheck: Skipping archived or missing item_id: {$this->item_id}", 'queue');
+            if (
+                !$item
+                || $item->isArchived()
+                || $item->publish_status !== Item::STATUS_PUBLISH
+                || !$item->check_enabled
+            ) {
+                \Yii::info("WorkerCheck: Skipping item_id {$this->item_id}: it is missing, archived, unpublished, or monitoring is disabled", 'queue');
                 return;
             }
 

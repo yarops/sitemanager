@@ -1,6 +1,6 @@
 # Механизм проверок доступности сайтов
 
-Система мониторинга предназначена для регулярной проверки доступности сайтов (объектов `Item`) с настраиваемой частотой и гибкими стратегиями уведомлений.
+Система мониторинга предназначена для регулярной проверки доступности опубликованных сайтов (объектов `Item`) с настраиваемой частотой и гибкими стратегиями уведомлений. Правила публикации описаны в [item-publication.md](item-publication.md).
 
 ## Обзор архитектуры
 
@@ -26,7 +26,7 @@ sequenceDiagram
     participant Notif as SiteNotification
 
     Cron->>Tick: Run Command
-    Tick->>Item: Find items where next_check_at <= now
+    Tick->>Item: Find published, enabled, non-archived items where next_check_at <= now
     loop Each Item
         Tick->>Queue: Push Job (WorkerCheck)
         Tick->>Item: Update next_check_at (now + interval)
@@ -34,6 +34,7 @@ sequenceDiagram
     
     Queue->>Worker: Execute Job
     activate Worker
+    Worker->>Item: Re-check that publication and monitoring are enabled
     Worker->>Site: HTTP HEAD Request
     Site-->>Worker: Status Code (e.g. 200, 404, 500)
     Worker->>DB: Save Check Results
@@ -61,11 +62,26 @@ sequenceDiagram
 - **Уведомления**: Если сайт упал, проверяет `notify_strategy`. Если `immediate`, отправляет алерты в Telegram.
 
 ### 3. Модель Item (`common\models\Item`)
+- `publish_status`: В мониторинг допускается только `publish`; черновики (`draft`) исключаются.
 - `check_enabled`: Включение мониторинга.
 - `check_interval`: Интервал в минутах (5, 15, 60 и т.д.).
 - `notify_strategy`: `immediate` (алерты сразу), `summary` (в ежедневном отчете), `disabled`.
 - `next_check_at`: Точное время следующей запланированной проверки.
 - `afterSave()`: Автоматически сбрасывает `next_check_at` на "сейчас" при изменении любых настроек мониторинга, чтобы изменения вступили в силу мгновенно.
+
+### Условия допуска к мониторингу
+
+Автоматические, массовые и одиночные ручные проверки работают только с сайтами, у которых одновременно выполняются условия:
+
+```php
+[
+    'publish_status' => Item::STATUS_PUBLISH,
+    'check_enabled' => 1,
+    'is_archived' => 0,
+]
+```
+
+Воркер повторно проверяет эти условия непосредственно перед HTTP-запросом. Поэтому задача, которая уже была добавлена в очередь, будет пропущена, если сайт успели перевести в черновик, отключить его мониторинг или архивировать.
 
 ---
 
@@ -81,6 +97,8 @@ sequenceDiagram
 2. **Массовое управление (`QueueController`)**:
    - `php yii queue/enable-all-monitoring`: Включает мониторинг для всех опубликованных сайтов.
    - `php yii queue/run-immediate-checks`: Форсирует проверку всех сайтов прямо сейчас.
+
+Ежедневный отчёт учитывает только опубликованные, неархивированные сайты с включённым мониторингом и стратегией `summary`.
 
 ---
 

@@ -72,15 +72,19 @@ class Template extends ActiveRecord
      *
      * @return ActiveDataProvider
      */
-    public function getItems(): ActiveDataProvider
+    public function getItems(bool $includeDrafts = false): ActiveDataProvider
     {
+        $conditions = [
+            'template_id' => $this->id,
+            'is_archived' => 0,
+        ];
+        if (!$includeDrafts) {
+            $conditions['publish_status'] = Item::STATUS_PUBLISH;
+        }
+
         return new ActiveDataProvider([
             'query' => Item::find()
-                ->where([
-                    'template_id' => $this->id,
-                    'publish_status' => Item::STATUS_PUBLISH,
-                    'is_archived' => 0,
-                ])
+                ->where($conditions)
         ]);
     }
 

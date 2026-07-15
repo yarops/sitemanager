@@ -40,7 +40,7 @@ class TemplateController extends Controller
     {
         $template = Template::findById($id);
 
-        $items = $template->getItems();
+        $items = $template->getItems(!Yii::$app->user->isGuest);
         $items->setPagination([
             'pageSize' => Yii::$app->params['pageSize']
         ]);

@@ -81,8 +81,13 @@ class SiteMonitorController extends Controller
     {
         $item = Item::findOne($itemId);
 
-        if (!$item || $item->isArchived()) {
-            $this->stdout("Site with ID {$itemId} not found.\n", Console::FG_RED);
+        if (
+            !$item
+            || $item->isArchived()
+            || $item->publish_status !== Item::STATUS_PUBLISH
+            || !$item->check_enabled
+        ) {
+            $this->stdout("Site with ID {$itemId} is not available for monitoring.\n", Console::FG_RED);
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
@@ -340,7 +345,11 @@ class SiteMonitorController extends Controller
      */
     private function saveCheckResult(Item $item, array $result): void
     {
-        if ($item->isArchived()) {
+        if (
+            $item->isArchived()
+            || $item->publish_status !== Item::STATUS_PUBLISH
+            || !$item->check_enabled
+        ) {
             return;
         }
 
@@ -362,8 +371,8 @@ class SiteMonitorController extends Controller
             return;
         }
 
-        // Send Telegram notification if check failed.
-        if ($check->check_status !== '200') {
+        // Send immediate Telegram notification only when that strategy is enabled.
+        if ($check->check_status !== '200' && $item->notify_strategy === Item::NOTIFY_IMMEDIATE) {
             try {
                 $notification = new SiteNotification();
                 $notification->sendTelegramNotification($item, $check);

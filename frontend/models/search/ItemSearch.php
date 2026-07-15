@@ -39,7 +39,6 @@ class ItemSearch extends Item
     {
         $query = Item::find()
             ->where([
-                'publish_status' => Item::STATUS_PUBLISH,
                 'is_archived' => 0,
             ]);
 

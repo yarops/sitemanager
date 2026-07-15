@@ -49,7 +49,6 @@ class ItemController extends Controller
         if ($filter_https == 'on') {
             $query = Item::find()
                 ->where(['protocol' => 'http'])
-                ->andWhere(['publish_status' => Item::STATUS_PUBLISH])
                 ->andWhere(['is_archived' => 0]);
 
             // Apply status filter if specified
@@ -73,7 +72,13 @@ class ItemController extends Controller
         }
 
         //$items = Item::findByCurrentUser();
-        $items = Item::findPublished($filter_status);
+        $query = Item::find()->where(['is_archived' => 0]);
+        if ($filter_status) {
+            $query = $this->applyStatusFilter($query, $filter_status);
+        }
+        $query->orderBy(['publish_date' => SORT_DESC]);
+
+        $items = new ActiveDataProvider(['query' => $query]);
         $items->setPagination([
             'pageSize' => Yii::$app->params['pageSize']
         ]);
@@ -122,7 +127,7 @@ class ItemController extends Controller
         $acceptedUsers = UserItemRelation::findUsersByItem($id);
 
         return $this->render('view', [
-            'model' => Item::findById($id),
+            'model' => $this->findVisibleItem($id),
             'acceptedUsers' => $acceptedUsers,
             'userItemRelation' => new UserItemRelation(),
             'users' => User::find()->all(),
@@ -177,7 +182,7 @@ class ItemController extends Controller
      */
     public function actionCheckStart($id)
     {
-        $model = Item::findById($id);
+        $model = $this->findVisibleItem($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -185,5 +190,15 @@ class ItemController extends Controller
 
         // On failure, redirect back to the item's view page.
         return $this->redirect(['index']);
+    }
+
+    private function findVisibleItem(int $id): Item
+    {
+        $item = Item::find()->where(['id' => $id, 'is_archived' => 0])->one();
+        if ($item === null) {
+            throw new \yii\web\NotFoundHttpException('The requested item does not exist.');
+        }
+
+        return $item;
     }
 }
