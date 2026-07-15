@@ -47,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Host</th>
             <th>Http response</th>
             <th>Дата публикации</th>
+            <th>Статус</th>
             <th>Actions</th>
         </tr>
         <?php foreach ($report as $key => $value):
@@ -83,6 +84,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td><?php echo $value; ?></td>
                 <td><?= $item ? Html::encode($item->publish_date ?: '—') : '—' ?></td>
                 <td>
+                    <?php if ($item && $item->isArchived()): ?>
+                        <span class="text-muted">Сайт в архиве</span>
+                    <?php elseif (!$item): ?>
+                        <span class="text-muted">Сайт не найден</span>
+                    <?php else: ?>
+                        <span>Активен</span>
+                    <?php endif; ?>
+                </td>
+                <td>
                     <?= Html::a('Перепроверить', ['server-check/recheck-site', 'id' => $model->id, 'url' => $key], [
                         'class' => 'btn btn-primary btn-sm',
                         'data-method' => 'post',
@@ -94,10 +104,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-method' => 'post',
                             'data-confirm' => 'Архивировать сайт и отключить мониторинг?',
                         ]) ?>
-                    <?php elseif ($item && $item->isArchived()): ?>
-                        <span class="text-muted">Сайт в архиве</span>
-                    <?php else: ?>
-                        <span class="text-muted">Сайт не найден</span>
                     <?php endif; ?>
                 </td>
             </tr>
