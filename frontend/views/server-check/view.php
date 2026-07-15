@@ -103,6 +103,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         'data-method' => 'post',
                         'data-confirm' => 'Перепроверить доступность сайта?',
                     ]) ?>
+                    <?= Html::a('Убрать из отчёта', ['server-check/remove-site-from-report', 'id' => $model->id, 'url' => $key], [
+                        'class' => 'btn btn-outline-danger btn-sm',
+                        'data-method' => 'post',
+                        'data-confirm' => 'Убрать сайт только из этого отчёта? Сам сайт и его мониторинг не изменятся.',
+                    ]) ?>
                     <?php if ($item && !$item->isArchived()): ?>
                         <?= Html::a('Архивировать сайт', ['server-check/archive-item', 'id' => $item->id], [
                             'class' => 'btn btn-warning btn-sm',

@@ -26,10 +26,10 @@ class ServerCheckController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['archive', 'restore', 'archive-all', 'archive-item', 'recheck-site'],
+                'only' => ['archive', 'restore', 'archive-all', 'archive-item', 'recheck-site', 'remove-site-from-report'],
                 'rules' => [
                     [
-                        'actions' => ['archive', 'restore', 'archive-all', 'archive-item', 'recheck-site'],
+                        'actions' => ['archive', 'restore', 'archive-all', 'archive-item', 'recheck-site', 'remove-site-from-report'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -43,6 +43,7 @@ class ServerCheckController extends Controller
                     'archive-all' => ['post'],
                     'archive-item' => ['post'],
                     'recheck-site' => ['post'],
+                    'remove-site-from-report' => ['post'],
                 ],
             ],
         ];
@@ -154,6 +155,26 @@ class ServerCheckController extends Controller
             $result['alias_status'] = $this->checkUrl($aliasUrl);
         }
         $report[$url] = $result;
+        $serverCheck->report = json_encode($report);
+        $serverCheck->save(false, ['report']);
+
+        return $this->redirect(['view', 'id' => $serverCheck->id]);
+    }
+
+    /**
+     * Remove one URL from a saved server-check report without changing the site itself.
+     */
+    public function actionRemoveSiteFromReport(int $id): Response
+    {
+        $serverCheck = ServerCheck::findById($id);
+        $url = (string)Yii::$app->request->get('url', '');
+        $report = json_decode($serverCheck->report, true);
+
+        if (!is_array($report) || $url === '' || !array_key_exists($url, $report)) {
+            throw new BadRequestHttpException('URL is not present in this server check report.');
+        }
+
+        unset($report[$url]);
         $serverCheck->report = json_encode($report);
         $serverCheck->save(false, ['report']);
 
