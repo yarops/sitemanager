@@ -334,6 +334,12 @@ class Item extends ActiveRecord
             return false;
         }
 
+        // An empty form field is loaded as an empty string, while publish_date
+        // is nullable in the database and an unpublished item must store NULL.
+        if (is_string($this->publish_date) && trim($this->publish_date) === '') {
+            $this->publish_date = null;
+        }
+
         if (!$insert) {
             $this->updated_at = date('Y-m-d H:i:s');
         }
