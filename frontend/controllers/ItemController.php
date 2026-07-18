@@ -69,10 +69,12 @@ class ItemController extends Controller
                 'CASE WHEN [[item.publish_status]] = :draftStatus THEN 0 ELSE 1 END',
                 [':draftStatus' => Item::STATUS_DRAFT]
             ))
-            ->addOrderBy([
-                'item.publish_date' => SORT_DESC,
-                'item.id' => SORT_DESC,
-            ]);
+            ->addOrderBy(new Expression(
+                'CASE WHEN [[item.publish_status]] = :draftStatus THEN [[item.id]] END DESC',
+                [':draftStatus' => Item::STATUS_DRAFT]
+            ))
+            ->addOrderBy(['item.publish_date' => SORT_DESC])
+            ->addOrderBy(['item.id' => SORT_DESC]);
 
         $items = new ActiveDataProvider(['query' => $query]);
         $items->setPagination([
