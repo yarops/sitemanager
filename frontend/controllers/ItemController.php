@@ -11,6 +11,7 @@ use frontend\models\search\ItemSearch;
 use Yii;
 use common\models\Item;
 use yii\data\ActiveDataProvider;
+use yii\db\Expression;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -63,7 +64,15 @@ class ItemController extends Controller
         if ($filterStatus) {
             $query = $this->applyStatusFilter($query, $filterStatus);
         }
-        $query->orderBy(['publish_date' => SORT_DESC]);
+        $query
+            ->orderBy(new Expression(
+                'CASE WHEN [[item.publish_status]] = :draftStatus THEN 0 ELSE 1 END',
+                [':draftStatus' => Item::STATUS_DRAFT]
+            ))
+            ->addOrderBy([
+                'item.publish_date' => SORT_DESC,
+                'item.id' => SORT_DESC,
+            ]);
 
         $items = new ActiveDataProvider(['query' => $query]);
         $items->setPagination([
