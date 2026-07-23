@@ -28,14 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
         $report = [];
     }
 
-    // Сортируем так, чтобы полностью успешные проверки были в конце.
+    // Сортируем так, чтобы успешные проверки основного URL были в конце.
     uasort($report, function ($a, $b) {
         $aStatus = is_array($a) ? ($a['status'] ?? 0) : $a;
         $bStatus = is_array($b) ? ($b['status'] ?? 0) : $b;
-        $aAliasStatus = is_array($a) ? ($a['alias_status'] ?? null) : null;
-        $bAliasStatus = is_array($b) ? ($b['alias_status'] ?? null) : null;
-        $aIsOk = (int)$aStatus === 200 && ($aAliasStatus === null || (int)$aAliasStatus === 200);
-        $bIsOk = (int)$bStatus === 200 && ($bAliasStatus === null || (int)$bAliasStatus === 200);
+        $aIsOk = (int)$aStatus === 200;
+        $bIsOk = (int)$bStatus === 200;
 
         return $aIsOk === $bIsOk ? (int)$aStatus <=> (int)$bStatus : ($aIsOk ? 1 : -1);
     });
@@ -54,10 +52,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php foreach ($report as $key => $result):
             $value = is_array($result) ? ($result['status'] ?? 0) : $result;
             $aliasStatus = is_array($result) ? ($result['alias_status'] ?? null) : null;
-            $hasAliasError = $aliasStatus !== null && (int)$aliasStatus !== 200;
             switch ((int)$value) {
                 case 200:
-                    $classes = $hasAliasError ? 'table-warning' : 'table-success';
+                    $classes = 'table-success';
                     break;
                 case 0:
                     $classes = 'table-danger';
