@@ -268,7 +268,9 @@ class ServerCheckController extends Controller
             return [];
         }
 
-        $query = Item::find()->where(['domain' => $domains]);
+        $query = Item::find()
+            ->where(['domain' => $domains])
+            ->with('childs');
         if (!empty($serverCheck->server_id)) {
             $query->andWhere(['server_id' => $serverCheck->server_id]);
         }

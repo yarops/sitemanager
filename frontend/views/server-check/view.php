@@ -45,6 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Host</th>
             <th>Http response</th>
             <th>Http response alias</th>
+            <th>Поддомен</th>
             <th>Дата публикации</th>
             <th>Статус</th>
             <th>Actions</th>
@@ -85,6 +86,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 </td>
                 <td><?php echo $value; ?></td>
                 <td><?= $aliasStatus === null ? '—' : Html::encode($aliasStatus) ?></td>
+                <td>
+                    <?php if ($item && !empty($item->childs)): ?>
+                        <?php foreach ($item->childs as $child): ?>
+                            <div><?= Html::encode($child->domain) ?></div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        —
+                    <?php endif; ?>
+                </td>
                 <td><?= $item ? Html::encode($item->publish_date ?: '—') : '—' ?></td>
                 <td>
                     <?php if ($item && $item->isArchived()): ?>
