@@ -121,9 +121,13 @@ class ServerCheckController extends Controller
         ]);
     }
 
-    public function actionArchiveItem(int $id): Response
+    public function actionArchiveItem(int $id, ?int $reportId = null, ?string $row = null): Response
     {
         Item::findById($id, true)->archive(Yii::$app->user->id);
+
+        if ($reportId !== null) {
+            return $this->redirect($this->reportViewRoute($reportId, $row));
+        }
 
         return $this->redirect(Yii::$app->request->referrer ?: ['index']);
     }
@@ -131,7 +135,7 @@ class ServerCheckController extends Controller
     /**
      * Recheck one URL from a saved server-check report and update its response code.
      */
-    public function actionRecheckSite(int $id): Response
+    public function actionRecheckSite(int $id, ?string $row = null): Response
     {
         $serverCheck = ServerCheck::findById($id);
         $url = (string)Yii::$app->request->get('url', '');
@@ -158,7 +162,20 @@ class ServerCheckController extends Controller
         $serverCheck->report = json_encode($report);
         $serverCheck->save(false, ['report']);
 
-        return $this->redirect(['view', 'id' => $serverCheck->id]);
+        return $this->redirect($this->reportViewRoute($serverCheck->id, $row));
+    }
+
+    /**
+     * Build a report URL with an optional, validated row anchor.
+     */
+    private function reportViewRoute(int $reportId, ?string $row): array
+    {
+        $route = ['view', 'id' => $reportId];
+        if ($row !== null && preg_match('/^site-row-[a-f0-9]{16}$/D', $row)) {
+            $route['#'] = $row;
+        }
+
+        return $route;
     }
 
     /**

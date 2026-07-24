@@ -70,8 +70,9 @@ $this->params['breadcrumbs'][] = $this->title;
             $itemKey = $scheme && $host ? $scheme . '://' . $host : $key;
             $item = $itemsByUrl[$itemKey] ?? null;
             $domain = $host ?: preg_replace('#^https?://#', '', $key);
+            $rowId = 'site-row-' . substr(hash('sha256', $key), 0, 16);
             ?>
-            <tr class="<?php echo $classes; ?>">
+            <tr id="<?= Html::encode($rowId) ?>" class="<?php echo $classes; ?>">
                 <td>
                     <a href="<?php echo $key; ?>" target="_blank"><?php echo $key; ?></a>
                     <button
@@ -95,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?= Html::a('Перепроверить', ['server-check/recheck-site', 'id' => $model->id, 'url' => $key], [
+                    <?= Html::a('Перепроверить', ['server-check/recheck-site', 'id' => $model->id, 'url' => $key, 'row' => $rowId], [
                         'class' => 'btn btn-primary btn-sm',
                         'data-method' => 'post',
                         'data-confirm' => 'Перепроверить доступность сайта?',
@@ -106,7 +107,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         'data-confirm' => 'Убрать сайт только из этого отчёта? Сам сайт и его мониторинг не изменятся.',
                     ]) ?>
                     <?php if ($item && !$item->isArchived()): ?>
-                        <?= Html::a('Архивировать сайт', ['server-check/archive-item', 'id' => $item->id], [
+                        <?= Html::a('Архивировать сайт', [
+                            'server-check/archive-item',
+                            'id' => $item->id,
+                            'reportId' => $model->id,
+                            'row' => $rowId,
+                        ], [
                             'class' => 'btn btn-warning btn-sm',
                             'data-method' => 'post',
                             'data-confirm' => 'Архивировать сайт и отключить мониторинг?',
