@@ -199,7 +199,7 @@ class ServerController extends Controller
 
         $result      = [];
         $server       = Server::findById($id, true);
-        $domainsQuery = $server->getItems();
+        $domainsQuery = $server->getItems(true);
         $domains      = $domainsQuery->query->all();
 
         foreach ($domains as $domain) {

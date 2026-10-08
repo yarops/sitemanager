@@ -47,7 +47,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Http response alias</th>
             <th>Поддомен</th>
             <th>Дата публикации</th>
-            <th>Статус</th>
+            <th>Статус публикации</th>
+            <th>Статус архивации</th>
             <th>Actions</th>
         </tr>
         <?php foreach ($report as $key => $result):
@@ -71,6 +72,9 @@ $this->params['breadcrumbs'][] = $this->title;
             $itemKey = $scheme && $host ? $scheme . '://' . $host : $key;
             $item = $itemsByUrl[$itemKey] ?? null;
             $domain = $host ?: preg_replace('#^https?://#', '', $key);
+            $aliasUrl = $item && !empty($item->alias) && $item->alias !== $item->domain
+                ? $item->protocol . '://' . $item->alias
+                : (is_array($result) ? ($result['alias_url'] ?? null) : null);
             $rowId = 'site-row-' . substr(hash('sha256', $key), 0, 16);
             ?>
             <tr id="<?= Html::encode($rowId) ?>" class="<?php echo $classes; ?>">
@@ -83,6 +87,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     >
                         Copy domain
                     </button>
+                    <?php if ($aliasUrl): ?>
+                        <div class="mt-1">
+                            <span class="text-muted">Алиас:</span>
+                            <?= Html::a($aliasUrl, $aliasUrl, ['target' => '_blank', 'rel' => 'noopener noreferrer']) ?>
+                        </div>
+                    <?php endif; ?>
                 </td>
                 <td><?php echo $value; ?></td>
                 <td><?= $aliasStatus === null ? '—' : Html::encode($aliasStatus) ?></td>
@@ -96,6 +106,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php endif; ?>
                 </td>
                 <td><?= $item ? Html::encode($item->publish_date ?: '—') : '—' ?></td>
+                <td>
+                    <?php if ($item && $item->publish_status === \common\models\Item::STATUS_PUBLISH): ?>
+                        <span class="badge bg-success">Опубликован</span>
+                    <?php elseif ($item && $item->publish_status === \common\models\Item::STATUS_DRAFT): ?>
+                        <span class="badge bg-secondary">Черновик</span>
+                    <?php else: ?>
+                        —
+                    <?php endif; ?>
+                </td>
                 <td>
                     <?php if ($item && $item->isArchived()): ?>
                         <span class="text-muted">Сайт в архиве</span>
