@@ -26,10 +26,10 @@ class ServerCheckController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['archive', 'restore', 'archive-all', 'archive-item', 'recheck-site', 'remove-site-from-report'],
+                'only' => ['delete', 'archive', 'restore', 'archive-all', 'archive-item', 'recheck-site', 'remove-site-from-report'],
                 'rules' => [
                     [
-                        'actions' => ['archive', 'restore', 'archive-all', 'archive-item', 'recheck-site', 'remove-site-from-report'],
+                        'actions' => ['delete', 'archive', 'restore', 'archive-all', 'archive-item', 'recheck-site', 'remove-site-from-report'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -38,6 +38,7 @@ class ServerCheckController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
+                    'delete' => ['post'],
                     'archive' => ['post'],
                     'restore' => ['post'],
                     'archive-all' => ['post'],
@@ -196,6 +197,23 @@ class ServerCheckController extends Controller
         $serverCheck->save(false, ['report']);
 
         return $this->redirect(['view', 'id' => $serverCheck->id]);
+    }
+
+    public function actionDelete(int $id): Response
+    {
+        $serverCheck = ServerCheck::findById($id);
+        $route = !empty($serverCheck->server_id)
+            ? ['server', 'id' => $serverCheck->server_id]
+            : ['index'];
+        if ($serverCheck->is_archived) {
+            $route['archived'] = 1;
+        }
+
+        if ($serverCheck->delete() === false) {
+            Yii::$app->session->setFlash('error', 'Не удалось удалить отчёт.');
+        }
+
+        return $this->redirect($route);
     }
 
     public function actionArchive(int $id): Response

@@ -113,6 +113,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-confirm' => 'Восстановить эту проверку из архива?',
                         ]) ?>
                     <?php endif; ?>
+                    <?= Html::a('Удалить отчёт', ['server-check/delete', 'id' => $item->id], [
+                        'class' => 'btn btn-danger btn-sm',
+                        'data-method' => 'post',
+                        'data-confirm' => 'Удалить отчёт без возможности восстановления? Сайты и их мониторинг не изменятся.',
+                    ]) ?>
                 </td>
             </tr>
         <?php endforeach; ?>
