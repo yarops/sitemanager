@@ -41,6 +41,18 @@ use common\models\ServerUser;
     <?php ActiveForm::end(); ?>
 
     <?php if (isset($serverUser)) : ?>
+    <?php
+    $siteCountsByUser = [];
+    $siteCounts = Item::find()
+        ->select(['server_user_id', 'is_archived', 'site_count' => 'COUNT(*)'])
+        ->where(['server_user_id' => ServerUser::find()->select('id')->where(['server_id' => $model->id])])
+        ->groupBy(['server_user_id', 'is_archived'])
+        ->asArray()
+        ->all();
+    foreach ($siteCounts as $siteCount) {
+        $siteCountsByUser[$siteCount['server_user_id']][(int)$siteCount['is_archived']] = (int)$siteCount['site_count'];
+    }
+    ?>
     <div class="box">
       <div class="server-users">
 
@@ -55,7 +67,7 @@ use common\models\ServerUser;
           <thead>
             <tr>
               <th>#</th>
-              <th>Title</th>
+              <th>Title (активные / архивные сайты)</th>
               <th scope="col">User credentials</th>
               <th scope="col">Ftp</th>
               <th scope="col">Editor FTP</th>
@@ -68,14 +80,12 @@ use common\models\ServerUser;
             $i = 0;
             foreach ($model->getServerUsers()->models as $sUser) :
                 $i++;
-                $count_items = Item::find()
-                    ->where(['server_user_id' => $sUser->id, 'is_archived' => 0])
-                    ->count();
                 ?>
               <tr class="server-user">
                 <td><?php echo $i; ?></td>
                 <td>
-                  <?= htmlspecialchars($sUser->title) . ' [' . $count_items . ']' ?>
+                  <?= Html::encode($sUser->title) ?>
+                  (<?= $siteCountsByUser[$sUser->id][0] ?? 0 ?> / <?= $siteCountsByUser[$sUser->id][1] ?? 0 ?>)
                 </td>
                 <td>
                   <?= htmlspecialchars($sUser->title) ?><br>
@@ -125,7 +135,7 @@ use common\models\ServerUser;
             <thead>
               <tr>
                 <th>#</th>
-                <th>Title</th>
+                <th>Title (активные / архивные сайты)</th>
                 <th scope="col">User credentials</th>
                 <th scope="col">Ftp</th>
                 <th scope="col">Archived at</th>
@@ -138,7 +148,10 @@ use common\models\ServerUser;
                 <?php $i++; ?>
                 <tr class="server-user">
                   <td><?php echo $i; ?></td>
-                  <td><?= htmlspecialchars($sUser->title) ?></td>
+                  <td>
+                    <?= Html::encode($sUser->title) ?>
+                    (<?= $siteCountsByUser[$sUser->id][0] ?? 0 ?> / <?= $siteCountsByUser[$sUser->id][1] ?? 0 ?>)
+                  </td>
                   <td>
                     <?= htmlspecialchars($sUser->user_login) ?><br>
                     <?= htmlspecialchars($sUser->user_pass) ?>
