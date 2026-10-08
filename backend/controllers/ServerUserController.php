@@ -9,6 +9,7 @@
 namespace backend\controllers;
 
 use common\models\ServerUser;
+use common\models\Server;
 use backend\models\ServerUserForm;
 use common\models\Item;
 use Yii;
@@ -31,7 +32,7 @@ class ServerUserController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['create', 'update', 'delete', 'archive', 'restore', 'server-user'],
+                        'actions' => ['create', 'update', 'delete', 'cleanup-empty', 'archive', 'restore', 'server-user'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -41,6 +42,7 @@ class ServerUserController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['post'],
+                    'cleanup-empty' => ['post'],
                     'archive' => ['post'],
                     'restore' => ['post'],
                 ],
@@ -83,9 +85,20 @@ class ServerUserController extends Controller
     public function actionDelete(int $id): Response
     {
         $serverUser = ServerUser::findById($id, true);
-        $serverUser->delete();
+        if (ServerUser::deleteWithoutSites(['id' => $serverUser->id]) === 0) {
+            Yii::$app->session->setFlash('error', 'Удаление разрешено только для пользователей без активных и архивных сайтов (0 / 0).');
+        }
 
         return $this->redirect(['server/update', 'id' => $serverUser->server_id]);
+    }
+
+    public function actionCleanupEmpty(int $serverId): Response
+    {
+        Server::findById($serverId);
+        $deletedCount = ServerUser::deleteWithoutSites(['server_id' => $serverId]);
+        Yii::$app->session->setFlash('success', 'Удалено пользователей без сайтов: ' . $deletedCount . '.');
+
+        return $this->redirect(['server/update', 'id' => $serverId]);
     }
 
     public function actionArchive(int $id): Response

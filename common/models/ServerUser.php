@@ -112,6 +112,16 @@ class ServerUser extends ActiveRecord
         return (int)$this->is_archived === 1;
     }
 
+    /** Delete matching users only when they have no active or archived sites. */
+    public static function deleteWithoutSites(array $condition): int
+    {
+        return static::deleteAll([
+            'and',
+            $condition,
+            ['not in', 'id', Item::find()->select('server_user_id')->where(['not', ['server_user_id' => null]])],
+        ]);
+    }
+
     public function archive(?int $userId = null): bool
     {
         $this->is_archived = 1;

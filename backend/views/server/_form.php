@@ -63,6 +63,13 @@ use common\models\ServerUser;
         ]) ?>
 
         <?php /** @var ServerUser $server_user */ ?>
+        <?= Html::a('Очистить пользователей без сайтов (0 / 0)', ['server-user/cleanup-empty', 'serverId' => $model->id], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Удалить всех пользователей этого сервера без активных и архивных сайтов, включая архивных пользователей? Учётные записи на сервере не удаляются.',
+                'method' => 'post',
+            ],
+        ]) ?>
         <table class="table">
           <thead>
             <tr>
@@ -113,7 +120,7 @@ use common\models\ServerUser;
                   <?= Html::a(Yii::t('backend', 'Delete'), ['server-user/delete', 'id' => $sUser->id], [
                     'class' => 'btn btn-danger',
                     'data'  => [
-                      'confirm' => Yii::t('backend', 'Hard delete this server user? Use archive for historical records.'),
+                      'confirm' => 'Удалить пользователя? Удаление разрешено только при отсутствии активных и архивных сайтов (0 / 0).',
                       'method'  => 'post',
                     ],
                   ]) ?>
@@ -173,7 +180,7 @@ use common\models\ServerUser;
                     <?= Html::a(Yii::t('backend', 'Delete'), ['server-user/delete', 'id' => $sUser->id], [
                       'class' => 'btn btn-danger',
                       'data'  => [
-                        'confirm' => Yii::t('backend', 'Hard delete this server user? Use archive for historical records.'),
+                        'confirm' => 'Удалить пользователя? Удаление разрешено только при отсутствии активных и архивных сайтов (0 / 0).',
                         'method'  => 'post',
                       ],
                     ]) ?>
