@@ -58,6 +58,11 @@ $filterUrl = static function (array $overrides = []) use (
                 $filterUrl(['publication' => \common\models\Item::STATUS_DRAFT]),
                 ['class' => 'filter-btn' . ($current_publication_filter === \common\models\Item::STATUS_DRAFT ? ' active' : '')]
             ) ?>
+            <?= Html::a(
+                'Демо' . ($current_publication_filter === \common\models\Item::STATUS_DEMO ? ' ✓' : ''),
+                $filterUrl(['publication' => \common\models\Item::STATUS_DEMO]),
+                ['class' => 'filter-btn' . ($current_publication_filter === \common\models\Item::STATUS_DEMO ? ' active' : '')]
+            ) ?>
         </div>
 
         <div class="status-filters">

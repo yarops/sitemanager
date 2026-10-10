@@ -150,8 +150,8 @@ class ServerCheckController extends Controller
 
         $itemsByUrl = $this->findItemsByReportUrls($serverCheck, [$url]);
         $item = $itemsByUrl[$url] ?? null;
-        if ($item && $item->publish_status === Item::STATUS_DRAFT) {
-            Yii::$app->session->setFlash('info', 'Черновики не проверяются.');
+        if ($item && ($item->publish_status === Item::STATUS_DRAFT || $item->isDemo())) {
+            Yii::$app->session->setFlash('info', $item->isDemo() ? 'Демо-сайты не проверяются.' : 'Черновики не проверяются.');
             return $this->redirect($this->reportViewRoute($serverCheck->id, $row));
         }
 
@@ -173,6 +173,9 @@ class ServerCheckController extends Controller
         if ($aliasUrl) {
             $result['alias_url'] = $aliasUrl;
             $result['alias_status'] = $this->checkUrl($aliasUrl);
+        }
+        if ($item && (!$item->refresh() || $item->isDemo())) {
+            return $this->redirect($this->reportViewRoute($serverCheck->id, $row));
         }
         $report[$url] = $result;
         $serverCheck->report = json_encode($report);

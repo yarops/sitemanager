@@ -136,7 +136,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('backend', 'Author'),
                 'value' => 'author.title',
             ],
-            'publish_status',
+            [
+                'attribute' => 'publish_status',
+                'value' => static fn ($model) => $model->isDemo() ? 'Демо' : ($model->publish_status === \common\models\Item::STATUS_PUBLISH ? 'Опубликован' : 'Черновик'),
+            ],
             [
                 'attribute' => 'publish_date',
                 'format' => 'date',

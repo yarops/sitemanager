@@ -50,6 +50,10 @@ $has_subdomains = is_array($model->childs) && !empty($model->childs);
         )
         ?>
 
+        <?php if ($model->isDemo()): ?>
+            <span class="badge bg-info">Демо</span>
+        <?php endif; ?>
+
         <?php if ($model->publish_status === \common\models\Item::STATUS_DRAFT): ?>
             <span class="badge bg-secondary">Черновик</span>
         <?php endif; ?>
@@ -78,7 +82,10 @@ $has_subdomains = is_array($model->childs) && !empty($model->childs);
             <?= $model->template->title; ?>
         </p>
         <div class="monitoring-info">
-            <?php if ($model->lastCheck): ?>
+            <?php if ($model->isDemo()): ?>
+                <p class="text-muted">Мониторинг не выполняется: демо</p>
+                <?= Html::a('История проверок', ['check/site', 'id' => $model->id], ['class' => 'btn btn-sm btn-info']) ?>
+            <?php elseif ($model->lastCheck): ?>
                 <p class="check-status check-status--<?php echo $class; ?>">
                     Status: <?php echo $statusText; ?>
                 </p>

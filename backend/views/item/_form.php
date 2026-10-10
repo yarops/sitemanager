@@ -127,7 +127,7 @@ use kartik\depdrop\DepDrop;
 ]) ?>
             </div>
             <div class="col-xs-4">
-                <?php echo $form->field($model, 'check_enabled')->checkbox() ?>
+                <?php echo $form->field($model, 'check_enabled')->checkbox()->hint('Для демо-сайтов настройки применятся после публикации.') ?>
             </div>
         </div>
 
@@ -140,6 +140,7 @@ use kartik\depdrop\DepDrop;
                     [
                         Item::STATUS_PUBLISH => Yii::t('backend', 'Published'),
                         Item::STATUS_DRAFT => Yii::t('backend', 'Draft'),
+                        Item::STATUS_DEMO => 'Демо',
                     ]
                 ) ?>
             </div>

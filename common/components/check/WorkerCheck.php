@@ -56,6 +56,10 @@ class WorkerCheck implements JobInterface
 
             \Yii::info("WorkerCheck: Check result - Status: {$checkResult['status']}, Response time: {$responseTime}ms", 'queue');
 
+            if (!$item->refresh() || !$item->canMonitor()) {
+                return;
+            }
+
             // Save check result.
             $check = new Check();
             $check->item_id = $this->item_id;
@@ -70,7 +74,7 @@ class WorkerCheck implements JobInterface
 
                 // Отправляет уведомление только для стратегии 'immediate'
                 if ($check->check_status !== '200') {
-                    if ($item && $item->notify_strategy === Item::NOTIFY_IMMEDIATE) {
+                    if ($item->refresh() && $item->canMonitor() && $item->notify_strategy === Item::NOTIFY_IMMEDIATE) {
                         try {
                             $notification = new SiteNotification();
                             $notification->sendTelegramNotification($item, $check);

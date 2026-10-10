@@ -145,6 +145,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         <span class="badge bg-success">Опубликован</span>
                     <?php elseif ($item && $item->publish_status === \common\models\Item::STATUS_DRAFT): ?>
                         <span class="badge bg-secondary">Черновик</span>
+                    <?php elseif ($item && $item->isDemo()): ?>
+                        <span class="badge bg-info">Демо</span>
                     <?php else: ?>
                         —
                     <?php endif; ?>
@@ -159,7 +161,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php endif; ?>
                 </td>
                 <td>
-                    <?php if (!$item || $item->publish_status !== \common\models\Item::STATUS_DRAFT): ?>
+                    <?php if (!$item || ($item->publish_status !== \common\models\Item::STATUS_DRAFT && !$item->isDemo())): ?>
                     <?= Html::a('Перепроверить', ['server-check/recheck-site', 'id' => $model->id, 'url' => $key, 'row' => $rowId], [
                         'class' => 'btn btn-primary btn-sm',
                         'data-method' => 'post',

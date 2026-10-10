@@ -46,6 +46,7 @@ class Item extends ActiveRecord
 {
     public const STATUS_PUBLISH = 'publish';
     public const STATUS_DRAFT   = 'draft';
+    public const STATUS_DEMO    = 'demo';
 
     public const NOTIFY_IMMEDIATE = 'immediate';
     public const NOTIFY_SUMMARY   = 'summary';
@@ -83,7 +84,7 @@ class Item extends ActiveRecord
             [ [ 'alias' ], 'string' ],
             [ [ 'parent_id', 'server_id', 'server_user_id', 'template_id', 'author_id', 'is_archived', 'archived_by' ], 'integer' ],
             [ [ 'admin_link', 'content', 'publish_status' ], 'string' ],
-            [ [ 'publish_status' ], 'in', 'range' => [self::STATUS_DRAFT, self::STATUS_PUBLISH] ],
+            [ [ 'publish_status' ], 'in', 'range' => [self::STATUS_DRAFT, self::STATUS_PUBLISH, self::STATUS_DEMO] ],
             [ [ 'publish_date', 'updated_at', 'next_check_at', 'archived_at' ], 'safe' ],
             [
                 [ 'protocol' ],
@@ -303,6 +304,16 @@ class Item extends ActiveRecord
         return $this->publish_status === self::STATUS_PUBLISH;
     }
 
+    public function isDemo(): bool
+    {
+        return $this->publish_status === self::STATUS_DEMO;
+    }
+
+    public function canMonitor(): bool
+    {
+        return $this->isPublished() && !$this->isArchived() && (bool)$this->check_enabled;
+    }
+
     public function isArchived(): bool
     {
         return (int)$this->is_archived === 1;
@@ -349,26 +360,14 @@ class Item extends ActiveRecord
             $this->publish_date = date('Y-m-d H:i:s');
         }
 
-        return true;
-    }
-
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-
-        // Инициализируем или сбрасываем next_check_at при изменении настроек мониторинга
-        $monitoringFields = ['check_enabled', 'check_interval', 'notify_strategy'];
-        $isChanged = false;
-        foreach ($monitoringFields as $field) {
-            if (isset($changedAttributes[$field])) {
-                $isChanged = true;
-                break;
-            }
-        }
-
-        if ($this->check_enabled && ($insert || $isChanged)) {
+        if (!$this->canMonitor()) {
+            $this->next_check_at = null;
+        } elseif ($insert || $this->isAttributeChanged('publish_status') || $this->isAttributeChanged('is_archived')
+            || $this->isAttributeChanged('check_enabled') || $this->isAttributeChanged('check_interval')
+            || $this->isAttributeChanged('notify_strategy')) {
             $this->next_check_at = date('Y-m-d H:i:s');
-            $this->updateAttributes(['next_check_at' => $this->next_check_at]);
         }
+
+        return true;
     }
 }

@@ -39,6 +39,9 @@ class SiteMonitorController extends Controller
         $this->stdout("Found {$totalSites} sites to check.\n", Console::FG_CYAN);
 
         foreach ($items as $item) {
+            if (!$item->refresh() || !$item->canMonitor()) {
+                continue;
+            }
             $url = $item->protocol . '://' . $item->domain;
             $this->stdout("Checking: {$item->domain} ({$url})... ", Console::FG_CYAN);
 
@@ -128,6 +131,9 @@ class SiteMonitorController extends Controller
         $this->stdout("==================\n\n");
 
         foreach ($items as $item) {
+            if (!$item->refresh() || !$item->canMonitor()) {
+                continue;
+            }
             $url = $item->protocol . '://' . $item->domain;
             $latestCheck = $item->lastCheck;
 
@@ -345,6 +351,10 @@ class SiteMonitorController extends Controller
      */
     private function saveCheckResult(Item $item, array $result): void
     {
+        if (!$item->refresh()) {
+            return;
+        }
+
         if (
             $item->isArchived()
             || $item->publish_status !== Item::STATUS_PUBLISH

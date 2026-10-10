@@ -21,6 +21,10 @@ class SiteNotification extends Component
      */
     public function sendDownAlert(Item $item, Check $check): bool
     {
+        if (!$item->refresh() || !$item->canMonitor()) {
+            return false;
+        }
+
         $url = $item->protocol . '://' . $item->domain;
 
         $subject = "Сайт недоступен: {$item->domain}";
@@ -41,6 +45,10 @@ class SiteNotification extends Component
      */
     public function sendUpAlert(Item $item, Check $check): bool
     {
+        if (!$item->refresh() || !$item->canMonitor()) {
+            return false;
+        }
+
         $url = $item->protocol . '://' . $item->domain;
 
         $subject = "✅ Сайт восстановлен: {$item->domain}";
@@ -247,6 +255,10 @@ class SiteNotification extends Component
      */
     public function sendTelegramNotification(Item $item, Check $check): bool
     {
+        if (!$item->refresh() || !$item->canMonitor()) {
+            return false;
+        }
+
         $botToken = Yii::$app->params['telegram_bot_token'] ?? null;
         $chatId = Yii::$app->params['telegram_chat_id'] ?? null;
         $messageThreadId = Yii::$app->params['message_thread_id'] ?? null;

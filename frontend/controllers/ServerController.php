@@ -208,6 +208,9 @@ class ServerController extends Controller
         $traffic = (new UserTraffic())->fetch($server);
 
         foreach ($domains as $domain) {
+            if (!$domain->refresh() || $domain->publish_status !== Item::STATUS_PUBLISH || $domain->isArchived()) {
+                continue;
+            }
             $host = $domain->protocol . '://' . $domain->domain;
             $result[$host] = [
                 'status' => $this->checkOnline($host),
@@ -223,6 +226,9 @@ class ServerController extends Controller
                 $aliasUrl = $domain->protocol . '://' . $domain->alias;
                 $result[$host]['alias_url'] = $aliasUrl;
                 $result[$host]['alias_status'] = $this->checkOnline($aliasUrl);
+            }
+            if (!$domain->refresh() || $domain->publish_status !== Item::STATUS_PUBLISH || $domain->isArchived()) {
+                unset($result[$host]);
             }
         }
 

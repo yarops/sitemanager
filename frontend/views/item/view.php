@@ -23,11 +23,17 @@ $has_subdomains = is_array($model->childs) && !empty($model->childs);
 ?>
 <h1 class="page-title">
     <?= $model->domain ?>
+    <?php if ($model->isDemo()): ?><span class="badge bg-info">Демо</span><?php endif; ?>
     <a href="<?= $model->protocol . '://' . $model->domain; ?>" target="_blank" class="btn btn-success btn-sm"
        style="margin-right: 8px;">To site</a>
     <a href="<?= $model->protocol . '://' . $model->domain . $model->admin_link; ?>" target="_blank"
        class="btn btn-success btn-sm">To admin</a>
 </h1>
+
+<?php if ($model->isDemo()): ?>
+    <p class="text-muted">Мониторинг не выполняется: демо</p>
+    <?= Html::a('История проверок', ['check/site', 'id' => $model->id]) ?>
+<?php endif; ?>
 
 <div class="row">
     <div class="col-sm-9">

@@ -50,7 +50,7 @@ class ItemController extends Controller
         if (!in_array($filterStatus, ['enabled', 'disabled', 'up', 'down', 'never_checked'], true)) {
             $filterStatus = null;
         }
-        if (!in_array($filterPublication, [Item::STATUS_DRAFT, Item::STATUS_PUBLISH], true)) {
+        if (!in_array($filterPublication, [Item::STATUS_DRAFT, Item::STATUS_PUBLISH, Item::STATUS_DEMO], true)) {
             $filterPublication = null;
         }
 
@@ -66,12 +66,16 @@ class ItemController extends Controller
         }
         $query
             ->orderBy(new Expression(
-                'CASE WHEN [[item.publish_status]] = :draftStatus THEN 0 ELSE 1 END',
-                [':draftStatus' => Item::STATUS_DRAFT]
+                'CASE WHEN [[item.publish_status]] = :draftStatus THEN 0 WHEN [[item.publish_status]] = :demoStatus THEN 2 ELSE 1 END',
+                [':draftStatus' => Item::STATUS_DRAFT, ':demoStatus' => Item::STATUS_DEMO]
             ))
             ->addOrderBy(new Expression(
                 'CASE WHEN [[item.publish_status]] = :draftStatus THEN [[item.id]] END DESC',
                 [':draftStatus' => Item::STATUS_DRAFT]
+            ))
+            ->addOrderBy(new Expression(
+                'CASE WHEN [[item.publish_status]] = :demoStatus THEN [[item.id]] END DESC',
+                [':demoStatus' => Item::STATUS_DEMO]
             ))
             ->addOrderBy(['item.publish_date' => SORT_DESC])
             ->addOrderBy(['item.id' => SORT_DESC]);
@@ -97,24 +101,24 @@ class ItemController extends Controller
     {
         switch ($status) {
             case 'enabled':
-                return $query->andWhere(['check_enabled' => 1]);
+                return $query->andWhere(['check_enabled' => 1])->andWhere(['!=', 'item.publish_status', Item::STATUS_DEMO]);
             case 'disabled':
-                return $query->andWhere(['check_enabled' => 0]);
+                return $query->andWhere(['or', ['check_enabled' => 0], ['item.publish_status' => Item::STATUS_DEMO]]);
             case 'up':
-                return $query->andWhere(['check_enabled' => 1])
+                return $query->andWhere(['check_enabled' => 1])->andWhere(['!=', 'item.publish_status', Item::STATUS_DEMO])
                     ->leftJoin('`check`', '`check`.item_id = item.id AND `check`.check_date = (
                         SELECT MAX(check_date) FROM `check` WHERE `check`.item_id = item.id
                     )')
                     ->andWhere(['`check`.check_status' => '200']);
             case 'down':
-                return $query->andWhere(['check_enabled' => 1])
+                return $query->andWhere(['check_enabled' => 1])->andWhere(['!=', 'item.publish_status', Item::STATUS_DEMO])
                     ->leftJoin('`check`', '`check`.item_id = item.id AND `check`.check_date = (
                         SELECT MAX(check_date) FROM `check` WHERE `check`.item_id = item.id
                     )')
                     ->andWhere(['!=', '`check`.check_status', '200'])
                     ->andWhere(['not', ['`check`.check_status' => null]]);
             case 'never_checked':
-                return $query->andWhere(['check_enabled' => 1])
+                return $query->andWhere(['check_enabled' => 1])->andWhere(['!=', 'item.publish_status', Item::STATUS_DEMO])
                     ->leftJoin('`check`', '`check`.item_id = item.id')
                     ->andWhere(['`check`.check_status' => null]);
             default:
@@ -183,6 +187,11 @@ class ItemController extends Controller
     public function actionCheckStart($id)
     {
         $model = $this->findVisibleItem($id);
+
+        if ($model->isDemo()) {
+            Yii::$app->session->setFlash('info', 'Демо-сайты не проверяются.');
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

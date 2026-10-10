@@ -38,6 +38,9 @@ class MonitoringController extends Controller
         $scheduled = 0;
 
         foreach ($items as $item) {
+            if (!$item->refresh() || !$item->canMonitor()) {
+                continue;
+            }
             $url = $item->protocol . '://' . $item->domain;
 
             $job = new WorkerCheck([
@@ -55,7 +58,10 @@ class MonitoringController extends Controller
 
             // Вычисляет время следующей проверки
             $nextCheckTime = date('Y-m-d H:i:s', strtotime("+{$item->check_interval} minutes"));
-            $item->updateAttributes(['next_check_at' => $nextCheckTime]);
+            Item::updateAll(['next_check_at' => $nextCheckTime], [
+                'id' => $item->id, 'publish_status' => Item::STATUS_PUBLISH,
+                'check_enabled' => 1, 'is_archived' => 0,
+            ]);
 
             $scheduled++;
             $this->stdout("✓ Запланирована проверка для {$item->domain} (следующая: {$nextCheckTime})\n");
