@@ -236,7 +236,7 @@ class ServerController extends Controller
 
         if (!empty($result)) {
             $serverCheckModel->server_id = $server->id;
-            $serverCheckModel->title = $server->ip . date('j F Y');
+            $serverCheckModel->title = $server->ip . ' ' . date('j F Y');
             $serverCheckModel->report = json_encode($result);
 
             if ($serverCheckModel->save()) {

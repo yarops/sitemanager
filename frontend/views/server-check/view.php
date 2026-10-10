@@ -16,11 +16,22 @@ use common\components\cloudflare\ReportGroups;
 
 $this->title = Yii::t('frontend', 'Server check: ' . $model->title);
 $this->params['breadcrumbs'][] = $this->title;
+$heading = $this->title;
+$reportDate = null;
+if (preg_match('/^(.*?)(\d{1,2} [A-Za-z]+ \d{4})$/', $model->title, $matches)) {
+    $heading = Yii::t('frontend', 'Server check: ' . trim($matches[1]));
+    $reportDate = $matches[2];
+}
 ?>
 
 <div class="item-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1 class="d-flex flex-wrap align-items-baseline gap-3">
+        <span><?= Html::encode($heading) ?></span>
+        <?php if ($reportDate !== null): ?>
+            <span class="fs-6 fw-normal text-secondary"><?= Html::encode($reportDate) ?></span>
+        <?php endif; ?>
+    </h1>
 
     <?php
     $report = json_decode($model->report, true);
