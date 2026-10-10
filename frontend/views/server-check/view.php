@@ -144,11 +144,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php endif; ?>
                 </td>
                 <td>
+                    <?php if (!$item || $item->publish_status !== \common\models\Item::STATUS_DRAFT): ?>
                     <?= Html::a('Перепроверить', ['server-check/recheck-site', 'id' => $model->id, 'url' => $key, 'row' => $rowId], [
                         'class' => 'btn btn-primary btn-sm',
                         'data-method' => 'post',
                         'data-confirm' => 'Перепроверить доступность сайта и наличие в наших аккаунтах Cloudflare?',
                     ]) ?>
+                    <?php endif; ?>
                     <?= Html::a('Убрать из отчёта', ['server-check/remove-site-from-report', 'id' => $model->id, 'url' => $key], [
                         'class' => 'btn btn-outline-danger btn-sm',
                         'data-method' => 'post',

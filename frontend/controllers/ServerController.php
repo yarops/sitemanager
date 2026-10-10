@@ -200,7 +200,7 @@ class ServerController extends Controller
 
         $result      = [];
         $server       = Server::findById($id, true);
-        $domainsQuery = $server->getItems(true);
+        $domainsQuery = $server->getItems();
         $domains      = $domainsQuery->query->all();
         $cloudflare = ZoneMonitor::configured()->synchronize();
 

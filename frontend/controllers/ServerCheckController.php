@@ -147,13 +147,18 @@ class ServerCheckController extends Controller
             throw new BadRequestHttpException('URL is not present in this server check report.');
         }
 
+        $itemsByUrl = $this->findItemsByReportUrls($serverCheck, [$url]);
+        $item = $itemsByUrl[$url] ?? null;
+        if ($item && $item->publish_status === Item::STATUS_DRAFT) {
+            Yii::$app->session->setFlash('info', 'Черновики не проверяются.');
+            return $this->redirect($this->reportViewRoute($serverCheck->id, $row));
+        }
+
         ini_set('max_execution_time', 1800);
         $cloudflare = ZoneMonitor::configured()->synchronize();
         $result = is_array($report[$url]) ? $report[$url] : [];
         $result['status'] = $this->checkUrl($url);
         $result['cloudflare'] = ZoneMonitor::match($url, $cloudflare);
-        $itemsByUrl = $this->findItemsByReportUrls($serverCheck, [$url]);
-        $item = $itemsByUrl[$url] ?? null;
         $aliasUrl = $item && !empty($item->alias) && $item->alias !== $item->domain
             ? $item->protocol . '://' . $item->alias
             : (is_array($report[$url]) ? ($report[$url]['alias_url'] ?? null) : null);
