@@ -7,6 +7,7 @@
  */
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
+use common\components\cloudflare\ReportGroups;
 
 /** @var $this yii\web\View */
 /** @var $serverCheck \common\models\Template текущая категория */
@@ -28,42 +29,41 @@ $this->params['breadcrumbs'][] = $this->title;
         $report = [];
     }
 
-    // Сортируем так, чтобы успешные проверки основного URL были в конце.
-    uasort($report, function ($a, $b) {
-        $aStatus = is_array($a) ? ($a['status'] ?? 0) : $a;
-        $bStatus = is_array($b) ? ($b['status'] ?? 0) : $b;
-        $aIsOk = (int)$aStatus === 200;
-        $bIsOk = (int)$bStatus === 200;
-
-        return $aIsOk === $bIsOk ? (int)$aStatus <=> (int)$bStatus : ($aIsOk ? 1 : -1);
-    });
+    $missingOnly = Yii::$app->request->get('cloudflare') === 'missing';
+    $groups = ReportGroups::partition($report, $missingOnly);
 
     ?>
+    <div class="mb-3">
+        <?= Html::a('Все', ['view', 'id' => $model->id], [
+            'class' => 'btn btn-sm ' . (!$missingOnly ? 'btn-primary' : 'btn-outline-primary'),
+        ]) ?>
+        <?= Html::a('Нет в наших аккаунтах Cloudflare', ['view', 'id' => $model->id, 'cloudflare' => 'missing'], [
+            'class' => 'btn btn-sm ' . ($missingOnly ? 'btn-primary' : 'btn-outline-primary'),
+        ]) ?>
+    </div>
     <div>
     <table class="table table-bordered detail-view">
         <tr>
             <th>Host</th>
             <th>Http response</th>
             <th>Http response alias</th>
+            <th>Наш Cloudflare</th>
             <th>Поддомен</th>
             <th>Дата публикации</th>
             <th>Статус публикации</th>
             <th>Статус архивации</th>
             <th>Actions</th>
         </tr>
-        <?php foreach ($report as $key => $result):
+        <?php foreach ($groups as $group => $rows): ?>
+        <?php if (!$rows) { continue; } ?>
+        <tr class="table-secondary">
+            <th colspan="9"><?= Html::encode(ReportGroups::LABELS[$group]) ?> (<?= count($rows) ?>)</th>
+        </tr>
+        <?php foreach ($rows as $key => $result):
             $value = is_array($result) ? ($result['status'] ?? 0) : $result;
             $aliasStatus = is_array($result) ? ($result['alias_status'] ?? null) : null;
-            switch ((int)$value) {
-                case 200:
-                    $classes = 'table-success';
-                    break;
-                case 0:
-                    $classes = 'table-danger';
-                    break;
-                default:
-                    $classes = 'table-warning';
-            }
+            $classes = ReportGroups::rowClass($result);
+            $cf = is_array($result) ? ($result['cloudflare'] ?? []) : [];
 
             ?>
             <?php
@@ -97,6 +97,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td><?php echo $value; ?></td>
                 <td><?= $aliasStatus === null ? '—' : Html::encode($aliasStatus) ?></td>
                 <td>
+                    <?php if (!empty($cf['zones'])): ?>
+                        <?php foreach ($cf['zones'] as $zone): ?>
+                            <div><?= Html::encode($zone['account_label'] . ' · ' . $zone['name'] . ' · ' . $zone['status']) ?></div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div><?= ($cf['state'] ?? null) === 'missing' && empty($cf['stale']) ? 'Не найден' : 'Не проверено' ?></div>
+                    <?php endif; ?>
+                    <?php if (!empty($cf['stale'])): ?>
+                        <div class="text-muted">Данные устарели / проверка неполная</div>
+                    <?php endif; ?>
+                    <?php foreach ($cf['accounts'] ?? [] as $account): ?>
+                        <div class="small text-muted">
+                            <?= Html::encode($account['account_label']) ?>:
+                            <?= Html::encode($account['checked_at'] ?? 'нет успешной синхронизации') ?>
+                            <?= !empty($account['stale']) ? ' (устарело)' : '' ?>
+                        </div>
+                    <?php endforeach; ?>
+                </td>
+                <td>
                     <?php if ($item && !empty($item->childs)): ?>
                         <?php foreach ($item->childs as $child): ?>
                             <div><?= Html::encode($child->domain) ?></div>
@@ -128,7 +147,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= Html::a('Перепроверить', ['server-check/recheck-site', 'id' => $model->id, 'url' => $key, 'row' => $rowId], [
                         'class' => 'btn btn-primary btn-sm',
                         'data-method' => 'post',
-                        'data-confirm' => 'Перепроверить доступность сайта?',
+                        'data-confirm' => 'Перепроверить доступность сайта и наличие в наших аккаунтах Cloudflare?',
                     ]) ?>
                     <?= Html::a('Убрать из отчёта', ['server-check/remove-site-from-report', 'id' => $model->id, 'url' => $key], [
                         'class' => 'btn btn-outline-danger btn-sm',
@@ -150,6 +169,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 </td>
             </tr>
         <?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php if (!array_filter($groups)): ?>
+            <tr><td colspan="9">Нет сайтов для отображения.</td></tr>
+        <?php endif; ?>
     </table>
     </div>
 

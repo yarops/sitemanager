@@ -8,6 +8,7 @@
 
 namespace frontend\controllers;
 
+use common\components\cloudflare\ZoneMonitor;
 use common\models\Server;
 use common\models\ServerCheck;
 use common\models\Item;
@@ -134,7 +135,7 @@ class ServerCheckController extends Controller
     }
 
     /**
-     * Recheck one URL from a saved server-check report and update its response code.
+     * Recheck HTTP and Cloudflare for one URL while retaining other report fields.
      */
     public function actionRecheckSite(int $id, ?string $row = null): Response
     {
@@ -146,9 +147,11 @@ class ServerCheckController extends Controller
             throw new BadRequestHttpException('URL is not present in this server check report.');
         }
 
-        $result = [
-            'status' => $this->checkUrl($url),
-        ];
+        ini_set('max_execution_time', 1800);
+        $cloudflare = ZoneMonitor::configured()->synchronize();
+        $result = is_array($report[$url]) ? $report[$url] : [];
+        $result['status'] = $this->checkUrl($url);
+        $result['cloudflare'] = ZoneMonitor::match($url, $cloudflare);
         $itemsByUrl = $this->findItemsByReportUrls($serverCheck, [$url]);
         $item = $itemsByUrl[$url] ?? null;
         $aliasUrl = $item && !empty($item->alias) && $item->alias !== $item->domain

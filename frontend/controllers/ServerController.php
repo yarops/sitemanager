@@ -8,6 +8,7 @@
 
 namespace frontend\controllers;
 
+use common\components\cloudflare\ZoneMonitor;
 use common\models\Item;
 use common\models\Server;
 use common\models\ServerCheck;
@@ -201,11 +202,13 @@ class ServerController extends Controller
         $server       = Server::findById($id, true);
         $domainsQuery = $server->getItems(true);
         $domains      = $domainsQuery->query->all();
+        $cloudflare = ZoneMonitor::configured()->synchronize();
 
         foreach ($domains as $domain) {
             $host = $domain->protocol . '://' . $domain->domain;
             $result[$host] = [
                 'status' => $this->checkOnline($host),
+                'cloudflare' => ZoneMonitor::match($host, $cloudflare),
             ];
 
             if (!empty($domain->alias) && $domain->alias !== $domain->domain) {
