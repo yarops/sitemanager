@@ -49,7 +49,6 @@ $this->params['fluidContainer'] = true;
             <th>Http response</th>
             <th>Http response alias</th>
             <th>Наш Cloudflare</th>
-            <th>Поддомен</th>
             <th>Дата публикации</th>
             <th>Статус публикации</th>
             <th>Статус архивации</th>
@@ -60,7 +59,7 @@ $this->params['fluidContainer'] = true;
         <?php foreach ($groups as $group => $rows): ?>
         <?php if (!$rows) { continue; } ?>
         <tr class="table-secondary">
-            <th colspan="9"><?= Html::encode(ReportGroups::LABELS[$group]) ?> (<?= count($rows) ?>)</th>
+            <th colspan="8"><?= Html::encode(ReportGroups::LABELS[$group]) ?> (<?= count($rows) ?>)</th>
         </tr>
         <?php foreach ($rows as $key => $result):
             $value = is_array($result) ? ($result['status'] ?? 0) : $result;
@@ -96,6 +95,14 @@ $this->params['fluidContainer'] = true;
                             <?= Html::a($aliasUrl, $aliasUrl, ['target' => '_blank', 'rel' => 'noopener noreferrer']) ?>
                         </div>
                     <?php endif; ?>
+                    <?php if ($item && !empty($item->childs)): ?>
+                        <div class="mt-1">
+                            <span class="text-muted">Поддомены:</span>
+                            <?php foreach ($item->childs as $child): ?>
+                                <div><?= Html::encode($child->domain) ?></div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </td>
                 <td><?php echo $value; ?></td>
                 <td><?= $aliasStatus === null ? '—' : Html::encode($aliasStatus) ?></td>
@@ -117,15 +124,6 @@ $this->params['fluidContainer'] = true;
                             <?= !empty($account['stale']) ? ' (устарело)' : '' ?>
                         </div>
                     <?php endforeach; ?>
-                </td>
-                <td>
-                    <?php if ($item && !empty($item->childs)): ?>
-                        <?php foreach ($item->childs as $child): ?>
-                            <div><?= Html::encode($child->domain) ?></div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        —
-                    <?php endif; ?>
                 </td>
                 <td><?= $item ? Html::encode($item->publish_date ?: '—') : '—' ?></td>
                 <td>
@@ -176,7 +174,7 @@ $this->params['fluidContainer'] = true;
         <?php endforeach; ?>
         <?php endforeach; ?>
         <?php if (!array_filter($groups)): ?>
-            <tr><td colspan="9">Нет сайтов для отображения.</td></tr>
+            <tr><td colspan="8">Нет сайтов для отображения.</td></tr>
         <?php endif; ?>
         </tbody>
     </table>
