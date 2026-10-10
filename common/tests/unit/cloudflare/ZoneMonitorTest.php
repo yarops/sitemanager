@@ -171,6 +171,10 @@ class ZoneMonitorTest extends TestCase
                 'https://old.example' => 200,
                 'https://absent.example' => ['status' => 200, 'cloudflare' => [
                     'state' => 'missing', 'stale' => false, 'zones' => [], 'accounts' => [],
+                ], 'isp_traffic' => [
+                    'state' => 'available', 'login' => 'traffic-user', 'used_mib' => 304100,
+                    'period_start' => '2026-10-01', 'period_end' => '2026-10-10',
+                    'checked_at' => '2026-10-10T10:00:00+05:00',
                 ]],
             ]);
             $html = $app->view->renderFile(\Yii::getAlias('@frontend/views/server-check/view.php'), [
@@ -179,6 +183,10 @@ class ZoneMonitorTest extends TestCase
             self::assertStringContainsString('table-info', $html);
             self::assertStringContainsString('Не проверено', $html);
             self::assertStringContainsString('Не найден', $html);
+            self::assertStringContainsString('Трафик пользователя, MiB', $html);
+            self::assertStringContainsString('traffic-user', $html);
+            self::assertStringContainsString('2026-10-01 — 2026-10-10', $html);
+            self::assertStringContainsString('304', $html);
             self::assertSame(2, substr_count($html, '<tr id="site-row-'));
             $app->request->setQueryParams(['cloudflare' => 'missing']);
             $filtered = $app->view->renderFile(\Yii::getAlias('@frontend/views/server-check/view.php'), [

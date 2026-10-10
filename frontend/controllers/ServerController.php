@@ -9,6 +9,7 @@
 namespace frontend\controllers;
 
 use common\components\cloudflare\ZoneMonitor;
+use common\components\ispmanager\UserTraffic;
 use common\models\Item;
 use common\models\Server;
 use common\models\ServerCheck;
@@ -201,14 +202,21 @@ class ServerController extends Controller
         $result      = [];
         $server       = Server::findById($id, true);
         $domainsQuery = $server->getItems();
+        $domainsQuery->query->with('serverUser');
         $domains      = $domainsQuery->query->all();
         $cloudflare = ZoneMonitor::configured()->synchronize();
+        $traffic = (new UserTraffic())->fetch($server);
 
         foreach ($domains as $domain) {
             $host = $domain->protocol . '://' . $domain->domain;
             $result[$host] = [
                 'status' => $this->checkOnline($host),
                 'cloudflare' => ZoneMonitor::match($host, $cloudflare),
+                'isp_traffic' => UserTraffic::forLogin(
+                    $domain->serverUser && (int)$domain->serverUser->server_id === (int)$server->id
+                        ? $domain->serverUser->user_login : null,
+                    $traffic
+                ),
             ];
 
             if (!empty($domain->alias) && $domain->alias !== $domain->domain) {

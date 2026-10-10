@@ -49,6 +49,7 @@ $this->params['fluidContainer'] = true;
             <th>Http response</th>
             <th>Http response alias</th>
             <th>Наш Cloudflare</th>
+            <th>Трафик пользователя, MiB</th>
             <th>Дата публикации</th>
             <th>Статус публикации</th>
             <th>Статус архивации</th>
@@ -59,13 +60,14 @@ $this->params['fluidContainer'] = true;
         <?php foreach ($groups as $group => $rows): ?>
         <?php if (!$rows) { continue; } ?>
         <tr class="table-secondary">
-            <th colspan="8"><?= Html::encode(ReportGroups::LABELS[$group]) ?> (<?= count($rows) ?>)</th>
+            <th colspan="9"><?= Html::encode(ReportGroups::LABELS[$group]) ?> (<?= count($rows) ?>)</th>
         </tr>
         <?php foreach ($rows as $key => $result):
             $value = is_array($result) ? ($result['status'] ?? 0) : $result;
             $aliasStatus = is_array($result) ? ($result['alias_status'] ?? null) : null;
             $classes = ReportGroups::rowClass($result);
             $cf = is_array($result) ? ($result['cloudflare'] ?? []) : [];
+            $traffic = is_array($result) ? ($result['isp_traffic'] ?? []) : [];
 
             ?>
             <?php
@@ -125,6 +127,19 @@ $this->params['fluidContainer'] = true;
                         </div>
                     <?php endforeach; ?>
                 </td>
+                <td>
+                    <div><?= ($traffic['state'] ?? null) === 'available' && isset($traffic['used_mib'])
+                        ? Html::encode(Yii::$app->formatter->asDecimal($traffic['used_mib'], 0)) : '—' ?></div>
+                    <?php if (!empty($traffic['login'])): ?>
+                        <div class="small text-muted"><?= Html::encode($traffic['login']) ?></div>
+                    <?php endif; ?>
+                    <?php if (!empty($traffic['period_start']) && !empty($traffic['period_end'])): ?>
+                        <div class="small text-muted"><?= Html::encode($traffic['period_start'] . ' — ' . $traffic['period_end']) ?></div>
+                    <?php endif; ?>
+                    <?php if (!empty($traffic['checked_at'])): ?>
+                        <div class="small text-muted">Получено: <?= Html::encode($traffic['checked_at']) ?></div>
+                    <?php endif; ?>
+                </td>
                 <td><?= $item ? Html::encode($item->publish_date ?: '—') : '—' ?></td>
                 <td>
                     <?php if ($item && $item->publish_status === \common\models\Item::STATUS_PUBLISH): ?>
@@ -149,7 +164,7 @@ $this->params['fluidContainer'] = true;
                     <?= Html::a('Перепроверить', ['server-check/recheck-site', 'id' => $model->id, 'url' => $key, 'row' => $rowId], [
                         'class' => 'btn btn-primary btn-sm',
                         'data-method' => 'post',
-                        'data-confirm' => 'Перепроверить доступность сайта и наличие в наших аккаунтах Cloudflare?',
+                        'data-confirm' => 'Обновить доступность, Cloudflare и трафик пользователя сайта?',
                     ]) ?>
                     <?php endif; ?>
                     <?= Html::a('Убрать из отчёта', ['server-check/remove-site-from-report', 'id' => $model->id, 'url' => $key], [
@@ -174,7 +189,7 @@ $this->params['fluidContainer'] = true;
         <?php endforeach; ?>
         <?php endforeach; ?>
         <?php if (!array_filter($groups)): ?>
-            <tr><td colspan="8">Нет сайтов для отображения.</td></tr>
+            <tr><td colspan="9">Нет сайтов для отображения.</td></tr>
         <?php endif; ?>
         </tbody>
     </table>

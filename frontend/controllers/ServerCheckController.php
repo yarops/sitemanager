@@ -9,6 +9,7 @@
 namespace frontend\controllers;
 
 use common\components\cloudflare\ZoneMonitor;
+use common\components\ispmanager\UserTraffic;
 use common\models\Server;
 use common\models\ServerCheck;
 use common\models\Item;
@@ -159,6 +160,12 @@ class ServerCheckController extends Controller
         $result = is_array($report[$url]) ? $report[$url] : [];
         $result['status'] = $this->checkUrl($url);
         $result['cloudflare'] = ZoneMonitor::match($url, $cloudflare);
+        $server = $item ? $item->server : $serverCheck->server;
+        $traffic = $server ? (new UserTraffic())->fetch($server) : [];
+        $login = $item && $item->serverUser && $server
+            && (int)$item->serverUser->server_id === (int)$server->id
+            ? $item->serverUser->user_login : null;
+        $result['isp_traffic'] = UserTraffic::forLogin($login, $traffic);
         $aliasUrl = $item && !empty($item->alias) && $item->alias !== $item->domain
             ? $item->protocol . '://' . $item->alias
             : (is_array($report[$url]) ? ($report[$url]['alias_url'] ?? null) : null);
@@ -296,7 +303,7 @@ class ServerCheckController extends Controller
 
         $query = Item::find()
             ->where(['domain' => $domains])
-            ->with('childs');
+            ->with(['childs', 'serverUser', 'server']);
         if (!empty($serverCheck->server_id)) {
             $query->andWhere(['server_id' => $serverCheck->server_id]);
         }
