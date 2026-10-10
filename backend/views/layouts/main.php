@@ -25,11 +25,13 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'Go to front',
+                'brandLabel' => 'to front',
                 'brandUrl' => 'https://panel.devgamescom.ru',
                 'innerContainerOptions' => ['class' => 'container-fluid'],
                 'brandOptions' => [
+                    'class' => 'btn btn-outline-light btn-sm panel-switch',
                     'target' => '_blank',
+                    'rel' => 'noopener noreferrer',
                 ],
                 'options' => [
                     'class' => 'navbar-expand-lg navbar-dark bg-dark fixed-top',

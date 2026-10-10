@@ -26,8 +26,13 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'Front',
-                'brandUrl' => Yii::$app->homeUrl,
+                'brandLabel' => 'to backend',
+                'brandUrl' => 'https://backend.devel.codesweet.ru',
+                'brandOptions' => [
+                    'class' => 'btn btn-outline-light btn-sm panel-switch',
+                    'target' => '_blank',
+                    'rel' => 'noopener noreferrer',
+                ],
                 'innerContainerOptions' => ['class' => 'container-fluid'],
                 'options' => [
                     'class' => 'navbar-expand-lg navbar-dark bg-dark fixed-top',
