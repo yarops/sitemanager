@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Server */
@@ -9,38 +8,27 @@ use yii\widgets\DetailView;
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Servers'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['fluidContainer'] = true;
 ?>
 <div class="item-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <table class="table table-bordered detail-view">
-    <tr>
-        <td>Host</td>
-        <td>Result</td>
-    </tr>
-    <?php
-    foreach ($checked as $key => $value) {
-        if ($value === '0') {
-            $class = 'error';
-        } else {
-            $class = '';
-        }
-        echo '<tr class="'.$class.'">';
-        echo '<td>' . $key . '</td>';
-        echo '<td>' . $value . '</td>';
-        echo '</td>';
-    }
-    ?>
+    <div class="table-responsive">
+    <table class="table table-bordered align-top">
+        <thead><tr><th scope="col">Host</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+        <?php foreach (is_array($checked) ? $checked : [] as $key => $value): ?>
+            <tr class="<?= (int)$value === 0 ? 'table-danger' : ((int)$value === 200 ? 'table-success' : 'table-warning') ?>">
+                <td><?= Html::encode($key) ?></td>
+                <td><?= Html::encode($value) ?></td>
+            </tr>
+        <?php endforeach; ?>
+        <?php if (empty($checked)): ?>
+            <tr><td colspan="2">Нет опубликованных сайтов для проверки.</td></tr>
+        <?php endif; ?>
+        </tbody>
     </table>
-
-    <style>
-        table {
-            background: white;
-        }
-        .error {
-            background: #ffd3d3;
-        }
-    </style>
+    </div>
 
 </div>

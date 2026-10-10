@@ -34,7 +34,8 @@ h4 {
     background: #e1f2ff;
 }
 
-.wrap > .container {
+.wrap > .container,
+.wrap > .container-fluid {
     padding: 70px 15px 20px;
 }
 

@@ -20,13 +20,14 @@ $this->title = $server
     ? Yii::t('frontend', $isArchived ? 'Server archive checks: {server}' : 'Server checks: {server}', ['server' => $server->title])
     : Yii::t('frontend', $isArchived ? 'Archived server checks' : 'All server checks');
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['fluidContainer'] = true;
 ?>
 
-<div class="row">
-<div class="col-md-8 item-index">
+<div class="row g-4">
+<div class="col-12 col-xl-9 item-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <p>
+    <div class="d-flex flex-wrap gap-2 mb-3">
         <?= Html::a('Active', ['server-check/index'], ['class' => 'btn btn-secondary btn-sm']) ?>
         <?= Html::a('Archive', ['server-check/index', 'archived' => 1], ['class' => 'btn btn-secondary btn-sm']) ?>
         <?php if (!$isArchived): ?>
@@ -49,9 +50,11 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::a('Server archive', ['server-check/server', 'id' => $server->id, 'archived' => 1], ['class' => 'btn btn-secondary btn-sm']) ?>
             <?= Html::a('Back to server', ['server/view', 'id' => $server->id], ['class' => 'btn btn-secondary btn-sm']) ?>
         <?php endif; ?>
-    </p>
+    </div>
 
-    <table class="table table-striped table-bordered detail-view server-checks-table">
+    <div class="table-responsive">
+    <table class="table table-striped table-bordered align-top server-checks-table">
+        <thead>
         <tr>
             <th>ID</th>
             <th>Server</th>
@@ -59,6 +62,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Bad/Total</th>
             <th>Actions</th>
         </tr>
+        </thead>
+        <tbody>
         <?php foreach ($items->models as $item): ?>
             <?php
             $report = json_decode($item->report, true);
@@ -121,7 +126,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 </td>
             </tr>
         <?php endforeach; ?>
+        </tbody>
     </table>
+    </div>
     
     <div>
         <?= LinkPager::widget([
@@ -131,9 +138,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 
-<div class="col-md-4 blog-sidebar">
+<div class="col-12 col-xl-3 blog-sidebar">
     <h1><?= Yii::t('frontend', 'Servers') ?></h1>
-    <ul>
+    <ul class="list-group">
         <?php foreach ($servers->models as $serverModel): ?>
             <?= $this->render('shortViewServer', [
                 'model' => $serverModel,

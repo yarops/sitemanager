@@ -10,6 +10,7 @@ use frontend\widgets\Alert;
 /* @var $content string */
 
 AppAsset::register($this);
+$containerClass = ($this->params['fluidContainer'] ?? false) ? 'container-fluid' : 'container';
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -28,6 +29,7 @@ AppAsset::register($this);
             NavBar::begin([
                 'brandLabel' => 'Front',
                 'brandUrl' => Yii::$app->homeUrl,
+                'innerContainerOptions' => ['class' => $containerClass],
                 'options' => [
                     'class' => 'navbar-expand-lg navbar-dark bg-dark fixed-top',
                 ],
@@ -63,7 +65,7 @@ AppAsset::register($this);
             NavBar::end();
             ?>
 
-        <div class="container">
+        <div class="<?= $containerClass ?>">
         <?= Breadcrumbs::widget([
             'links' => $this->params['breadcrumbs'] ?? [],
             'homeLink' => [
@@ -80,7 +82,7 @@ AppAsset::register($this);
     </div>
 
     <footer class="footer">
-        <div class="container">
+        <div class="<?= $containerClass ?>">
             <p class="float-start">&copy; <a href="https://codesweet.ru" target="_blank">codesweet.ru</a> <?= date('Y') ?></p>
             <p class="float-end"><?= Yii::powered() ?></p>
         </div>

@@ -6,7 +6,6 @@
  * Time: 2:14
  */
 use yii\helpers\Html;
-use yii\widgets\LinkPager;
 use common\components\cloudflare\ReportGroups;
 
 /** @var $this yii\web\View */
@@ -17,9 +16,10 @@ use common\components\cloudflare\ReportGroups;
 
 $this->title = Yii::t('frontend', 'Server check: ' . $model->title);
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['fluidContainer'] = true;
 ?>
 
-<div class="col-12 item-index">
+<div class="item-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
     $groups = ReportGroups::partition($report, $missingOnly);
 
     ?>
-    <div class="mb-3">
+    <div class="d-flex flex-wrap gap-2 mb-3">
         <?= Html::a('Все', ['view', 'id' => $model->id], [
             'class' => 'btn btn-sm ' . (!$missingOnly ? 'btn-primary' : 'btn-outline-primary'),
         ]) ?>
@@ -41,8 +41,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'btn btn-sm ' . ($missingOnly ? 'btn-primary' : 'btn-outline-primary'),
         ]) ?>
     </div>
-    <div>
-    <table class="table table-bordered detail-view">
+    <div class="table-responsive">
+    <table class="table table-bordered align-top">
+        <thead>
         <tr>
             <th>Host</th>
             <th>Http response</th>
@@ -54,6 +55,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <th>Статус архивации</th>
             <th>Actions</th>
         </tr>
+        </thead>
+        <tbody>
         <?php foreach ($groups as $group => $rows): ?>
         <?php if (!$rows) { continue; } ?>
         <tr class="table-secondary">
@@ -175,6 +178,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php if (!array_filter($groups)): ?>
             <tr><td colspan="9">Нет сайтов для отображения.</td></tr>
         <?php endif; ?>
+        </tbody>
     </table>
     </div>
 
