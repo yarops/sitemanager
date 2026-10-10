@@ -20,7 +20,6 @@ $this->title = $server
     ? Yii::t('frontend', $isArchived ? 'Server archive checks: {server}' : 'Server checks: {server}', ['server' => $server->title])
     : Yii::t('frontend', $isArchived ? 'Archived server checks' : 'All server checks');
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['fluidContainer'] = true;
 ?>
 
 <div class="row g-4">

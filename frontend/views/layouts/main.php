@@ -10,7 +10,6 @@ use frontend\widgets\Alert;
 /* @var $content string */
 
 AppAsset::register($this);
-$containerClass = ($this->params['fluidContainer'] ?? false) ? 'container-fluid' : 'container';
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -29,7 +28,7 @@ $containerClass = ($this->params['fluidContainer'] ?? false) ? 'container-fluid'
             NavBar::begin([
                 'brandLabel' => 'Front',
                 'brandUrl' => Yii::$app->homeUrl,
-                'innerContainerOptions' => ['class' => $containerClass],
+                'innerContainerOptions' => ['class' => 'container-fluid'],
                 'options' => [
                     'class' => 'navbar-expand-lg navbar-dark bg-dark fixed-top',
                 ],
@@ -65,7 +64,7 @@ $containerClass = ($this->params['fluidContainer'] ?? false) ? 'container-fluid'
             NavBar::end();
             ?>
 
-        <div class="<?= $containerClass ?>">
+        <div class="container-fluid">
         <?= Breadcrumbs::widget([
             'links' => $this->params['breadcrumbs'] ?? [],
             'homeLink' => [
@@ -82,7 +81,7 @@ $containerClass = ($this->params['fluidContainer'] ?? false) ? 'container-fluid'
     </div>
 
     <footer class="footer">
-        <div class="<?= $containerClass ?>">
+        <div class="container-fluid">
             <p class="float-start">&copy; <a href="https://codesweet.ru" target="_blank">codesweet.ru</a> <?= date('Y') ?></p>
             <p class="float-end"><?= Yii::powered() ?></p>
         </div>

@@ -16,7 +16,6 @@ use common\components\cloudflare\ReportGroups;
 
 $this->title = Yii::t('frontend', 'Server check: ' . $model->title);
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['fluidContainer'] = true;
 ?>
 
 <div class="item-index">

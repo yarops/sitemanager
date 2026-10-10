@@ -8,7 +8,6 @@ use yii\helpers\Html;
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Servers'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['fluidContainer'] = true;
 ?>
 <div class="item-view">
 

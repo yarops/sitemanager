@@ -27,6 +27,7 @@ AppAsset::register($this);
             NavBar::begin([
                 'brandLabel' => 'Go to front',
                 'brandUrl' => 'https://panel.devgamescom.ru',
+                'innerContainerOptions' => ['class' => 'container-fluid'],
                 'brandOptions' => [
                     'target' => '_blank',
                 ],
@@ -58,7 +59,7 @@ AppAsset::register($this);
             NavBar::end();
             ?>
 
-        <div class="container">
+        <div class="container-fluid">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
@@ -67,7 +68,7 @@ AppAsset::register($this);
     </div>
 
     <footer class="footer">
-        <div class="container">
+        <div class="container-fluid">
             <p class="float-start">&copy; <a href="https://codesweet.ru" target="_blank">codesweet.ru</a> <?= date('Y') ?></p>
             <p class="float-end"><?= Yii::powered() ?></p>
         </div>
