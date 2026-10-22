@@ -1,10 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Server */
+/* @var $diff_isp string[] */
+/* @var $diff_admin string[] */
+/* @var $itemsByDomain common\models\Item[] */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('backend', 'Servers'), 'url' => ['index']];
@@ -20,7 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </tr>
     <?php
     foreach ($diff_isp as $domain) {
-        echo '<tr><td>' . $domain . '</td></tr>';
+        echo '<tr><td>' . (isset($itemsByDomain[$domain])
+            ? $this->render('//item/shortView', ['model' => $itemsByDomain[$domain]])
+            : Html::encode($domain)) . '</td></tr>';
     }
     ?>
 
@@ -29,7 +33,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </tr>
     <?php
     foreach ($diff_admin as $domain) {
-        echo '<tr><td>' . $domain . '</td></tr>';
+        echo '<tr><td>' . (isset($itemsByDomain[$domain])
+            ? $this->render('//item/shortView', ['model' => $itemsByDomain[$domain]])
+            : Html::encode($domain)) . '</td></tr>';
     }
     ?>
     </table>

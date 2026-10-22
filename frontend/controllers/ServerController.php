@@ -182,12 +182,24 @@ class ServerController extends Controller
             $admin_domains[] = $domain->domain;
         }
 
+        $diff_isp = array_diff($isp_domains, $admin_domains);
+        $itemsByDomain = Item::find()
+            ->where(['domain' => $diff_isp])
+            ->with(['server', 'template', 'lastCheck', 'childs'])
+            ->indexBy('domain')
+            ->all();
+
+        foreach ($domains as $domain) {
+            $itemsByDomain[$domain->domain] = $domain;
+        }
+
         return $this->render(
             'checkDiff',
             [
                 'model'      => $server,
-                'diff_isp'   => array_diff($isp_domains, $admin_domains),
+                'diff_isp'   => $diff_isp,
                 'diff_admin' => array_diff($admin_domains, $isp_domains),
+                'itemsByDomain' => $itemsByDomain,
             ]
         );
     }
