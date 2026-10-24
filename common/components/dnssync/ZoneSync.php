@@ -17,18 +17,20 @@ class ZoneSync
     private DnsRecords $cloudflare;
     private array $config;
     private Mutex $mutex;
+    private NameServers $nameServers;
 
-    public function __construct(DnsZone $isp, DnsRecords $cloudflare, array $config, Mutex $mutex)
+    public function __construct(DnsZone $isp, DnsRecords $cloudflare, array $config, Mutex $mutex, NameServers $nameServers)
     {
         $this->isp = $isp;
         $this->cloudflare = $cloudflare;
+        $this->nameServers = $nameServers;
         $this->config = $config;
         $this->mutex = $mutex;
     }
 
     public static function configured(): self
     {
-        return new self(new DnsZone(), DnsRecords::configured(), Yii::$app->params['dnsSync'], new MysqlMutex());
+        return new self(new DnsZone(), DnsRecords::configured(), Yii::$app->params['dnsSync'], new MysqlMutex(), new NameServers());
     }
 
     /** @return array|null records of synced types, null on failure */
@@ -60,6 +62,16 @@ class ZoneSync
 
     public function loadBefore(DnsSyncZone $zone): void
     {
+        // Delegation snapshot: which registrar NS the domain uses before the move.
+        try {
+            $servers = $this->nameServers->lookup($zone->domain);
+            $zone->setJson('ns_current', $servers);
+            $zone->ns_loaded_at = date('Y-m-d H:i:s');
+            $zone->addMessage('info', $servers === null ? 'NS: домен не существует (NXDOMAIN)'
+                : 'NS: ' . ($servers ? implode(', ', $servers) : 'нет'));
+        } catch (\Throwable $exception) {
+            $zone->addMessage('error', 'NS: ' . $exception->getMessage());
+        }
         try {
             $found = $this->cloudflare->findZone($zone->domain);
             if ($found['state'] !== DnsSyncZone::CF_FOUND) {

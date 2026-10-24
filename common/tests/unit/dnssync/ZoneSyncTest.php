@@ -3,6 +3,7 @@
 namespace common\tests\unit\dnssync;
 
 use common\components\cloudflare\DnsRecords;
+use common\components\dnssync\NameServers;
 use common\components\dnssync\ZoneSync;
 use common\components\ispmanager\DnsZone;
 use common\components\ispmanager\ZoneNotFound;
@@ -85,6 +86,20 @@ class FakeCloudflare extends DnsRecords
     }
 }
 
+class FakeNameServers extends NameServers
+{
+    /** @var array|null|\Throwable */
+    public $servers = ['ns1.fozzy.com', 'ns2.fozzy.com'];
+
+    public function lookup(string $domain): ?array
+    {
+        if ($this->servers instanceof \Throwable) {
+            throw $this->servers;
+        }
+        return $this->servers;
+    }
+}
+
 class FakeMutex extends Mutex
 {
     public static array $held = [];
@@ -117,6 +132,7 @@ class ZoneSyncTest extends TestCase
     private $previousApplication;
     private FakeIsp $isp;
     private FakeCloudflare $cloudflare;
+    private FakeNameServers $nameServers;
 
     protected function setUp(): void
     {
@@ -140,6 +156,8 @@ class ZoneSyncTest extends TestCase
         ob_start();
         try {
             $migration->safeUp();
+            require_once dirname(__DIR__, 4) . '/console/migrations/m261025_120000_add_ns_to_dns_sync_zone.php';
+            (new \m261025_120000_add_ns_to_dns_sync_zone())->safeUp();
         } finally {
             ob_end_clean();
         }
@@ -151,6 +169,7 @@ class ZoneSyncTest extends TestCase
         $this->isp = new FakeIsp();
         $this->isp->records = $this->ispRecords('a.com');
         $this->cloudflare = new FakeCloudflare();
+        $this->nameServers = new FakeNameServers();
     }
 
     protected function tearDown(): void
@@ -167,7 +186,7 @@ class ZoneSyncTest extends TestCase
 
     private function sync(array $config = self::CONFIG): ZoneSync
     {
-        return new ZoneSync($this->isp, $this->cloudflare, $config, new FakeMutex());
+        return new ZoneSync($this->isp, $this->cloudflare, $config, new FakeMutex(), $this->nameServers);
     }
 
     private function zone(string $domain = 'a.com', array $attributes = []): DnsSyncZone
@@ -234,6 +253,29 @@ class ZoneSyncTest extends TestCase
         self::assertSame('Зона в Cloudflare сменилась после сохранения before', array_slice($this->texts($zone), -1)[0]);
     }
 
+    public function testNameServerSnapshot(): void
+    {
+        $zone = $this->foundZone();
+        self::assertSame(['ns1.fozzy.com', 'ns2.fozzy.com'], $zone->getJson('ns_current'));
+        self::assertNotNull($zone->ns_loaded_at);
+        self::assertContains('NS: ns1.fozzy.com, ns2.fozzy.com', $this->texts($zone));
+
+        // A failed lookup keeps the previous snapshot and does not block the Cloudflare load.
+        $this->nameServers->servers = new \RuntimeException('DNS-резолвер недоступен');
+        $this->cloudflare->found = ['state' => 'missing'];
+        $this->sync()->loadBefore($zone);
+        $zone = DnsSyncZone::findOne($zone->id);
+        self::assertSame(['ns1.fozzy.com', 'ns2.fozzy.com'], $zone->getJson('ns_current'));
+        self::assertSame('missing', $zone->cf_state);
+        self::assertContains('NS: DNS-резолвер недоступен', $this->texts($zone));
+
+        $this->nameServers->servers = null;
+        $this->sync()->loadBefore($zone);
+        $zone = DnsSyncZone::findOne($zone->id);
+        self::assertNull($zone->ns_current);
+        self::assertContains('NS: домен не существует (NXDOMAIN)', $this->texts($zone));
+    }
+
     public function testMissingAndSearchErrors(): void
     {
         $zone = $this->zone();
@@ -245,7 +287,8 @@ class ZoneSyncTest extends TestCase
         $zone = DnsSyncZone::findOne($zone->id);
         self::assertSame('error', $zone->cf_state);
         self::assertNull($zone->cf_before);
-        self::assertSame(['Нет в Cloudflare', 'Cloudflare: Поиск неполный: b: HTTP 500'], $this->texts($zone));
+        self::assertSame(['NS: ns1.fozzy.com, ns2.fozzy.com', 'Нет в Cloudflare', 'NS: ns1.fozzy.com, ns2.fozzy.com',
+            'Cloudflare: Поиск неполный: b: HTTP 500'], $this->texts($zone));
     }
 
     public function testRunReplacesAllRecords(): void
