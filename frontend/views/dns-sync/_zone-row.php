@@ -82,18 +82,14 @@ $message = static fn(array $m): string => Html::tag('div',
         <?php endif; ?>
         <?php if ($zone->ns_loaded_at): ?>
             <?php $ns = $zone->getJson('ns_current'); ?>
-            <div class="small text-muted mt-1">
-                NS<?= $ns === null ? ': домен не существует' : (!$ns ? ': нет' : '') ?>
-                <?php if ($ns): ?>
-                    <?= Html::button('<i class="bi bi-clipboard"></i>', [
-                        'class' => 'btn btn-link btn-sm p-0 ms-1 align-baseline dns-sync-copy',
-                        'data-copy' => implode("\n", $ns), 'title' => 'Копировать NS',
-                    ]) ?>
-                    <?php foreach ($ns as $server): ?>
-                        <div><?= Html::encode($server) ?></div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
+            <?= $this->render('_ns-block', [
+                'title' => 'NS',
+                'servers' => $ns,
+                'empty' => $ns === null ? 'домен не существует' : 'нет',
+            ]) ?>
+        <?php endif; ?>
+        <?php if ($nameServers): ?>
+            <?= $this->render('_ns-block', ['title' => 'Cloudflare NS', 'servers' => $nameServers, 'empty' => 'нет']) ?>
         <?php endif; ?>
     </td>
     <td><?= $records($ispLines, $zone->isp_loaded_at) ?></td>
@@ -109,9 +105,6 @@ $message = static fn(array $m): string => Html::tag('div',
             <div class="small text-muted">
                 <?= Html::encode($zone->cf_account) ?><?= $zone->cf_zone_status ? ' · зона ' . Html::encode($zone->cf_zone_status) : '' ?>
             </div>
-            <?php if ($zone->cf_zone_status === 'pending' && $nameServers): ?>
-                <div class="small">NS для регистратора: <?= Html::encode(implode(', ', $nameServers)) ?></div>
-            <?php endif; ?>
         <?php endif; ?>
         <?php foreach (array_slice($messages, -3) as $m): ?>
             <?= $message($m) ?>
