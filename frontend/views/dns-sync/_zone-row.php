@@ -80,6 +80,10 @@ $message = static fn(array $m): string => Html::tag('div',
         <?php if ($childs): ?>
             <div class="small text-warning-emphasis">есть поддомены</div>
         <?php endif; ?>
+        <?php if ($zone->ns_loaded_at): ?>
+            <?php $ns = $zone->getJson('ns_current'); ?>
+            <div class="small text-muted">NS: <?= $ns === null ? 'домен не существует' : Html::encode($ns ? implode(', ', $ns) : 'нет') ?></div>
+        <?php endif; ?>
     </td>
     <td><?= $records($ispLines, $zone->isp_loaded_at) ?></td>
     <td><?= $records($before === null ? null : RecordMapper::formatForDisplay($before, $zone->domain), $zone->cf_before_loaded_at) ?></td>
@@ -97,10 +101,6 @@ $message = static fn(array $m): string => Html::tag('div',
             <?php if ($zone->cf_zone_status === 'pending' && $nameServers): ?>
                 <div class="small">NS для регистратора: <?= Html::encode(implode(', ', $nameServers)) ?></div>
             <?php endif; ?>
-        <?php endif; ?>
-        <?php if ($zone->ns_loaded_at): ?>
-            <?php $ns = $zone->getJson('ns_current'); ?>
-            <div class="small">NS: <?= $ns === null ? 'домен не существует' : Html::encode($ns ? implode(', ', $ns) : 'нет') ?></div>
         <?php endif; ?>
         <?php foreach (array_slice($messages, -3) as $m): ?>
             <?= $message($m) ?>

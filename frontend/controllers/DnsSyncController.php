@@ -33,6 +33,7 @@ class DnsSyncController extends Controller
                 'actions' => [
                     'create' => ['get', 'post'],
                     'load-isp' => ['post'],
+                    'load-ns' => ['post'],
                     'load-before' => ['post'],
                     'toggle' => ['post'],
                     'run' => ['post'],
@@ -88,6 +89,13 @@ class DnsSyncController extends Controller
     {
         $model = $this->findZone($id, $zone);
         ZoneSync::configured()->loadIsp($model);
+        return $this->row($model);
+    }
+
+    public function actionLoadNs(int $id, int $zone): array
+    {
+        $model = $this->findZone($id, $zone);
+        ZoneSync::configured()->loadNs($model);
         return $this->row($model);
     }
 

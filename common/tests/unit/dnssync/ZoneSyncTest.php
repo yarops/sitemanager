@@ -255,25 +255,31 @@ class ZoneSyncTest extends TestCase
 
     public function testNameServerSnapshot(): void
     {
-        $zone = $this->foundZone();
-        self::assertSame(['ns1.fozzy.com', 'ns2.fozzy.com'], $zone->getJson('ns_current'));
-        self::assertNotNull($zone->ns_loaded_at);
-        self::assertContains('NS: ns1.fozzy.com, ns2.fozzy.com', $this->texts($zone));
-
-        // A failed lookup keeps the previous snapshot and does not block the Cloudflare load.
-        $this->nameServers->servers = new \RuntimeException('DNS-резолвер недоступен');
-        $this->cloudflare->found = ['state' => 'missing'];
-        $this->sync()->loadBefore($zone);
+        $zone = $this->zone();
+        $this->sync()->loadNs($zone);
         $zone = DnsSyncZone::findOne($zone->id);
         self::assertSame(['ns1.fozzy.com', 'ns2.fozzy.com'], $zone->getJson('ns_current'));
-        self::assertSame('missing', $zone->cf_state);
+        self::assertNotNull($zone->ns_loaded_at);
+        self::assertSame(['NS: ns1.fozzy.com, ns2.fozzy.com'], $this->texts($zone));
+        self::assertNull($zone->cf_state, 'NS lookup does not touch Cloudflare');
+
+        // A failed lookup keeps the previous snapshot.
+        $this->nameServers->servers = new \RuntimeException('DNS-резолвер недоступен');
+        $this->sync()->loadNs($zone);
+        $zone = DnsSyncZone::findOne($zone->id);
+        self::assertSame(['ns1.fozzy.com', 'ns2.fozzy.com'], $zone->getJson('ns_current'));
         self::assertContains('NS: DNS-резолвер недоступен', $this->texts($zone));
 
         $this->nameServers->servers = null;
-        $this->sync()->loadBefore($zone);
+        $this->sync()->loadNs($zone);
         $zone = DnsSyncZone::findOne($zone->id);
         self::assertNull($zone->ns_current);
         self::assertContains('NS: домен не существует (NXDOMAIN)', $this->texts($zone));
+
+        // Loading Cloudflare does not look up NS.
+        $this->nameServers->servers = new \RuntimeException('must not be called');
+        $this->sync()->loadBefore($zone);
+        self::assertNotContains('NS: must not be called', $this->texts($zone));
     }
 
     public function testMissingAndSearchErrors(): void
@@ -287,8 +293,7 @@ class ZoneSyncTest extends TestCase
         $zone = DnsSyncZone::findOne($zone->id);
         self::assertSame('error', $zone->cf_state);
         self::assertNull($zone->cf_before);
-        self::assertSame(['NS: ns1.fozzy.com, ns2.fozzy.com', 'Нет в Cloudflare', 'NS: ns1.fozzy.com, ns2.fozzy.com',
-            'Cloudflare: Поиск неполный: b: HTTP 500'], $this->texts($zone));
+        self::assertSame(['Нет в Cloudflare', 'Cloudflare: Поиск неполный: b: HTTP 500'], $this->texts($zone));
     }
 
     public function testRunReplacesAllRecords(): void

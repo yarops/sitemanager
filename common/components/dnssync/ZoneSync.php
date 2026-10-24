@@ -60,9 +60,9 @@ class ZoneSync
         return $records;
     }
 
-    public function loadBefore(DnsSyncZone $zone): void
+    /** Delegation snapshot: which NS the domain uses right now; not related to Cloudflare. */
+    public function loadNs(DnsSyncZone $zone): void
     {
-        // Delegation snapshot: which registrar NS the domain uses before the move.
         try {
             $servers = $this->nameServers->lookup($zone->domain);
             $zone->setJson('ns_current', $servers);
@@ -72,6 +72,11 @@ class ZoneSync
         } catch (\Throwable $exception) {
             $zone->addMessage('error', 'NS: ' . $exception->getMessage());
         }
+        $zone->save(false);
+    }
+
+    public function loadBefore(DnsSyncZone $zone): void
+    {
         try {
             $found = $this->cloudflare->findZone($zone->domain);
             if ($found['state'] !== DnsSyncZone::CF_FOUND) {
