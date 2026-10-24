@@ -80,7 +80,7 @@ class DnsSyncController extends Controller
 
         return $this->render('view', [
             'model' => $sync,
-            'zones' => $sync->getZones()->with(['item.childs'])->all(),
+            'zones' => $sync->getZones()->with(['item.childs', 'item.serverUser'])->all(),
         ]);
     }
 

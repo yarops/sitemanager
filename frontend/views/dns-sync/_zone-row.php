@@ -58,6 +58,15 @@ $message = static fn(array $m): string => Html::tag('div',
 <tbody data-zone-id="<?= (int)$zone->id ?>" data-status="<?= Html::encode($zone->status) ?>">
 <tr class="<?= $childs ? 'table-warning' : '' ?> <?= $dimmed ? 'dns-sync-dimmed' : '' ?>">
     <td>
+        <?php if ($item && $item->serverUser): ?>
+            <div class="small text-muted">
+                <?= Html::encode($item->serverUser->user_login) ?>
+                <?= Html::button('<i class="bi bi-clipboard"></i>', [
+                    'class' => 'btn btn-link btn-sm p-0 ms-1 align-baseline dns-sync-copy',
+                    'data-copy' => $item->serverUser->user_login, 'title' => 'Копировать пользователя',
+                ]) ?>
+            </div>
+        <?php endif; ?>
         <strong><?= Html::encode($zone->domain) ?></strong>
         <?= Html::button('<i class="bi bi-clipboard"></i>', [
             'class' => 'btn btn-link btn-sm p-0 ms-1 align-baseline dns-sync-copy',
