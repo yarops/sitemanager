@@ -180,13 +180,31 @@ class DnsRecordsTest extends TestCase
     {
         $client = $this->client();
         $client->responses = [[429, ['retry-after' => '1'], null], $this->ok(['deletes' => [], 'posts' => []])];
-        $this->expectExceptionMessage('Rate limit Cloudflare, batch не применён');
+        $this->expectExceptionMessage('Rate limit Cloudflare, запрос не применён');
         try {
             $client->batch('a', 'z1', ['x'], []);
         } finally {
             self::assertSame([], $client->sleeps);
             self::assertCount(1, $client->calls);
         }
+    }
+
+    public function testCreateZone(): void
+    {
+        $client = $this->client();
+        $client->responses[] = $this->ok($this->zone('example.com', 'id-a', 'new'));
+        self::assertSame(
+            ['zone_id' => 'new', 'status' => 'pending', 'name_servers' => ['ann.ns.cloudflare.com', 'bob.ns.cloudflare.com']],
+            $client->createZone('a', 'example.com')
+        );
+        [$token, $method, $path, $body] = $client->calls[0];
+        self::assertSame(['token-a', 'POST', 'zones'], [$token, $method, $path]);
+        self::assertSame(['account' => ['id' => 'id-a'], 'name' => 'example.com', 'type' => 'full', 'jump_start' => false], $body);
+
+        // Not retried on 429.
+        $client->responses = [[429, ['retry-after' => '1'], null]];
+        $this->expectExceptionMessage('Rate limit Cloudflare, запрос не применён');
+        $client->createZone('a', 'example.com');
     }
 
     public function testBatchTimeout(): void

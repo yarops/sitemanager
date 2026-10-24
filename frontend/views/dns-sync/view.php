@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $model->title;
 
 $this->registerJsFile('@web/js/dns-sync.js', ['depends' => [YiiAsset::class]]);
 $urls = [];
-foreach (['load-isp' => 'loadIsp', 'load-before' => 'loadBefore', 'toggle' => 'toggle', 'run' => 'run', 'load-after' => 'loadAfter'] as $route => $key) {
+foreach (['load-isp' => 'loadIsp', 'load-before' => 'loadBefore', 'toggle' => 'toggle', 'run' => 'run', 'load-after' => 'loadAfter', 'add-zone' => 'addZone'] as $route => $key) {
     $urls[$key] = Url::to([$route, 'id' => $model->id]);
 }
 ?>

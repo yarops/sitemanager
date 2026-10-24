@@ -163,6 +163,83 @@ class ZoneSync
         }
     }
 
+    /**
+     * Adds a missing root zone to Cloudflare (no DNS import, settings untouched).
+     * The records are uploaded afterwards by a regular run.
+     */
+    public function addZone(DnsSyncZone $zone, string $account): void
+    {
+        $records = $zone->getJson('isp_records');
+        $refusal = null;
+        if ($zone->cf_state !== DnsSyncZone::CF_MISSING) {
+            $refusal = 'Добавить можно только зону со статусом «Нет в Cloudflare»';
+        } elseif ($zone->item === null || $zone->item->parent_id) {
+            $refusal = 'Добавляются только корневые сайты';
+        } elseif (!$records) {
+            $refusal = 'Сначала загрузите записи ISP';
+        } elseif (RecordMapper::isLegacy($records, $zone->domain)) {
+            $refusal = 'Легаси cPanel-зона, добавление не поддерживается';
+        } elseif (!in_array($account, $this->cloudflare->accountLabels(), true)) {
+            $refusal = 'Неизвестный аккаунт Cloudflare';
+        }
+        if ($refusal !== null || !$zone->tryLock()) {
+            $zone->addMessage('error', $refusal ?? 'Зона уже выполняется');
+            $zone->save(false, ['messages']);
+            return;
+        }
+        $status = DnsSyncZone::STATUS_ERROR;
+        $mutexName = null;
+        try {
+            $name = 'dns-sync:domain:' . $zone->domain;
+            if (!$this->mutex->acquire($name)) {
+                $zone->addMessage('error', 'Зона выполняется в другом синке');
+                return;
+            }
+            $mutexName = $name;
+            // The zone may have been added since the Cloudflare load: create only on a repeated "missing".
+            $found = $this->cloudflare->findZone($zone->domain);
+            if ($found['state'] === DnsSyncZone::CF_FOUND) {
+                $zone->cf_state = DnsSyncZone::CF_FOUND;
+                $zone->cf_account = $found['account'];
+                $zone->cf_zone_id = $found['zone_id'];
+                $zone->cf_zone_status = $found['status'];
+                $zone->setJson('cf_name_servers', $found['name_servers']);
+                $zone->addMessage('warning', 'Зона уже есть в Cloudflare, загрузите Cloudflare перед синком');
+                $status = DnsSyncZone::STATUS_NEW;
+                return;
+            }
+            if ($found['state'] === DnsSyncZone::CF_AMBIGUOUS) {
+                $zone->cf_state = DnsSyncZone::CF_AMBIGUOUS;
+                $zone->addMessage('error', 'Найдено несколько зон в Cloudflare');
+                return;
+            }
+            if ($found['state'] !== DnsSyncZone::CF_MISSING) {
+                $zone->addMessage('error', $found['message'] ?? 'Поиск неполный');
+                return;
+            }
+            $created = $this->cloudflare->createZone($account, $zone->domain);
+            $zone->cf_state = DnsSyncZone::CF_FOUND;
+            $zone->cf_zone_status = $created['status'];
+            $zone->setJson('cf_name_servers', $created['name_servers']);
+            // A new zone is empty: the empty snapshot is its before.
+            if (!$zone->saveBeforeOnce([], $account, $created['zone_id'])) {
+                $zone->addMessage('warning', 'before был сохранён раньше и не перезаписан');
+            }
+            $zone->cf_account = $account;
+            $zone->cf_zone_id = $created['zone_id'];
+            $zone->addMessage('info', 'Зона создана, NS: ' . implode(', ', $created['name_servers']));
+            $status = DnsSyncZone::STATUS_NEW;
+        } catch (\Throwable $exception) {
+            $zone->addMessage('error', 'Cloudflare: ' . $exception->getMessage());
+        } finally {
+            if ($mutexName !== null) {
+                $this->mutex->release($mutexName);
+            }
+            $zone->save(false);
+            $zone->unlock($status);
+        }
+    }
+
     public function loadAfter(DnsSyncZone $zone): void
     {
         try {

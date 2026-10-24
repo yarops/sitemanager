@@ -37,6 +37,7 @@ class DnsSyncController extends Controller
                     'toggle' => ['post'],
                     'run' => ['post'],
                     'load-after' => ['post'],
+                    'add-zone' => ['post'],
                 ],
             ],
         ];
@@ -119,6 +120,14 @@ class DnsSyncController extends Controller
     {
         $model = $this->findZone($id, $zone);
         ZoneSync::configured()->loadAfter($model);
+        return $this->row($model);
+    }
+
+    public function actionAddZone(int $id, int $zone): array
+    {
+        $model = $this->findZone($id, $zone);
+        Yii::$app->session->close();
+        ZoneSync::configured()->addZone($model, (string)Yii::$app->request->post('account'));
         return $this->row($model);
     }
 

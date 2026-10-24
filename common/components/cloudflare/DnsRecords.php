@@ -157,6 +157,30 @@ class DnsRecords
         return ['deletes' => (array)($result['deletes'] ?? []), 'posts' => (array)($result['posts'] ?? [])];
     }
 
+    /**
+     * Adds a zone without DNS import and without changing its settings.
+     *
+     * @return array ['zone_id', 'status', 'name_servers']
+     */
+    public function createZone(string $account, string $domain): array
+    {
+        $response = $this->send($account, 'POST', 'zones', [
+            'account' => ['id' => (string)($this->accounts[$account]['id'] ?? '')],
+            'name' => $domain,
+            'type' => 'full',
+            'jump_start' => false,
+        ], false);
+        $zone = $response['result'] ?? null;
+        if (!is_array($zone) || empty($zone['id'])) {
+            throw new \RuntimeException('Некорректный ответ Cloudflare');
+        }
+        return [
+            'zone_id' => (string)$zone['id'],
+            'status' => (string)($zone['status'] ?? ''),
+            'name_servers' => array_values((array)($zone['name_servers'] ?? [])),
+        ];
+    }
+
     /** One API call with a single retry on 429 for idempotent requests. */
     private function send(string $account, string $method, string $path, ?array $body = null, bool $retry = true): array
     {
@@ -167,7 +191,7 @@ class DnsRecords
         [$code, $headers, $response] = $this->request($token, $method, $path, $body);
         if ($code === 429) {
             if (!$retry) {
-                throw new \RuntimeException('Rate limit Cloudflare, batch не применён');
+                throw new \RuntimeException('Rate limit Cloudflare, запрос не применён');
             }
             $after = isset($headers['retry-after']) && is_numeric($headers['retry-after'])
                 ? (int)$headers['retry-after'] : self::DEFAULT_RETRY_AFTER;

@@ -37,6 +37,9 @@ class FakeCloudflare extends DnsRecords
     public $batchResult = null;
     public array $batches = [];
     public int $listCalls = 0;
+    /** @var array|\Throwable */
+    public $created = ['zone_id' => 'new1', 'status' => 'pending', 'name_servers' => ['ann.ns.cloudflare.com', 'bob.ns.cloudflare.com']];
+    public array $creates = [];
 
     public function __construct()
     {
@@ -46,6 +49,20 @@ class FakeCloudflare extends DnsRecords
     public function findZone(string $domain): array
     {
         return $this->found;
+    }
+
+    public function accountLabels(): array
+    {
+        return ['a'];
+    }
+
+    public function createZone(string $account, string $domain): array
+    {
+        $this->creates[] = [$account, $domain];
+        if ($this->created instanceof \Throwable) {
+            throw $this->created;
+        }
+        return $this->created;
     }
 
     public function list(string $account, string $zoneId): array
@@ -111,6 +128,8 @@ class ZoneSyncTest extends TestCase
         ]);
         \Yii::$app->db->createCommand('CREATE TABLE server (id INTEGER PRIMARY KEY, title TEXT, ip TEXT, password TEXT)')->execute();
         \Yii::$app->db->createCommand()->insert('server', ['id' => 1, 'title' => 's', 'ip' => '127.0.0.1', 'password' => 'x'])->execute();
+        \Yii::$app->db->createCommand('CREATE TABLE item (id INTEGER PRIMARY KEY, parent_id INTEGER, domain TEXT, alias TEXT, publish_status TEXT)')->execute();
+        \Yii::$app->db->createCommand()->batchInsert('item', ['id', 'parent_id', 'domain'], [[1, null, 'a.com'], [2, 1, 'sub.a.com']])->execute();
         require_once dirname(__DIR__, 4) . '/console/migrations/m261024_120000_create_dns_sync_tables.php';
         $migration = new class extends \m261024_120000_create_dns_sync_tables {
             public function addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete = null, $update = null)
@@ -355,6 +374,99 @@ class ZoneSyncTest extends TestCase
         $messages = $zone->getJson('messages');
         self::assertCount(100, $messages);
         self::assertSame('m5', $messages[0]['text']);
+    }
+
+    private function missingZone(int $itemId = 1, string $domain = 'a.com'): DnsSyncZone
+    {
+        $zone = $this->zone($domain, ['item_id' => $itemId, 'cf_state' => 'missing']);
+        $this->sync()->loadIsp($zone);
+        $this->cloudflare->found = ['state' => 'missing'];
+        return DnsSyncZone::findOne($zone->id);
+    }
+
+    public function testAddZoneThenRun(): void
+    {
+        $zone = $this->missingZone();
+        $this->sync()->addZone($zone, 'a');
+        $zone = DnsSyncZone::findOne($zone->id);
+        self::assertSame([['a', 'a.com']], $this->cloudflare->creates);
+        self::assertSame(['found', 'a', 'new1', 'pending', 'new'], [$zone->cf_state, $zone->cf_account, $zone->cf_zone_id, $zone->cf_zone_status, $zone->status]);
+        self::assertSame([], $zone->getJson('cf_before'));
+        self::assertSame(['ann.ns.cloudflare.com', 'bob.ns.cloudflare.com'], $zone->getJson('cf_name_servers'));
+        self::assertContains('Зона создана, NS: ann.ns.cloudflare.com, bob.ns.cloudflare.com', $this->texts($zone));
+        self::assertSame([], FakeMutex::$held);
+
+        // The new zone is synced right away; the empty before is kept.
+        $this->cloudflare->lists = [[]];
+        $this->sync()->run($zone);
+        $zone = DnsSyncZone::findOne($zone->id);
+        self::assertSame('done', $zone->status);
+        self::assertSame(['a', 'new1', [], 9], [$this->cloudflare->batches[0][0], $this->cloudflare->batches[0][1], $this->cloudflare->batches[0][2], count($this->cloudflare->batches[0][3])]);
+        self::assertSame([], $zone->getJson('cf_before'));
+    }
+
+    public function testAddZoneRefusals(): void
+    {
+        $found = $this->foundZone();
+        $this->sync()->addZone($found, 'a');
+        self::assertContains('Добавить можно только зону со статусом «Нет в Cloudflare»', $this->texts($found));
+
+        $child = $this->missingZone(2, 'sub.a.com');
+        $this->sync()->addZone($child, 'a');
+        self::assertContains('Добавляются только корневые сайты', $this->texts($child));
+
+        $this->isp->records = DnsZone::parse(file_get_contents(__DIR__ . '/fixtures/isp-domain.record-franbowgame.com.json'), 'franbowgame.com');
+        \Yii::$app->db->createCommand()->insert('item', ['id' => 3, 'domain' => 'franbowgame.com'])->execute();
+        $legacy = $this->missingZone(3, 'franbowgame.com');
+        $this->sync()->addZone($legacy, 'a');
+        self::assertContains('Легаси cPanel-зона, добавление не поддерживается', $this->texts($legacy));
+
+        $this->isp->records = $this->ispRecords('c.com');
+        \Yii::$app->db->createCommand()->insert('item', ['id' => 4, 'domain' => 'c.com'])->execute();
+        $other = $this->missingZone(4, 'c.com');
+        $this->sync()->addZone($other, 'unknown');
+        self::assertContains('Неизвестный аккаунт Cloudflare', $this->texts($other));
+
+        self::assertSame([], $this->cloudflare->creates);
+        self::assertSame('new', DnsSyncZone::findOne($other->id)->status);
+    }
+
+    public function testAddZoneRechecksCloudflare(): void
+    {
+        // Appeared meanwhile: bound, not created.
+        $zone = $this->missingZone();
+        $this->cloudflare->found = ['state' => 'found', 'zone_id' => 'z7', 'account' => 'a', 'status' => 'active', 'name_servers' => []];
+        $this->sync()->addZone($zone, 'a');
+        $zone = DnsSyncZone::findOne($zone->id);
+        self::assertSame(['found', 'z7', 'new'], [$zone->cf_state, $zone->cf_zone_id, $zone->status]);
+
+        // Incomplete search: state stays missing, a retry is possible.
+        $zone->cf_state = 'missing';
+        $zone->save(false);
+        $this->cloudflare->found = ['state' => 'error', 'message' => 'Поиск неполный: b: HTTP 500'];
+        $this->sync()->addZone($zone, 'a');
+        $zone = DnsSyncZone::findOne($zone->id);
+        self::assertSame(['missing', 'error'], [$zone->cf_state, $zone->status]);
+
+        $this->cloudflare->found = ['state' => 'ambiguous', 'message' => 'x'];
+        $this->sync()->addZone($zone, 'a');
+        self::assertSame('ambiguous', DnsSyncZone::findOne($zone->id)->cf_state);
+        self::assertSame([], $this->cloudflare->creates);
+    }
+
+    public function testAddZoneCloudflareError(): void
+    {
+        $zone = $this->missingZone();
+        $this->cloudflare->created = new \RuntimeException('Cloudflare 1105: limit');
+        $this->sync()->addZone($zone, 'a');
+        $zone = DnsSyncZone::findOne($zone->id);
+        self::assertSame(['missing', 'error'], [$zone->cf_state, $zone->status]);
+        self::assertContains('Cloudflare: Cloudflare 1105: limit', $this->texts($zone));
+
+        $this->cloudflare->created = ['zone_id' => 'n2', 'status' => 'pending', 'name_servers' => []];
+        $this->sync()->addZone($zone, 'a');
+        self::assertSame('found', DnsSyncZone::findOne($zone->id)->cf_state);
+        self::assertCount(2, $this->cloudflare->creates);
     }
 
     public function testSyncRelations(): void

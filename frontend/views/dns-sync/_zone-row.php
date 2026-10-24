@@ -1,5 +1,6 @@
 <?php
 
+use common\components\cloudflare\DnsRecords;
 use common\components\dnssync\RecordMapper;
 use common\models\DnsSyncZone;
 use yii\helpers\Html;
@@ -108,6 +109,16 @@ $message = static fn(array $m): string => Html::tag('div',
             'data-confirm' => "Перезалить DNS зоны {$zone->domain} в Cloudflare?",
         ]) ?>
         <?= Html::button('Обновить after', ['class' => 'btn btn-outline-secondary btn-sm', 'data-action' => 'loadAfter']) ?>
+        <?php if ($zone->cf_state === DnsSyncZone::CF_MISSING && $item && !$item->parent_id): ?>
+            <?php $accounts = DnsRecords::configured()->accountLabels(); ?>
+            <?php foreach ($accounts as $account): ?>
+                <?= Html::button('Добавить в Cloudflare' . (count($accounts) > 1 ? ': ' . Html::encode($account) : ''), [
+                    'class' => 'btn btn-outline-primary btn-sm mt-1', 'data-action' => 'addZone',
+                    'data-params' => json_encode(['account' => $account]),
+                    'data-confirm' => "Добавить зону {$zone->domain} в Cloudflare ($account)? Записи не импортируются, NS у регистратора не меняются.",
+                ]) ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </td>
 </tr>
 <?php foreach ($childs as $child): ?>
