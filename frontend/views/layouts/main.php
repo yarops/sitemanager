@@ -42,6 +42,7 @@ AppAsset::register($this);
                 ['label' => Yii::t('frontend', 'Items'), 'url' => ['/item/index']],
                 ['label' => Yii::t('frontend', 'Servers'), 'url' => ['/server/index']],
                 ['label' => 'Проверки серверов', 'url' => ['/server-check/index']],
+                ['label' => 'DNS синк', 'url' => ['/dns-sync/index']],
                 ['label' => Yii::t('frontend', 'Templates'), 'url' => ['/template/index']],
                 ['label' => 'Мониторинг', 'url' => ['/check/dashboard']],
                 //['label' => Yii::t('frontend', 'About'), 'url' => ['/site/about']],
