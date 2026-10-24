@@ -59,6 +59,10 @@ $message = static fn(array $m): string => Html::tag('div',
 <tr class="<?= $childs ? 'table-warning' : '' ?> <?= $dimmed ? 'dns-sync-dimmed' : '' ?>">
     <td>
         <strong><?= Html::encode($zone->domain) ?></strong>
+        <?= Html::button('<i class="bi bi-clipboard"></i>', [
+            'class' => 'btn btn-link btn-sm p-0 ms-1 align-baseline dns-sync-copy',
+            'data-copy' => $zone->domain, 'title' => 'Копировать домен',
+        ]) ?>
         <?php if ($item): ?>
             <div class="small"><?= Html::a('сайт #' . (int)$item->id, ['item/view', 'id' => $item->id], ['target' => '_blank']) ?>
                 <?= $item->publish_status !== 'publish' ? Html::encode($item->publish_status) : '' ?>

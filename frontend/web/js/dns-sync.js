@@ -129,6 +129,16 @@
         if (!button || !root.contains(button)) {
             return;
         }
+        if (button.dataset.copy) {
+            navigator.clipboard.writeText(button.dataset.copy).then(function () {
+                var icon = button.querySelector('.bi');
+                icon.className = 'bi bi-clipboard-check';
+                setTimeout(function () {
+                    icon.className = 'bi bi-clipboard';
+                }, 1200);
+            });
+            return;
+        }
         if (button.hasAttribute('data-stop')) {
             stopped = true;
             return;
