@@ -67,7 +67,9 @@ $message = static fn(array $m): string => Html::tag('div',
                 ]) ?>
             </div>
         <?php endif; ?>
-        <strong><?= Html::encode($zone->domain) ?></strong>
+        <strong><?= Html::a(Html::encode($zone->domain), ($item && $item->protocol ? $item->protocol : 'https') . '://' . $zone->domain, [
+            'target' => '_blank', 'rel' => 'noopener noreferrer', 'class' => 'link-dark',
+        ]) ?></strong>
         <?= Html::button('<i class="bi bi-clipboard"></i>', [
             'class' => 'btn btn-link btn-sm p-0 ms-1 align-baseline dns-sync-copy',
             'data-copy' => $zone->domain, 'title' => 'Копировать домен',
