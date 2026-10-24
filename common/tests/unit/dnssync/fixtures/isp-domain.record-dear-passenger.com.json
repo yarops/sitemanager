@@ -1,0 +1,713 @@
+{
+ "doc":{
+  "$lang":"en",
+  "$func":"domain.record",
+  "$binary":"\/ispmgr",
+  "$host":"https:\/\/5.11.83.189:1500",
+  "$themename":"phoenix",
+  "$features":"b113d9171dc33bed546ce60348a36d23",
+  "$notify":"",
+  "$theme":"\/manimg\/phoenix\/",
+  "$css":"main.css",
+  "$logo":"logo-ispmgr.svg",
+  "$darklogo":"dark-logo-ispmgr.svg",
+  "$smalllogo":"small-logo-ispmgr.svg",
+  "$darksmalllogo":"dark-small-logo-ispmgr.svg",
+  "$logolink":"",
+  "$favicon":"favicon-ispmgr.ico",
+  "$localdir":"default\/",
+  "$allow_change_colors":"on",
+  "elem":[
+   {
+    "name":{
+     "$":"dear-passenger.com."
+    },
+    "rkey":{
+     "$":"dear-passenger.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"dear-passenger.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"www.dear-passenger.com."
+    },
+    "rkey":{
+     "$":"www.dear-passenger.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"www.dear-passenger.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"ftp.dear-passenger.com."
+    },
+    "rkey":{
+     "$":"ftp.dear-passenger.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"ftp.dear-passenger.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"mail.dear-passenger.com."
+    },
+    "rkey":{
+     "$":"mail.dear-passenger.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"mail.dear-passenger.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"smtp.dear-passenger.com."
+    },
+    "rkey":{
+     "$":"smtp.dear-passenger.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"smtp.dear-passenger.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"pop.dear-passenger.com."
+    },
+    "rkey":{
+     "$":"pop.dear-passenger.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"pop.dear-passenger.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 10"
+    },
+    "name":{
+     "$":"dear-passenger.com."
+    },
+    "rkey":{
+     "$":"dear-passenger.com. MX 10 mail.dear-passenger.com."
+    },
+    "rkey_name":{
+     "$":"dear-passenger.com. MX 10 mail.dear-passenger.com."
+    },
+    "rtype":{
+     "$orig":"mx",
+     "$":"MX (mail server)"
+    },
+    "rtype_hidden":{
+     "$":"MX"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"mail.dear-passenger.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 20"
+    },
+    "name":{
+     "$":"dear-passenger.com."
+    },
+    "rkey":{
+     "$":"dear-passenger.com. MX 20 mail.dear-passenger.com."
+    },
+    "rkey_name":{
+     "$":"dear-passenger.com. MX 20 mail.dear-passenger.com."
+    },
+    "rtype":{
+     "$orig":"mx",
+     "$":"MX (mail server)"
+    },
+    "rtype_hidden":{
+     "$":"MX"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"mail.dear-passenger.com."
+    }
+   },
+   {
+    "name":{
+     "$":"dear-passenger.com."
+    },
+    "rkey":{
+     "$":"dear-passenger.com. NS  ns1.example.com."
+    },
+    "rkey_name":{
+     "$":"dear-passenger.com. NS  ns1.example.com."
+    },
+    "rtype":{
+     "$orig":"ns",
+     "$":"NS (name server)"
+    },
+    "rtype_hidden":{
+     "$":"NS"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"ns1.example.com."
+    }
+   },
+   {
+    "name":{
+     "$":"dear-passenger.com."
+    },
+    "rkey":{
+     "$":"dear-passenger.com. NS  ns2.example.com."
+    },
+    "rkey_name":{
+     "$":"dear-passenger.com. NS  ns2.example.com."
+    },
+    "rtype":{
+     "$orig":"ns",
+     "$":"NS (name server)"
+    },
+    "rtype_hidden":{
+     "$":"NS"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"ns2.example.com."
+    }
+   },
+   {
+    "info":{
+     "$":"mname = vps-245504.; serial = 2026102412"
+    },
+    "name":{
+     "$":"dear-passenger.com."
+    },
+    "rkey":{
+     "$":"SOA"
+    },
+    "rkey_name":{
+     "$":"SOA"
+    },
+    "rtype":{
+     "$orig":"soa",
+     "$":"SOA (start of authority record)"
+    },
+    "rtype_hidden":{
+     "$":"SOA"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"root.example.com."
+    }
+   },
+   {
+    "name":{
+     "$":"dear-passenger.com."
+    },
+    "rkey":{
+     "$":"dear-passenger.com. TXT  v=spf1 ip4:5.11.83.189 a mx ~all"
+    },
+    "rkey_name":{
+     "$":"dear-passenger.com. TXT  v=spf1 ip4:5.11.83.189 a mx ~all"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"v=spf1 ip4:5.11.83.189 a mx ~all"
+    }
+   }
+  ],
+  "messages":{
+   "$name":"domain.record",
+   "$checked":"b113d9171dc33bed546ce60348a36d23",
+   "msg":{
+    "hint_add_to_favorite":"Add to favorite paths",
+    "hint_remove_from_favorite":"Remove from favorite paths",
+    "table_settings_show_columns":"Show columns:",
+    "filter_delimiter_~":"contains",
+    "table_settings_select_all":"Select all",
+    "table_settings_extended":"Extended settings",
+    "path_copy_to_buffer":"The path has been copied to clipboard",
+    "table_settings":"Table settings",
+    "table_settings_select":"Select",
+    "table_settings_reset":"Reset",
+    "progress_group_step":"Group operation in progress. Please wait. '__param__' element is being processed ",
+    "hint_help_links":"Show useful links ",
+    "tip_help_links":"Click the icon to display useful links ",
+    "dashboard":"Dashboard",
+    "hint_copylink":"Copy the link to the form",
+    "hint_unpin":"Unpin tab ",
+    "hint_pin":"Pin tab ",
+    "pagernext":"Next page",
+    "msg_selected":"Selected items",
+    "msg_tab_loading":"Loading...",
+    "hint_takefavorite":"Add to Favorites",
+    "hint_takeunfavorite":"Remove from Menu",
+    "msg_nosel":"Not selected ",
+    "msg_pager_count":"Number per page ",
+    "hint_reloadlist":"Update data",
+    "pagershow":"Show",
+    "moreinfo":"Details",
+    "msg_pager":"Pages",
+    "msg_totalelem":", ... (TOTAL __s__ elements)",
+    "dismiss":"Hide",
+    "tip_typo":"Found a typo? Select the text and press Ctrl+Enter",
+    "filteredit":"Edit",
+    "filterhead":"Filter :",
+    "filterremove":"Reset filters",
+    "filtersave":"Save",
+    "hint_autoupdate_stop":"Cancel auto-update of the list",
+    "hint_export":"Save in CSV",
+    "hint_help":"Go to the Documentation page ",
+    "hint_print":"Print this page",
+    "hint_selectall":"Select all the list elements. You can press CTRL+SHIFT+A",
+    "msg_cant_dwn_dir":"Cannot upload the folder ",
+    "msg_has_colums":"Table has the following columns:",
+    "msg_has_funcs":"Functions for list management:",
+    "msg_sec":"sec.",
+    "msg_total":"Total",
+    "msg_tsetting":"Adjust the table settings ",
+    "notactive":"The service is not active ",
+    "pagerfrom":"of",
+    "pagerline":"lines per page",
+    "pagerok":"Ok",
+    "pagerpage":"Page",
+    "hint_autoupdate_resume":"Enable auto-update of the list",
+    "autoupdate_off":"off",
+    "autoupdate_value":"__value__ sec",
+    "tip_filter":"Click to filter the list",
+    "tip_mbar_pin":"You can hide the menu to expand view area",
+    "tip_msort":"Click the column heading to sort the list. Click the heading and press and hold Ctrl to sort the information by several columns",
+    "tip_sort":"Click the column heading to sort the list. Click the heading and press and hold Ctrl to sort the information by several columns",
+    "tip_title_reload":"Click the heading for data update",
+    "msg_show_more":"More",
+    "msg_collapse":"Collapse",
+    "msg_expand":"Expand",
+    "switch_table_view":"Switch table view",
+    "expand_row":"Expand row",
+    "collapse_row":"Collapse row",
+    "expand_all_rows":"Expand all rows",
+    "collapse_all_rows":"Collapse all rows",
+    "context_menu":"Context menu",
+    "table_search":"Table search",
+    "sort":"Sorting",
+    "sort_column":"__index__ column",
+    "sort_apply":"Apply",
+    "sort_reset":"Reset",
+    "sort_close":"Close",
+    "sort_add_column":"Add column",
+    "sort_asc":"In ascending order",
+    "sort_dsc":"In descending order",
+    "msg_ok_confirm_delete":"Delete",
+    "short_new":"Create record",
+    "tlsa_cert_usage_0":"0 - CA Limit",
+    "tlsa_cert_usage_3":"3 - Domain certificate ",
+    "tlsa_selector_0":"0 - Full certificate ",
+    "tlsa_matching_type_2":"2 - SHA-512",
+    "tlsa_selector_1":"1 - Open key",
+    "rtype_tlsa":"TLSA (TLS authentication)",
+    "tlsa_cert_usage_1":"1 - Certificate limit service ",
+    "hint_rtype_tlsa":"It is used to associate a TLS server certificate or public key with the domain name",
+    "tlsa_matching_type_1":"1 - SHA-256",
+    "tlsa_cert_usage_2":"2 - Trusted source ",
+    "tlsa_matching_type_0":"0 - Hash is not used ",
+    "hint_p_custom_on":"The record was created manually. This type of records is not supported by the control panel, that's why it can be displayed and processed incorrectly. ",
+    "ds_algorithm_10":"10 - RSA\/SHA-512",
+    "rtype_dnskey":"DNSKEY (sign key in DNSSEC)",
+    "ds_algorithm_13":"13 - ECDSA Curve P-256 with SHA-256",
+    "ds_algorithm_5":"5 - RSA\/SHA-1",
+    "ds_algorithm_7":"7 - RSASHA1-NSEC3-SHA1",
+    "ds_algorithm_3":"3 - DSA\/SHA1",
+    "ds_digest_type_3":"3 - GOST R 34.11-94",
+    "ds_digest_type_4":"4 - SHA-384 ",
+    "ds_digest_type_1":"1 - SHA-1",
+    "ds_digest_type_2":"2 - SHA-256",
+    "ds_algorithm_12":"12 - GOST R 34.10-2001",
+    "rtype_ds":"DS (digest of DNSSEC key)",
+    "ds_algorithm_14":"14 - ECDSA Curve P-384 with SHA-384",
+    "dnssec_banner_resign_error":"Error occured during __value__ DNSSEC resigning. Domain zone returned to initial state.",
+    "while_status_queue_banner":"You cannot edit domain zone while this zone is signed in DNSSEC",
+    "ds_algorithm_15":"15 - Ed25519",
+    "ds_algorithm_8":"8 - RSA\/SHA-256",
+    "ds_algorithm_6":"6 - DSA-NSEC3-SHA1",
+    "ds_algorithm_16":"16 - Ed448",
+    "rtype_caa":"CAA (Certification Authority Authorization)",
+    "hint_ttl":"Time to live ",
+    "ttl":"TTL, sec ",
+    "msg_error_access":"You have insufficient permissions to access the domain name",
+    "hint_delete":"Delete the selected DNS record.",
+    "hint_edit":"Change the settings of the selected DNS record.",
+    "hint_info":"Additional information",
+    "hint_name":"Enter the record name (it can be a subdomain)",
+    "hint_new":"Add a new DNS record.",
+    "hint_rtype":"Select a record type. Values and additional parameters may vary based on the record type selected",
+    "hint_rtype_a":"Maps this domain name to IPv4 address",
+    "hint_rtype_aaaa":"Maps this domain name to IPv6 address.",
+    "hint_rtype_cname":"This domain name will be canonical for another domain name",
+    "hint_rtype_dname":"All subdomains of this domain name will be canonical for corresponding subdomains of another domain name",
+    "hint_rtype_mx":"Specifies the e-mail server responsible for this domain name",
+    "hint_rtype_ns":"The specified server will serve as the name server for this subdomain",
+    "hint_rtype_ptr":"Maps IP address to the domain name",
+    "hint_rtype_soa":"Specifies a server that contains the global information about this domain name ",
+    "hint_rtype_srv":"Specifies the location of a service (КАС 2782)",
+    "hint_rtype_txt":"This record is intended for informational purposes. It allows users to associate some text with a hostname",
+    "hint_value":"Enter any text",
+    "info":"Additional information",
+    "rtype":"Type",
+    "rtype_a":"A (internet address v4)",
+    "rtype_aaaa":"AAAA (Internet address v6)",
+    "rtype_cname":"CNAME (canonical name)",
+    "rtype_dname":"DNAME (delegated name)",
+    "rtype_mx":"MX (mail server)",
+    "rtype_ns":"NS (name server)",
+    "rtype_ptr":"PTR (domain name pointer)",
+    "rtype_soa":"SOA (start of authority record)",
+    "rtype_srv":"SRV (network service)",
+    "rtype_txt":"TXT (text record)",
+    "value":"Value",
+    "msg_header_confirm_delete":"Resource record removal",
+    "msg_confirm_delete":"You are going to delete:",
+    "spamexperts_mx_banner_moreinfo":"Go to SpamExperts",
+    "spamexperts_mx_banner":"Creating and editing MX records is unavailable, the domain is connected to SpamExperts. To manage MX records, go to SpamExperts.",
+    "msg_confirm_delimiter":",",
+    "short_edit":"Edit",
+    "hint_back":"Back to the previous list ",
+    "name":"Name",
+    "short_back":"Back",
+    "short_delete":"Delete",
+    "title":"DNS record types - dear-passenger.com"
+   }
+  },
+  "metadata":{
+   "$name":"domain.record",
+   "$type":"list",
+   "$key":"rkey",
+   "$keyname":"rkey_name",
+   "$mgr":"ispmgr",
+   "coldata":{
+    "col":[
+     {
+      "$name":"name",
+      "$type":"data",
+      "$sort":"alpha",
+      "$convert":"punycode",
+      "xprop":[
+       {
+        "$name":"custom",
+        "$value":"on",
+        "$img":"p-error",
+        "$sprite":"yes",
+        "$spritesvg":"yes"
+       }
+      ]
+     },
+     {
+      "$name":"ttl",
+      "$type":"data",
+      "$sort":"digit"
+     },
+     {
+      "$name":"rtype",
+      "$type":"msg",
+      "$sort":"alpha",
+      "$sorted":"+1"
+     },
+     {
+      "$name":"value",
+      "$type":"data",
+      "$sort":"alpha",
+      "$convert":"punycode"
+     },
+     {
+      "$name":"info",
+      "$type":"data",
+      "$sort":"alpha"
+     }
+    ]
+   },
+   "contextmenu":{
+    "toolgrp":[
+     {
+      "$name":"edit",
+      "toolbtn":[
+       {
+        "$func":"domain.record.edit",
+        "$type":"edit",
+        "$nogroupedit":"yes",
+        "$img":"t-edit",
+        "$name":"edit",
+        "$default":"yes",
+        "$sprite":"yes",
+        "$spritesvg":"yes",
+        "hide":[
+         {
+          "$name":"rtype_hidden",
+          "$value":"DNSKEY"
+         },
+         {
+          "$name":"custom",
+          "$value":"on"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "$name":"delete",
+      "toolbtn":[
+       {
+        "$func":"domain.record.delete",
+        "$type":"group",
+        "$nogroupedit":"yes",
+        "$img":"t-delete",
+        "$name":"delete",
+        "$danger":"yes",
+        "$sprite":"yes",
+        "$spritesvg":"yes",
+        "hide":[
+         {
+          "$name":"rtype_hidden",
+          "$value":"SOA"
+         },
+         {
+          "$name":"rtype_hidden",
+          "$value":"DNSKEY"
+         },
+         {
+          "$name":"custom",
+          "$value":"on"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "toolbar":{
+    "toolgrp":[
+     {
+      "$name":"back",
+      "toolbtn":[
+       {
+        "$func":"domain",
+        "$type":"back",
+        "$img":"t-back",
+        "$name":"back",
+        "$sprite":"yes",
+        "$spritesvg":"yes"
+       }
+      ]
+     },
+     {
+      "$name":"back_btn_sep",
+      "$separator":"yes"
+     },
+     {
+      "$name":"new",
+      "toolbtn":[
+       {
+        "$func":"domain.record.edit",
+        "$type":"new",
+        "$img":"t-new",
+        "$name":"new",
+        "$detached":"yes",
+        "$sprite":"yes",
+        "$spritesvg":"yes"
+       },
+       {
+        "$func":"domain.record.edit",
+        "$type":"edit",
+        "$nogroupedit":"yes",
+        "$img":"t-edit",
+        "$name":"edit",
+        "$default":"yes",
+        "$notext":"yes",
+        "$sprite":"yes",
+        "$spritesvg":"yes",
+        "hide":[
+         {
+          "$name":"rtype_hidden",
+          "$value":"DNSKEY"
+         },
+         {
+          "$name":"custom",
+          "$value":"on"
+         }
+        ]
+       },
+       {
+        "$func":"domain.record.delete",
+        "$type":"group",
+        "$nogroupedit":"yes",
+        "$img":"t-delete",
+        "$name":"delete",
+        "$notext":"yes",
+        "$danger":"yes",
+        "$sprite":"yes",
+        "$spritesvg":"yes",
+        "hide":[
+         {
+          "$name":"rtype_hidden",
+          "$value":"SOA"
+         },
+         {
+          "$name":"rtype_hidden",
+          "$value":"DNSKEY"
+         },
+         {
+          "$name":"custom",
+          "$value":"on"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "p_cnt":{
+   "$":"1000"
+  },
+  "p_elems":{
+   "$":"12"
+  },
+  "p_num":{
+   "$":"1"
+  },
+  "p_order":{
+   "$":"asc"
+  },
+  "p_sort":{
+   "$":"rtype"
+  },
+  "page":[
+   {
+    "$":"A (internet address v4) - TXT (text record)"
+   }
+  ],
+  "plid":{
+   "$":"dear-passenger.com"
+  },
+  "plname":{
+   "$":"dear-passenger.com"
+  },
+  "saved_filters":{
+   
+  },
+  "tips":{
+   "tip":{
+    "$":"title_reload"
+   }
+  },
+  "tparams":{
+   "elid":{
+    "$":"dear-passenger.com"
+   },
+   "func":{
+    "$":"domain.record"
+   },
+   "out":{
+    "$":"json"
+   }
+  }
+ }
+}

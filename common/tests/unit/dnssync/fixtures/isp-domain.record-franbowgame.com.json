@@ -1,0 +1,3344 @@
+{
+ "doc":{
+  "$lang":"en",
+  "$func":"domain.record",
+  "$binary":"\/ispmgr",
+  "$host":"https:\/\/5.11.83.189:1500",
+  "$themename":"phoenix",
+  "$features":"b113d9171dc33bed546ce60348a36d23",
+  "$notify":"",
+  "$theme":"\/manimg\/phoenix\/",
+  "$css":"main.css",
+  "$logo":"logo-ispmgr.svg",
+  "$darklogo":"dark-logo-ispmgr.svg",
+  "$smalllogo":"small-logo-ispmgr.svg",
+  "$darksmalllogo":"dark-small-logo-ispmgr.svg",
+  "$logolink":"",
+  "$favicon":"favicon-ispmgr.ico",
+  "$localdir":"default\/",
+  "$allow_change_colors":"on",
+  "elem":[
+   {
+    "name":{
+     "$":"franbowgame.com."
+    },
+    "rkey":{
+     "$":"franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"www.franbowgame.com."
+    },
+    "rkey":{
+     "$":"www.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"www.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"l.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"l.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"www.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"www.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"www.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcalendars.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcalendars.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcalendars.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webdisk.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webdisk.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webdisk.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcontacts.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcontacts.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcontacts.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autodiscover.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autodiscover.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autodiscover.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"whm.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"whm.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"whm.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcalendars.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcalendars.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcalendars.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webmail.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webmail.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webmail.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpanel.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpanel.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpanel.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpanel.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpanel.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpanel.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autoconfig.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autoconfig.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autoconfig.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autodiscover.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autodiscover.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autodiscover.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcontacts.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcontacts.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcontacts.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"whm.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"whm.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"whm.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webdisk.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webdisk.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webdisk.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webmail.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webmail.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webmail.deathparkgame.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcalendars.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcalendars.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcalendars.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"whm.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"whm.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"whm.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpanel.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpanel.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpanel.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autoconfig.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autoconfig.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autoconfig.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcontacts.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcontacts.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcontacts.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webdisk.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webdisk.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webdisk.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autodiscover.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autodiscover.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autodiscover.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webmail.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webmail.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webmail.l.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autoconfig.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autoconfig.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autoconfig.darkdeception-game.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autoconfig.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autoconfig.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autoconfig.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webmail.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webmail.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webmail.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcontacts.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcontacts.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcontacts.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpanel.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpanel.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpanel.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpanel.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpanel.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpanel.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcontacts.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcontacts.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcontacts.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webdisk.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webdisk.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webdisk.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autodiscover.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autodiscover.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autodiscover.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autodiscover.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autodiscover.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autodiscover.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webmail.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webmail.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webmail.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcalendars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcalendars.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcalendars.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"whm.franbowgame.com."
+    },
+    "rkey":{
+     "$":"whm.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"whm.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webdisk.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webdisk.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webdisk.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpanel.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpanel.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpanel.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autoconfig.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autoconfig.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autoconfig.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcontacts.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcontacts.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcontacts.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"whm.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"whm.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"whm.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webmail.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webmail.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webmail.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcalendars.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcalendars.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcalendars.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autodiscover.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autodiscover.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autodiscover.dudetheftwars.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"autoconfig.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"autoconfig.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"autoconfig.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"webdisk.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"webdisk.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"webdisk.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"cpcalendars.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"cpcalendars.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"cpcalendars.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"whm.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"whm.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rkey_name":{
+     "$":"whm.mrhoppsplayhouse.franbowgame.com. A  5.11.83.189"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"5.11.83.189"
+    }
+   },
+   {
+    "name":{
+     "$":"ftp.franbowgame.com."
+    },
+    "rkey":{
+     "$":"ftp.franbowgame.com. A  206.54.190.30"
+    },
+    "rkey_name":{
+     "$":"ftp.franbowgame.com. A  206.54.190.30"
+    },
+    "rtype":{
+     "$orig":"a",
+     "$":"A (internet address v4)"
+    },
+    "rtype_hidden":{
+     "$":"A"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"206.54.190.30"
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0"
+    },
+    "name":{
+     "$":"franbowgame.com."
+    },
+    "rkey":{
+     "$":"franbowgame.com. MX 0 franbowgame.com."
+    },
+    "rkey_name":{
+     "$":"franbowgame.com. MX 0 franbowgame.com."
+    },
+    "rtype":{
+     "$orig":"mx",
+     "$":"MX (mail server)"
+    },
+    "rtype_hidden":{
+     "$":"MX"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"franbowgame.com."
+    }
+   },
+   {
+    "name":{
+     "$":"franbowgame.com."
+    },
+    "rkey":{
+     "$":"franbowgame.com. NS  ns1.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"franbowgame.com. NS  ns1.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"ns",
+     "$":"NS (name server)"
+    },
+    "rtype_hidden":{
+     "$":"NS"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"ns1.fozzy.com."
+    }
+   },
+   {
+    "name":{
+     "$":"franbowgame.com."
+    },
+    "rkey":{
+     "$":"franbowgame.com. NS  ns2.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"franbowgame.com. NS  ns2.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"ns",
+     "$":"NS (name server)"
+    },
+    "rtype_hidden":{
+     "$":"NS"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"ns2.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"mname = vps-245504.; serial = 2026102520"
+    },
+    "name":{
+     "$":"franbowgame.com."
+    },
+    "rkey":{
+     "$":"SOA"
+    },
+    "rkey_name":{
+     "$":"SOA"
+    },
+    "rtype":{
+     "$orig":"soa",
+     "$":"SOA (start of authority record)"
+    },
+    "rtype_hidden":{
+     "$":"SOA"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"root.example.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 443"
+    },
+    "name":{
+     "$":"_autodiscover._tcp.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_autodiscover._tcp.darkdeception-game.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rkey_name":{
+     "$":"_autodiscover._tcp.darkdeception-game.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanelemaildiscovery.cpanel.net."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_carddav._tcp.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.deathparkgame.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.deathparkgame.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_caldavs._tcp.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.darkdeception-game.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.darkdeception-game.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_carddav._tcp.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.darkdeception-game.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.darkdeception-game.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_caldav._tcp.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.deathparkgame.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.deathparkgame.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_caldavs._tcp.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.deathparkgame.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.deathparkgame.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_carddavs._tcp.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.deathparkgame.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.deathparkgame.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 443"
+    },
+    "name":{
+     "$":"_autodiscover._tcp.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_autodiscover._tcp.deathparkgame.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rkey_name":{
+     "$":"_autodiscover._tcp.deathparkgame.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanelemaildiscovery.cpanel.net."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_carddav._tcp.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.l.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.l.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_caldavs._tcp.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.l.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.l.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 443"
+    },
+    "name":{
+     "$":"_autodiscover._tcp.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_autodiscover._tcp.l.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rkey_name":{
+     "$":"_autodiscover._tcp.l.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanelemaildiscovery.cpanel.net."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_carddavs._tcp.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.l.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.l.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_caldav._tcp.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.l.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.l.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_caldav._tcp.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.darkdeception-game.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.darkdeception-game.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_carddavs._tcp.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.darkdeception-game.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.darkdeception-game.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 443"
+    },
+    "name":{
+     "$":"_autodiscover._tcp.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_autodiscover._tcp.mrhoppsplayhouse.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rkey_name":{
+     "$":"_autodiscover._tcp.mrhoppsplayhouse.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanelemaildiscovery.cpanel.net."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_carddav._tcp.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.mrhoppsplayhouse.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.mrhoppsplayhouse.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_caldavs._tcp.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_carddav._tcp.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 443"
+    },
+    "name":{
+     "$":"_autodiscover._tcp.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_autodiscover._tcp.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rkey_name":{
+     "$":"_autodiscover._tcp.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanelemaildiscovery.cpanel.net."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_caldav._tcp.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_carddavs._tcp.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_caldav._tcp.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.dudetheftwars.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.dudetheftwars.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_carddavs._tcp.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.dudetheftwars.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.dudetheftwars.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_caldavs._tcp.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.dudetheftwars.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.dudetheftwars.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 443"
+    },
+    "name":{
+     "$":"_autodiscover._tcp.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_autodiscover._tcp.dudetheftwars.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rkey_name":{
+     "$":"_autodiscover._tcp.dudetheftwars.franbowgame.com. SRV 0 0 443  cpanelemaildiscovery.cpanel.net."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanelemaildiscovery.cpanel.net."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_carddav._tcp.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.dudetheftwars.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.dudetheftwars.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_caldavs._tcp.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.mrhoppsplayhouse.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.mrhoppsplayhouse.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2080"
+    },
+    "name":{
+     "$":"_carddavs._tcp.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.mrhoppsplayhouse.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.mrhoppsplayhouse.franbowgame.com. SRV 0 0 2080  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "info":{
+     "$":"priority = 0; weight = 0; port = 2079"
+    },
+    "name":{
+     "$":"_caldav._tcp.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.mrhoppsplayhouse.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.mrhoppsplayhouse.franbowgame.com. SRV 0 0 2079  cpanel1.c.fozzy.com."
+    },
+    "rtype":{
+     "$orig":"srv",
+     "$":"SRV (network service)"
+    },
+    "rtype_hidden":{
+     "$":"SRV"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"cpanel1.c.fozzy.com."
+    }
+   },
+   {
+    "name":{
+     "$":"_carddav._tcp.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.deathparkgame.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.deathparkgame.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"darkdeception-game.franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rkey_name":{
+     "$":"darkdeception-game.franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldavs._tcp.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.darkdeception-game.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.darkdeception-game.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddav._tcp.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.darkdeception-game.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.darkdeception-game.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldav._tcp.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.deathparkgame.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.deathparkgame.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldavs._tcp.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.deathparkgame.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.deathparkgame.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddavs._tcp.deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.deathparkgame.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.deathparkgame.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"deathparkgame.franbowgame.com."
+    },
+    "rkey":{
+     "$":"deathparkgame.franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rkey_name":{
+     "$":"deathparkgame.franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    }
+   },
+   {
+    "name":{
+     "$":"_cpanel-dcv-test-record.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_cpanel-dcv-test-record.franbowgame.com. TXT  _cpanel-dcv-test-record=qOb7Ci3LysFw9eJEr9hufHqYGAzEX_wQE_41pU4iyREg4n8rFUPPFn88oQZ_flOF"
+    },
+    "rkey_name":{
+     "$":"_cpanel-dcv-test-record.franbowgame.com. TXT  _cpanel-dcv-test-record=qOb7Ci3LysFw9eJEr9hufHqYGAzEX_wQE_41pU4iyREg4n8rFUPPFn88oQZ_flOF"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"_cpanel-dcv-test-record=qOb7Ci3LysFw9eJEr9hufHqYGAzEX_wQE_41pU4iyREg4n8rFUPPFn88oQZ_flOF"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldavs._tcp.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.l.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.l.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddavs._tcp.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.l.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.l.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddav._tcp.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.l.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.l.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldav._tcp.l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.l.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.l.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"l.franbowgame.com."
+    },
+    "rkey":{
+     "$":"l.franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rkey_name":{
+     "$":"l.franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldav._tcp.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.darkdeception-game.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.darkdeception-game.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddavs._tcp.darkdeception-game.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.darkdeception-game.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.darkdeception-game.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddav._tcp.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.mrhoppsplayhouse.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.mrhoppsplayhouse.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"mrhoppsplayhouse.franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rkey_name":{
+     "$":"mrhoppsplayhouse.franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldavs._tcp.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddav._tcp.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldav._tcp.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddavs._tcp.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"franbowgame.com."
+    },
+    "rkey":{
+     "$":"franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rkey_name":{
+     "$":"franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddav._tcp.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddav._tcp.dudetheftwars.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddav._tcp.dudetheftwars.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldav._tcp.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.dudetheftwars.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.dudetheftwars.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddavs._tcp.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.dudetheftwars.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.dudetheftwars.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldavs._tcp.dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.dudetheftwars.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.dudetheftwars.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"dudetheftwars.franbowgame.com."
+    },
+    "rkey":{
+     "$":"dudetheftwars.franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rkey_name":{
+     "$":"dudetheftwars.franbowgame.com. TXT  v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"v=spf1 ip4:206.54.190.30 +a +mx ~all"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldavs._tcp.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldavs._tcp.mrhoppsplayhouse.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldavs._tcp.mrhoppsplayhouse.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_carddavs._tcp.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_carddavs._tcp.mrhoppsplayhouse.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_carddavs._tcp.mrhoppsplayhouse.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   },
+   {
+    "name":{
+     "$":"_caldav._tcp.mrhoppsplayhouse.franbowgame.com."
+    },
+    "rkey":{
+     "$":"_caldav._tcp.mrhoppsplayhouse.franbowgame.com. TXT  path=\/"
+    },
+    "rkey_name":{
+     "$":"_caldav._tcp.mrhoppsplayhouse.franbowgame.com. TXT  path=\/"
+    },
+    "rtype":{
+     "$orig":"txt",
+     "$":"TXT (text record)"
+    },
+    "rtype_hidden":{
+     "$":"TXT"
+    },
+    "ttl":{
+     "$":"3600"
+    },
+    "value":{
+     "$":"path=\/"
+    }
+   }
+  ],
+  "messages":{
+   "$name":"domain.record",
+   "$checked":"b113d9171dc33bed546ce60348a36d23",
+   "msg":{
+    "hint_add_to_favorite":"Add to favorite paths",
+    "hint_remove_from_favorite":"Remove from favorite paths",
+    "table_settings_show_columns":"Show columns:",
+    "filter_delimiter_~":"contains",
+    "table_settings_select_all":"Select all",
+    "table_settings_extended":"Extended settings",
+    "path_copy_to_buffer":"The path has been copied to clipboard",
+    "table_settings":"Table settings",
+    "table_settings_select":"Select",
+    "table_settings_reset":"Reset",
+    "progress_group_step":"Group operation in progress. Please wait. '__param__' element is being processed ",
+    "hint_help_links":"Show useful links ",
+    "tip_help_links":"Click the icon to display useful links ",
+    "dashboard":"Dashboard",
+    "hint_copylink":"Copy the link to the form",
+    "hint_unpin":"Unpin tab ",
+    "hint_pin":"Pin tab ",
+    "pagernext":"Next page",
+    "msg_selected":"Selected items",
+    "msg_tab_loading":"Loading...",
+    "hint_takefavorite":"Add to Favorites",
+    "hint_takeunfavorite":"Remove from Menu",
+    "msg_nosel":"Not selected ",
+    "msg_pager_count":"Number per page ",
+    "hint_reloadlist":"Update data",
+    "pagershow":"Show",
+    "moreinfo":"Details",
+    "msg_pager":"Pages",
+    "msg_totalelem":", ... (TOTAL __s__ elements)",
+    "dismiss":"Hide",
+    "tip_typo":"Found a typo? Select the text and press Ctrl+Enter",
+    "filteredit":"Edit",
+    "filterhead":"Filter :",
+    "filterremove":"Reset filters",
+    "filtersave":"Save",
+    "hint_autoupdate_stop":"Cancel auto-update of the list",
+    "hint_export":"Save in CSV",
+    "hint_help":"Go to the Documentation page ",
+    "hint_print":"Print this page",
+    "hint_selectall":"Select all the list elements. You can press CTRL+SHIFT+A",
+    "msg_cant_dwn_dir":"Cannot upload the folder ",
+    "msg_has_colums":"Table has the following columns:",
+    "msg_has_funcs":"Functions for list management:",
+    "msg_sec":"sec.",
+    "msg_total":"Total",
+    "msg_tsetting":"Adjust the table settings ",
+    "notactive":"The service is not active ",
+    "pagerfrom":"of",
+    "pagerline":"lines per page",
+    "pagerok":"Ok",
+    "pagerpage":"Page",
+    "hint_autoupdate_resume":"Enable auto-update of the list",
+    "autoupdate_off":"off",
+    "autoupdate_value":"__value__ sec",
+    "tip_filter":"Click to filter the list",
+    "tip_mbar_pin":"You can hide the menu to expand view area",
+    "tip_msort":"Click the column heading to sort the list. Click the heading and press and hold Ctrl to sort the information by several columns",
+    "tip_sort":"Click the column heading to sort the list. Click the heading and press and hold Ctrl to sort the information by several columns",
+    "tip_title_reload":"Click the heading for data update",
+    "msg_show_more":"More",
+    "msg_collapse":"Collapse",
+    "msg_expand":"Expand",
+    "switch_table_view":"Switch table view",
+    "expand_row":"Expand row",
+    "collapse_row":"Collapse row",
+    "expand_all_rows":"Expand all rows",
+    "collapse_all_rows":"Collapse all rows",
+    "context_menu":"Context menu",
+    "table_search":"Table search",
+    "sort":"Sorting",
+    "sort_column":"__index__ column",
+    "sort_apply":"Apply",
+    "sort_reset":"Reset",
+    "sort_close":"Close",
+    "sort_add_column":"Add column",
+    "sort_asc":"In ascending order",
+    "sort_dsc":"In descending order",
+    "msg_ok_confirm_delete":"Delete",
+    "short_new":"Create record",
+    "tlsa_cert_usage_0":"0 - CA Limit",
+    "tlsa_cert_usage_3":"3 - Domain certificate ",
+    "tlsa_selector_0":"0 - Full certificate ",
+    "tlsa_matching_type_2":"2 - SHA-512",
+    "tlsa_selector_1":"1 - Open key",
+    "rtype_tlsa":"TLSA (TLS authentication)",
+    "tlsa_cert_usage_1":"1 - Certificate limit service ",
+    "hint_rtype_tlsa":"It is used to associate a TLS server certificate or public key with the domain name",
+    "tlsa_matching_type_1":"1 - SHA-256",
+    "tlsa_cert_usage_2":"2 - Trusted source ",
+    "tlsa_matching_type_0":"0 - Hash is not used ",
+    "hint_p_custom_on":"The record was created manually. This type of records is not supported by the control panel, that's why it can be displayed and processed incorrectly. ",
+    "ds_algorithm_10":"10 - RSA\/SHA-512",
+    "rtype_dnskey":"DNSKEY (sign key in DNSSEC)",
+    "ds_algorithm_13":"13 - ECDSA Curve P-256 with SHA-256",
+    "ds_algorithm_5":"5 - RSA\/SHA-1",
+    "ds_algorithm_7":"7 - RSASHA1-NSEC3-SHA1",
+    "ds_algorithm_3":"3 - DSA\/SHA1",
+    "ds_digest_type_3":"3 - GOST R 34.11-94",
+    "ds_digest_type_4":"4 - SHA-384 ",
+    "ds_digest_type_1":"1 - SHA-1",
+    "ds_digest_type_2":"2 - SHA-256",
+    "ds_algorithm_12":"12 - GOST R 34.10-2001",
+    "rtype_ds":"DS (digest of DNSSEC key)",
+    "ds_algorithm_14":"14 - ECDSA Curve P-384 with SHA-384",
+    "dnssec_banner_resign_error":"Error occured during __value__ DNSSEC resigning. Domain zone returned to initial state.",
+    "while_status_queue_banner":"You cannot edit domain zone while this zone is signed in DNSSEC",
+    "ds_algorithm_15":"15 - Ed25519",
+    "ds_algorithm_8":"8 - RSA\/SHA-256",
+    "ds_algorithm_6":"6 - DSA-NSEC3-SHA1",
+    "ds_algorithm_16":"16 - Ed448",
+    "rtype_caa":"CAA (Certification Authority Authorization)",
+    "hint_ttl":"Time to live ",
+    "ttl":"TTL, sec ",
+    "msg_error_access":"You have insufficient permissions to access the domain name",
+    "hint_delete":"Delete the selected DNS record.",
+    "hint_edit":"Change the settings of the selected DNS record.",
+    "hint_info":"Additional information",
+    "hint_name":"Enter the record name (it can be a subdomain)",
+    "hint_new":"Add a new DNS record.",
+    "hint_rtype":"Select a record type. Values and additional parameters may vary based on the record type selected",
+    "hint_rtype_a":"Maps this domain name to IPv4 address",
+    "hint_rtype_aaaa":"Maps this domain name to IPv6 address.",
+    "hint_rtype_cname":"This domain name will be canonical for another domain name",
+    "hint_rtype_dname":"All subdomains of this domain name will be canonical for corresponding subdomains of another domain name",
+    "hint_rtype_mx":"Specifies the e-mail server responsible for this domain name",
+    "hint_rtype_ns":"The specified server will serve as the name server for this subdomain",
+    "hint_rtype_ptr":"Maps IP address to the domain name",
+    "hint_rtype_soa":"Specifies a server that contains the global information about this domain name ",
+    "hint_rtype_srv":"Specifies the location of a service (КАС 2782)",
+    "hint_rtype_txt":"This record is intended for informational purposes. It allows users to associate some text with a hostname",
+    "hint_value":"Enter any text",
+    "info":"Additional information",
+    "rtype":"Type",
+    "rtype_a":"A (internet address v4)",
+    "rtype_aaaa":"AAAA (Internet address v6)",
+    "rtype_cname":"CNAME (canonical name)",
+    "rtype_dname":"DNAME (delegated name)",
+    "rtype_mx":"MX (mail server)",
+    "rtype_ns":"NS (name server)",
+    "rtype_ptr":"PTR (domain name pointer)",
+    "rtype_soa":"SOA (start of authority record)",
+    "rtype_srv":"SRV (network service)",
+    "rtype_txt":"TXT (text record)",
+    "value":"Value",
+    "msg_header_confirm_delete":"Resource record removal",
+    "msg_confirm_delete":"You are going to delete:",
+    "spamexperts_mx_banner_moreinfo":"Go to SpamExperts",
+    "spamexperts_mx_banner":"Creating and editing MX records is unavailable, the domain is connected to SpamExperts. To manage MX records, go to SpamExperts.",
+    "msg_confirm_delimiter":",",
+    "short_edit":"Edit",
+    "hint_back":"Back to the previous list ",
+    "name":"Name",
+    "short_back":"Back",
+    "short_delete":"Delete",
+    "title":"DNS record types - franbowgame.com"
+   }
+  },
+  "metadata":{
+   "$name":"domain.record",
+   "$type":"list",
+   "$key":"rkey",
+   "$keyname":"rkey_name",
+   "$mgr":"ispmgr",
+   "coldata":{
+    "col":[
+     {
+      "$name":"name",
+      "$type":"data",
+      "$sort":"alpha",
+      "$convert":"punycode",
+      "xprop":[
+       {
+        "$name":"custom",
+        "$value":"on",
+        "$img":"p-error",
+        "$sprite":"yes",
+        "$spritesvg":"yes"
+       }
+      ]
+     },
+     {
+      "$name":"ttl",
+      "$type":"data",
+      "$sort":"digit"
+     },
+     {
+      "$name":"rtype",
+      "$type":"msg",
+      "$sort":"alpha",
+      "$sorted":"+1"
+     },
+     {
+      "$name":"value",
+      "$type":"data",
+      "$sort":"alpha",
+      "$convert":"punycode"
+     },
+     {
+      "$name":"info",
+      "$type":"data",
+      "$sort":"alpha"
+     }
+    ]
+   },
+   "contextmenu":{
+    "toolgrp":[
+     {
+      "$name":"edit",
+      "toolbtn":[
+       {
+        "$func":"domain.record.edit",
+        "$type":"edit",
+        "$nogroupedit":"yes",
+        "$img":"t-edit",
+        "$name":"edit",
+        "$default":"yes",
+        "$sprite":"yes",
+        "$spritesvg":"yes",
+        "hide":[
+         {
+          "$name":"rtype_hidden",
+          "$value":"DNSKEY"
+         },
+         {
+          "$name":"custom",
+          "$value":"on"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "$name":"delete",
+      "toolbtn":[
+       {
+        "$func":"domain.record.delete",
+        "$type":"group",
+        "$nogroupedit":"yes",
+        "$img":"t-delete",
+        "$name":"delete",
+        "$danger":"yes",
+        "$sprite":"yes",
+        "$spritesvg":"yes",
+        "hide":[
+         {
+          "$name":"rtype_hidden",
+          "$value":"SOA"
+         },
+         {
+          "$name":"rtype_hidden",
+          "$value":"DNSKEY"
+         },
+         {
+          "$name":"custom",
+          "$value":"on"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "toolbar":{
+    "toolgrp":[
+     {
+      "$name":"back",
+      "toolbtn":[
+       {
+        "$func":"domain",
+        "$type":"back",
+        "$img":"t-back",
+        "$name":"back",
+        "$sprite":"yes",
+        "$spritesvg":"yes"
+       }
+      ]
+     },
+     {
+      "$name":"back_btn_sep",
+      "$separator":"yes"
+     },
+     {
+      "$name":"new",
+      "toolbtn":[
+       {
+        "$func":"domain.record.edit",
+        "$type":"new",
+        "$img":"t-new",
+        "$name":"new",
+        "$detached":"yes",
+        "$sprite":"yes",
+        "$spritesvg":"yes"
+       },
+       {
+        "$func":"domain.record.edit",
+        "$type":"edit",
+        "$nogroupedit":"yes",
+        "$img":"t-edit",
+        "$name":"edit",
+        "$default":"yes",
+        "$notext":"yes",
+        "$sprite":"yes",
+        "$spritesvg":"yes",
+        "hide":[
+         {
+          "$name":"rtype_hidden",
+          "$value":"DNSKEY"
+         },
+         {
+          "$name":"custom",
+          "$value":"on"
+         }
+        ]
+       },
+       {
+        "$func":"domain.record.delete",
+        "$type":"group",
+        "$nogroupedit":"yes",
+        "$img":"t-delete",
+        "$name":"delete",
+        "$notext":"yes",
+        "$danger":"yes",
+        "$sprite":"yes",
+        "$spritesvg":"yes",
+        "hide":[
+         {
+          "$name":"rtype_hidden",
+          "$value":"SOA"
+         },
+         {
+          "$name":"rtype_hidden",
+          "$value":"DNSKEY"
+         },
+         {
+          "$name":"custom",
+          "$value":"on"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "p_cnt":{
+   "$":"1000"
+  },
+  "p_elems":{
+   "$":"118"
+  },
+  "p_num":{
+   "$":"1"
+  },
+  "p_order":{
+   "$":"asc"
+  },
+  "p_sort":{
+   "$":"rtype"
+  },
+  "page":[
+   {
+    "$":"A (internet address v4) - TXT (text record)"
+   }
+  ],
+  "plid":{
+   "$":"franbowgame.com"
+  },
+  "plname":{
+   "$":"franbowgame.com"
+  },
+  "saved_filters":{
+   
+  },
+  "tips":{
+   "tip":{
+    "$":"title_reload"
+   }
+  },
+  "tparams":{
+   "elid":{
+    "$":"franbowgame.com"
+   },
+   "func":{
+    "$":"domain.record"
+   },
+   "out":{
+    "$":"json"
+   }
+  }
+ }
+}

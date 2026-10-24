@@ -1,0 +1,34 @@
+{
+ "doc":{
+  "error":{
+   "$type":"missed",
+   "$object":"domain",
+   "$lang":"en",
+   "group":{
+    "$":"__object__ with  '__value__' does not exist "
+   },
+   "msg":{
+    "$":"Domain name with  'no-such-zone-xyz.com' does not exist "
+   },
+   "param":[
+    {
+     "$name":"object",
+     "$type":"msg",
+     "$msg":"Domain name",
+     "$":"domain"
+    },
+    {
+     "$name":"value",
+     "$":"no-such-zone-xyz.com"
+    }
+   ],
+   "stack":{
+    "action":{
+     "$level":"30",
+     "$user":"root",
+     "$":"domain.record"
+    }
+   }
+  }
+ }
+}

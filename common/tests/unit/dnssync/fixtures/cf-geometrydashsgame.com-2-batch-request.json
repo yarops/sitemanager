@@ -1,0 +1,74 @@
+{
+    "deletes": [
+        {
+            "id": "cd5cfeed053b22d7f5c7cb7340021bbd"
+        },
+        {
+            "id": "5796fca7dd5381cb2e225f762f1e74ec"
+        }
+    ],
+    "posts": [
+        {
+            "type": "A",
+            "name": "geometrydashsgame.com",
+            "ttl": 1,
+            "content": "5.11.83.189",
+            "proxied": true
+        },
+        {
+            "type": "A",
+            "name": "www.geometrydashsgame.com",
+            "ttl": 1,
+            "content": "5.11.83.189",
+            "proxied": true
+        },
+        {
+            "type": "A",
+            "name": "ftp.geometrydashsgame.com",
+            "ttl": 1,
+            "content": "5.11.83.189",
+            "proxied": false
+        },
+        {
+            "type": "A",
+            "name": "mail.geometrydashsgame.com",
+            "ttl": 1,
+            "content": "5.11.83.189",
+            "proxied": false
+        },
+        {
+            "type": "A",
+            "name": "smtp.geometrydashsgame.com",
+            "ttl": 1,
+            "content": "5.11.83.189",
+            "proxied": false
+        },
+        {
+            "type": "A",
+            "name": "pop.geometrydashsgame.com",
+            "ttl": 1,
+            "content": "5.11.83.189",
+            "proxied": false
+        },
+        {
+            "type": "MX",
+            "name": "geometrydashsgame.com",
+            "ttl": 1,
+            "content": "mail.geometrydashsgame.com",
+            "priority": 10
+        },
+        {
+            "type": "MX",
+            "name": "geometrydashsgame.com",
+            "ttl": 1,
+            "content": "mail.geometrydashsgame.com",
+            "priority": 20
+        },
+        {
+            "type": "TXT",
+            "name": "geometrydashsgame.com",
+            "ttl": 1,
+            "content": "v=spf1 ip4:5.11.83.189 a mx ~all"
+        }
+    ]
+}
