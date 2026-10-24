@@ -6,8 +6,9 @@ use yii\helpers\Html;
 /** @var $title string */
 /** @var $servers string[]|null */
 /** @var $empty string shown when there are no servers */
+/** @var $class string text colour class */
 ?>
-<div class="small text-muted mt-1">
+<div class="small mt-1 <?= Html::encode($class) ?>">
     <?= Html::encode($title) ?><?= $servers ? '' : ': ' . Html::encode($empty) ?>
     <?php if ($servers): ?>
         <?= Html::button('<i class="bi bi-clipboard"></i>', [

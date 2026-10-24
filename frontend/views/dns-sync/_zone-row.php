@@ -80,16 +80,29 @@ $message = static fn(array $m): string => Html::tag('div',
         <?php if ($childs): ?>
             <div class="small text-warning-emphasis">есть поддомены</div>
         <?php endif; ?>
+        <?php
+        $ns = $zone->ns_loaded_at ? $zone->getJson('ns_current') : null;
+        // Colour only when both lists are known: green — the domain already points to Cloudflare.
+        $nsClass = 'text-muted';
+        if ($zone->ns_loaded_at && $nameServers) {
+            $normalize = static function (array $list): array {
+                $list = array_map([RecordMapper::class, 'normalizeName'], $list);
+                sort($list);
+                return $list;
+            };
+            $nsClass = $normalize($ns ?? []) === $normalize($nameServers) ? 'text-success' : 'text-danger';
+        }
+        ?>
         <?php if ($zone->ns_loaded_at): ?>
-            <?php $ns = $zone->getJson('ns_current'); ?>
             <?= $this->render('_ns-block', [
                 'title' => 'NS',
                 'servers' => $ns,
                 'empty' => $ns === null ? 'домен не существует' : 'нет',
+                'class' => $nsClass,
             ]) ?>
         <?php endif; ?>
         <?php if ($nameServers): ?>
-            <?= $this->render('_ns-block', ['title' => 'Cloudflare NS', 'servers' => $nameServers, 'empty' => 'нет']) ?>
+            <?= $this->render('_ns-block', ['title' => 'Cloudflare NS', 'servers' => $nameServers, 'empty' => 'нет', 'class' => $nsClass]) ?>
         <?php endif; ?>
     </td>
     <td><?= $records($ispLines, $zone->isp_loaded_at) ?></td>
