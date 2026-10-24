@@ -30,16 +30,4 @@ class NameServersTest extends TestCase
         $this->expectExceptionMessage('Некорректный ответ DNS');
         NameServers::parse(null);
     }
-
-    public function testState(): void
-    {
-        $assigned = ['trace.ns.cloudflare.com', 'savanna.ns.cloudflare.com'];
-        self::assertSame('cloudflare', NameServers::state(['savanna.ns.cloudflare.com', 'trace.ns.cloudflare.com'], $assigned));
-        self::assertSame('cloudflare-other', NameServers::state(['ann.ns.cloudflare.com', 'bob.ns.cloudflare.com'], $assigned));
-        self::assertSame('cloudflare-other', NameServers::state(['ann.ns.cloudflare.com', 'bob.ns.cloudflare.com'], []));
-        self::assertSame('other', NameServers::state(['ns1.fozzy.com', 'ns2.fozzy.com'], $assigned));
-        self::assertSame('other', NameServers::state(['ns1.fozzy.com', 'trace.ns.cloudflare.com'], $assigned));
-        self::assertSame('none', NameServers::state([], $assigned));
-        self::assertSame('nxdomain', NameServers::state(null, $assigned));
-    }
 }

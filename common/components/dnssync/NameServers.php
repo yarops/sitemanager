@@ -42,28 +42,6 @@ class NameServers
         return $servers;
     }
 
-    /** Assigned pair is active only when the delegation is exactly the Cloudflare pair of the zone. */
-    public static function state(?array $current, array $assigned): string
-    {
-        if ($current === null) {
-            return 'nxdomain';
-        }
-        if (!$current) {
-            return 'none';
-        }
-        $assigned = array_map([RecordMapper::class, 'normalizeName'], $assigned);
-        sort($assigned);
-        if ($assigned && $current === $assigned) {
-            return 'cloudflare';
-        }
-        foreach ($current as $server) {
-            if (!str_ends_with($server, '.ns.cloudflare.com')) {
-                return 'other';
-            }
-        }
-        return 'cloudflare-other';
-    }
-
     protected function request(string $domain): ?array
     {
         $curl = curl_init(self::RESOLVER . '?' . http_build_query(['name' => $domain, 'type' => 'NS']));

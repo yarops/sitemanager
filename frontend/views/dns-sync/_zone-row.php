@@ -1,7 +1,6 @@
 <?php
 
 use common\components\cloudflare\DnsRecords;
-use common\components\dnssync\NameServers;
 use common\components\dnssync\RecordMapper;
 use common\models\DnsSyncZone;
 use yii\helpers\Html;
@@ -26,11 +25,6 @@ $before = $zone->getJson('cf_before');
 $after = $zone->getJson('cf_after');
 $messages = $zone->getJson('messages') ?? [];
 $nameServers = $zone->getJson('cf_name_servers') ?? [];
-$nsState = $zone->ns_loaded_at ? NameServers::state($zone->getJson('ns_current'), $nameServers) : null;
-$nsBadges = [
-    'cloudflare' => ['NS: Cloudflare', 'success'], 'cloudflare-other' => ['NS: другой Cloudflare', 'warning'],
-    'other' => ['NS: не Cloudflare', 'secondary'], 'none' => ['NS: нет', 'danger'], 'nxdomain' => ['NS: домен не существует', 'danger'],
-];
 $item = $zone->item;
 $childs = $item ? $item->childs : [];
 $alias = $item && !empty($item->alias) && $item->alias !== $item->domain ? $item->alias : null;
@@ -100,21 +94,13 @@ $message = static fn(array $m): string => Html::tag('div',
             <div class="small text-muted">
                 <?= Html::encode($zone->cf_account) ?><?= $zone->cf_zone_status ? ' · зона ' . Html::encode($zone->cf_zone_status) : '' ?>
             </div>
+            <?php if ($zone->cf_zone_status === 'pending' && $nameServers): ?>
+                <div class="small">NS для регистратора: <?= Html::encode(implode(', ', $nameServers)) ?></div>
+            <?php endif; ?>
         <?php endif; ?>
-        <?php if ($nsState !== null): ?>
-            <div class="small">
-                <?= $badge(...$nsBadges[$nsState]) ?>
-                <?= Html::encode(implode(', ', $zone->getJson('ns_current') ?? [])) ?>
-            </div>
-        <?php endif; ?>
-        <?php if ($nameServers && $nsState !== 'cloudflare'): ?>
-            <div class="small">
-                сменить на: <?= Html::encode(implode(', ', $nameServers)) ?>
-                <?= Html::button('<i class="bi bi-clipboard"></i>', [
-                    'class' => 'btn btn-link btn-sm p-0 ms-1 align-baseline dns-sync-copy',
-                    'data-copy' => implode("\n", $nameServers), 'title' => 'Копировать NS',
-                ]) ?>
-            </div>
+        <?php if ($zone->ns_loaded_at): ?>
+            <?php $ns = $zone->getJson('ns_current'); ?>
+            <div class="small">NS: <?= $ns === null ? 'домен не существует' : Html::encode($ns ? implode(', ', $ns) : 'нет') ?></div>
         <?php endif; ?>
         <?php foreach (array_slice($messages, -3) as $m): ?>
             <?= $message($m) ?>
