@@ -140,12 +140,12 @@ $message = static fn(array $m): string => Html::tag('div',
 </tr>
 <?php foreach ($childs as $child): ?>
     <tr class="table-warning">
-        <td colspan="7" class="small">↳ поддомен <?= Html::encode($child->domain) ?> — не обрабатывается, проверьте вручную</td>
+        <td colspan="7" class="small"><span class="dns-sync-sticky-text">↳ поддомен <?= Html::encode($child->domain) ?> — не обрабатывается, проверьте вручную</span></td>
     </tr>
 <?php endforeach; ?>
 <?php if ($alias): ?>
     <tr>
-        <td colspan="7" class="small text-muted">↳ алиас <?= Html::encode($alias) ?> — не обрабатывается</td>
+        <td colspan="7" class="small text-muted"><span class="dns-sync-sticky-text">↳ алиас <?= Html::encode($alias) ?> — не обрабатывается</span></td>
     </tr>
 <?php endif; ?>
 </tbody>

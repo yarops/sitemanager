@@ -50,7 +50,7 @@ foreach (['load-isp' => 'loadIsp', 'load-ns' => 'loadNs', 'load-before' => 'load
         before сохраняется один раз до первого изменения.
     </p>
 
-    <div class="table-responsive">
+    <div class="dns-sync-scroll">
     <table class="table table-bordered align-top dns-sync-table">
         <thead>
         <tr>
@@ -71,10 +71,44 @@ foreach (['load-isp' => 'loadIsp', 'load-ns' => 'loadNs', 'load-before' => 'load
 </div>
 
 <style>
+    /* Only the table scrolls: header row and zone column stay in place. */
+    .dns-sync-scroll {
+        --dns-sync-bg: #e1f2ff; /* .wrap background: sticky cells must be opaque */
+        max-height: calc(100vh - 90px);
+        overflow: auto;
+        border: 1px solid var(--bs-border-color);
+    }
+    .dns-sync-table {
+        --bs-table-bg: var(--dns-sync-bg);
+        margin-bottom: 0;
+        /* Collapsed borders scroll away from sticky cells. */
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .dns-sync-table > :not(caption) > * { border-width: 0; }
+    .dns-sync-table > :not(caption) > * > * { border-width: 0 1px 1px 0; }
+    .dns-sync-table > :not(caption) > * > :last-child { border-right-width: 0; }
+    .dns-sync-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        white-space: nowrap;
+    }
+    .dns-sync-table tr > :first-child:not([colspan]) {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        min-width: 220px;
+        max-width: 300px;
+        box-shadow: inset -2px 0 0 var(--bs-border-color), inset 0 0 0 9999px var(--bs-table-accent-bg);
+    }
+    .dns-sync-table > thead > tr > :first-child:not([colspan]) { z-index: 3; }
+    .dns-sync-table .dns-sync-sticky-text { position: sticky; left: 0.5rem; }
     .dns-sync-table td { font-size: 0.875rem; }
     .dns-sync-table .dns-sync-record { white-space: nowrap; font-family: var(--bs-font-monospace); font-size: 0.8rem; }
     .dns-sync-table .dns-sync-status { min-width: 260px; }
     .dns-sync-table .dns-sync-actions { white-space: nowrap; }
-    .dns-sync-table tr.dns-sync-dimmed > td { opacity: 0.6; }
-    .dns-sync-table tbody[data-busy] { opacity: 0.5; }
+    /* Fade content, not cells: a translucent sticky cell would show rows scrolling under it. */
+    .dns-sync-table tr.dns-sync-dimmed > td > *,
+    .dns-sync-table tbody[data-busy] td > * { opacity: 0.55; }
 </style>
