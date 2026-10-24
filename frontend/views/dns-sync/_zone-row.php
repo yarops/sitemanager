@@ -103,6 +103,11 @@ $message = static fn(array $m): string => Html::tag('div',
         ]) ?>
     </td>
     <td class="dns-sync-actions">
+        <?= Html::button('Перезапуск', [
+            'class' => 'btn btn-outline-danger btn-sm', 'data-action' => 'run',
+            'data-confirm' => "Перезалить DNS зоны {$zone->domain} в Cloudflare?",
+        ]) ?>
+        <?= Html::button('Обновить after', ['class' => 'btn btn-outline-secondary btn-sm', 'data-action' => 'loadAfter']) ?>
     </td>
 </tr>
 <?php foreach ($childs as $child): ?>

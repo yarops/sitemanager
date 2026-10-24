@@ -35,6 +35,8 @@ class DnsSyncController extends Controller
                     'load-isp' => ['post'],
                     'load-before' => ['post'],
                     'toggle' => ['post'],
+                    'run' => ['post'],
+                    'load-after' => ['post'],
                 ],
             ],
         ];
@@ -100,6 +102,23 @@ class DnsSyncController extends Controller
         $model = $this->findZone($id, $zone);
         $model->selected = (int)Yii::$app->request->post('selected') === 1 ? 1 : 0;
         $model->save(false, ['selected']);
+        return $this->row($model);
+    }
+
+    public function actionRun(int $id, int $zone): array
+    {
+        $model = $this->findZone($id, $zone);
+        set_time_limit(120);
+        // Do not hold the session lock: other tabs must get "Зона уже выполняется", not wait.
+        Yii::$app->session->close();
+        ZoneSync::configured()->run($model);
+        return $this->row($model);
+    }
+
+    public function actionLoadAfter(int $id, int $zone): array
+    {
+        $model = $this->findZone($id, $zone);
+        ZoneSync::configured()->loadAfter($model);
         return $this->row($model);
     }
 

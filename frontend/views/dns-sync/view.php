@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $model->title;
 
 $this->registerJsFile('@web/js/dns-sync.js', ['depends' => [YiiAsset::class]]);
 $urls = [];
-foreach (['load-isp' => 'loadIsp', 'load-before' => 'loadBefore', 'toggle' => 'toggle'] as $route => $key) {
+foreach (['load-isp' => 'loadIsp', 'load-before' => 'loadBefore', 'toggle' => 'toggle', 'run' => 'run', 'load-after' => 'loadAfter'] as $route => $key) {
     $urls[$key] = Url::to([$route, 'id' => $model->id]);
 }
 ?>
@@ -36,6 +36,8 @@ foreach (['load-isp' => 'loadIsp', 'load-before' => 'loadBefore', 'toggle' => 't
     <div class="d-flex flex-wrap gap-2 mb-2 align-items-center">
         <button type="button" class="btn btn-secondary btn-sm" data-queue="loadIsp">Загрузить ISP</button>
         <button type="button" class="btn btn-secondary btn-sm" data-queue="loadBefore">Загрузить Cloudflare</button>
+        <button type="button" class="btn btn-danger btn-sm" data-queue="run" data-selected-only
+                data-confirm="Перезалить DNS отмеченных зон в Cloudflare? Все записи этих зон в Cloudflare будут удалены и созданы заново из ISP.">Синхронизировать отмеченные</button>
         <button type="button" class="btn btn-outline-danger btn-sm d-none" data-stop>Стоп</button>
         <div class="progress flex-grow-1 d-none" style="max-width: 400px" data-progress>
             <div class="progress-bar" role="progressbar" style="width: 0"></div>
