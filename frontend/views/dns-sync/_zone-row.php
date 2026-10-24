@@ -82,7 +82,18 @@ $message = static fn(array $m): string => Html::tag('div',
         <?php endif; ?>
         <?php if ($zone->ns_loaded_at): ?>
             <?php $ns = $zone->getJson('ns_current'); ?>
-            <div class="small text-muted">NS: <?= $ns === null ? 'домен не существует' : Html::encode($ns ? implode(', ', $ns) : 'нет') ?></div>
+            <div class="small text-muted mt-1">
+                NS<?= $ns === null ? ': домен не существует' : (!$ns ? ': нет' : '') ?>
+                <?php if ($ns): ?>
+                    <?= Html::button('<i class="bi bi-clipboard"></i>', [
+                        'class' => 'btn btn-link btn-sm p-0 ms-1 align-baseline dns-sync-copy',
+                        'data-copy' => implode("\n", $ns), 'title' => 'Копировать NS',
+                    ]) ?>
+                    <?php foreach ($ns as $server): ?>
+                        <div><?= Html::encode($server) ?></div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         <?php endif; ?>
     </td>
     <td><?= $records($ispLines, $zone->isp_loaded_at) ?></td>
