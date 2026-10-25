@@ -13,6 +13,7 @@ use common\components\ispmanager\UserTraffic;
 use common\models\Item;
 use common\models\Server;
 use common\models\ServerCheck;
+use common\models\ServerUser;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
@@ -202,6 +203,38 @@ class ServerController extends Controller
                 'itemsByDomain' => $itemsByDomain,
             ]
         );
+    }
+
+    public function actionCheckUsersDiff(int $id): string
+    {
+        $server = Server::findById($id);
+        $snapshot = Yii::createObject(UserTraffic::class)->fetch($server);
+        $available = $snapshot['state'] === 'available';
+        $ispLogins = $available ? array_map('strval', array_keys($snapshot['users'])) : [];
+        $crmLogins = [];
+        $diffIsp = [];
+        $diffCrm = [];
+
+        if ($available) {
+            $crmLogins = ServerUser::find()
+                ->select('user_login')
+                ->where(['server_id' => $server->id, 'is_archived' => 0])
+                ->distinct()
+                ->column();
+            $diffIsp = array_values(array_diff($ispLogins, $crmLogins));
+            $diffCrm = array_values(array_diff($crmLogins, $ispLogins));
+            sort($diffIsp, SORT_STRING);
+            sort($diffCrm, SORT_STRING);
+        }
+
+        return $this->render('checkUsersDiff', [
+            'model' => $server,
+            'available' => $available,
+            'diffIsp' => $diffIsp,
+            'diffCrm' => $diffCrm,
+            'ispCount' => count($ispLogins),
+            'crmCount' => count($crmLogins),
+        ]);
     }
 
     /**

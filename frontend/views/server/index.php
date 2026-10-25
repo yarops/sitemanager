@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
         echo \yii\helpers\Html::a('View', ['server/view', 'id' => $server->id], ['class' => 'btn btn-secondary btn-sm']) . '&nbsp;';
         echo \yii\helpers\Html::a('Checks', ['server-check/server', 'id' => $server->id], ['class' => 'btn btn-secondary btn-sm']) . '&nbsp;';
         echo \yii\helpers\Html::a('Check diff', ['server/check-diff', 'id' => $server->id], ['class' => 'btn btn-success btn-sm']) . '&nbsp;';
+        echo Html::a('Check users diff', ['server/check-users-diff', 'id' => $server->id], ['class' => 'btn btn-success btn-sm']) . '&nbsp;';
         echo \yii\helpers\Html::a('Check online', ['server/check-online', 'id' => $server->id], [
             'class' => 'btn btn-success btn-sm',
             'data-method' => 'post',

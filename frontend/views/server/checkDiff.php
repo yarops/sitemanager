@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <p><?= Html::a('Check users diff', ['server/check-users-diff', 'id' => $model->id], ['class' => 'btn btn-success btn-sm']) ?></p>
+
     <table class="table table-striped table-bordered detail-view">
     <tr>
         <td><b>Difference on server</b></td>
