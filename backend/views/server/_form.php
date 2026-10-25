@@ -70,6 +70,13 @@ use common\models\ServerUser;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Архивировать пользователей только с архивными сайтами', ['server-user/archive-only-archived-sites', 'serverId' => $model->id], [
+            'class' => 'btn btn-warning',
+            'data' => [
+                'confirm' => 'Архивировать пользователей этого сервера, у которых нет активных сайтов и есть хотя бы один архивный сайт? Пользователи без сайтов не затрагиваются.',
+                'method' => 'post',
+            ],
+        ]) ?>
         <table class="table">
           <thead>
             <tr>

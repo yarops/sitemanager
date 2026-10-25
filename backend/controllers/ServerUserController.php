@@ -32,7 +32,7 @@ class ServerUserController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['create', 'update', 'delete', 'cleanup-empty', 'archive', 'restore', 'server-user'],
+                        'actions' => ['create', 'update', 'delete', 'cleanup-empty', 'archive-only-archived-sites', 'archive', 'restore', 'server-user'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -43,6 +43,7 @@ class ServerUserController extends Controller
                 'actions' => [
                     'delete' => ['post'],
                     'cleanup-empty' => ['post'],
+                    'archive-only-archived-sites' => ['post'],
                     'archive' => ['post'],
                     'restore' => ['post'],
                 ],
@@ -97,6 +98,15 @@ class ServerUserController extends Controller
         Server::findById($serverId);
         $deletedCount = ServerUser::deleteWithoutSites(['server_id' => $serverId]);
         Yii::$app->session->setFlash('success', 'Удалено пользователей без сайтов: ' . $deletedCount . '.');
+
+        return $this->redirect(['server/update', 'id' => $serverId]);
+    }
+
+    public function actionArchiveOnlyArchivedSites(int $serverId): Response
+    {
+        Server::findById($serverId);
+        $archivedCount = ServerUser::archiveWithOnlyArchivedSites($serverId, Yii::$app->user->id);
+        Yii::$app->session->setFlash('success', 'Архивировано пользователей только с архивными сайтами: ' . $archivedCount . '.');
 
         return $this->redirect(['server/update', 'id' => $serverId]);
     }

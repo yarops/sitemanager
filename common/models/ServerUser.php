@@ -122,6 +122,23 @@ class ServerUser extends ActiveRecord
         ]);
     }
 
+    /** Archive active users with at least one archived site and no active sites. */
+    public static function archiveWithOnlyArchivedSites(int $serverId, ?int $userId = null): int
+    {
+        return static::updateAll([
+            'is_archived' => 1,
+            'archived_at' => date('Y-m-d H:i:s'),
+            'archived_by' => $userId,
+        ], [
+            'and',
+            ['server_id' => $serverId, 'is_archived' => 0],
+            ['in', 'id', Item::find()->select('server_user_id')->where(['is_archived' => 1])],
+            ['not in', 'id', Item::find()->select('server_user_id')->where([
+                'is_archived' => 0,
+            ])->andWhere(['not', ['server_user_id' => null]])],
+        ]);
+    }
+
     public function archive(?int $userId = null): bool
     {
         $this->is_archived = 1;
