@@ -146,6 +146,7 @@ $message = static fn(array $m): string => Html::tag('div',
         ]) ?>
         <?= Html::button('Обновить ISP', ['class' => 'btn btn-outline-secondary btn-sm', 'data-action' => 'loadIsp']) ?>
         <?= Html::button('Обновить NS', ['class' => 'btn btn-outline-secondary btn-sm', 'data-action' => 'loadNs']) ?>
+        <?= Html::button('Обновить before', ['class' => 'btn btn-outline-secondary btn-sm', 'data-action' => 'loadBefore']) ?>
         <?= Html::button('Обновить after', ['class' => 'btn btn-outline-secondary btn-sm', 'data-action' => 'loadAfter']) ?>
         <?php if ($zone->cf_state === DnsSyncZone::CF_MISSING && $item && !$item->parent_id): ?>
             <?php $accounts = DnsRecords::configured()->accountLabels(); ?>
