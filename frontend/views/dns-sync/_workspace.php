@@ -6,27 +6,17 @@ use yii\helpers\Url;
 use yii\web\YiiAsset;
 
 /** @var $this yii\web\View */
-/** @var $model \common\models\DnsSync */
+/** @var $server \common\models\Server */
 /** @var $zones DnsSyncZone[] */
-
-$this->title = 'DNS синк: ' . $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'DNS синк', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $model->title;
 
 $this->registerJsFile('@web/js/dns-sync.js', ['depends' => [YiiAsset::class]]);
 $urls = [];
 foreach (['load-isp' => 'loadIsp', 'load-ns' => 'loadNs', 'load-before' => 'loadBefore', 'toggle' => 'toggle', 'run' => 'run', 'load-after' => 'loadAfter', 'add-zone' => 'addZone'] as $route => $key) {
-    $urls[$key] = Url::to([$route, 'id' => $model->id]);
+    $urls[$key] = Url::to([$route, 'server' => $server->id]);
 }
 ?>
 
 <div id="dns-sync" data-urls="<?= Html::encode(json_encode($urls)) ?>">
-    <h1><?= Html::encode($this->title) ?></h1>
-    <div class="mb-2 text-muted">
-        Сайты: <?= $model->sourceServer ? Html::encode($model->sourceServer->title . ' (' . $model->sourceServer->ip . ')') : 'N/A' ?>
-        · ISPmanager: <?= $model->ispServer ? Html::encode($model->ispServer->title . ' (' . $model->ispServer->ip . ')') : 'N/A' ?>
-        · <?= $model->author ? Html::encode($model->author->username) : '' ?> <?= Html::encode($model->created_at) ?>
-    </div>
     <div class="mb-2">
         Зон: <span data-counter="total"><?= count($zones) ?></span>
         · отмечено: <span data-counter="selected">0</span>
@@ -47,7 +37,7 @@ foreach (['load-isp' => 'loadIsp', 'load-ns' => 'loadNs', 'load-before' => 'load
     </div>
     <p class="small text-muted">
         Синк удаляет в Cloudflare все записи зоны и создаёт записи ISP (<?= Html::encode(implode(', ', Yii::$app->params['dnsSync']['types'])) ?>).
-        before сохраняется один раз до первого изменения.
+        before обновляется при загрузке Cloudflare и перед каждым синком.
     </p>
 
     <div class="dns-sync-scroll">

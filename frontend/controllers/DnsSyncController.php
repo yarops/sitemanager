@@ -2,21 +2,16 @@
 
 namespace frontend\controllers;
 
-use common\components\dnssync\RecordMapper;
 use common\components\dnssync\ZoneSync;
-use common\models\DnsSync;
 use common\models\DnsSyncZone;
-use common\models\Item;
 use common\models\Server;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 
-/** DNS sync ISPmanager → Cloudflare: one sync per server, AJAX actions over one zone each. */
+/** DNS sync ISPmanager → Cloudflare: current sites of a server, AJAX actions over one zone each. */
 class DnsSyncController extends Controller
 {
     public function behaviors(): array
@@ -44,79 +39,59 @@ class DnsSyncController extends Controller
         ];
     }
 
-    public function actionIndex(): string
+    public function actionIndex(?int $server = null): string
     {
+        $model = $server === null ? null : Server::findById($server);
         return $this->render('index', [
-            'items' => new ActiveDataProvider([
-                'query' => DnsSync::find()->with(['sourceServer', 'ispServer', 'author']),
-                'pagination' => ['pageSize' => 20],
-                'sort' => ['defaultOrder' => ['id' => SORT_DESC]],
-            ]),
+            'servers' => Server::find()->orderBy(['title' => SORT_ASC])->all(),
+            'server' => $model,
+            'zones' => $model === null ? [] : DnsSyncZone::forItems(DnsSyncZone::currentItems($model)),
         ]);
     }
 
-    public function actionCreate()
+    /** Compatibility for bookmarks of the former reports. */
+    public function actionCreate(): Response
     {
-        $servers = Server::find()->orderBy(['title' => SORT_ASC])->all();
-        $request = Yii::$app->request;
-        if ($request->isPost) {
-            $source = Server::findOne((int)$request->post('source_server_id'));
-            $isp = Server::findOne((int)$request->post('isp_server_id')) ?? $source;
-            if ($source === null || $isp === null) {
-                throw new BadRequestHttpException('Server is not selected.');
-            }
-            $sync = $this->createSync($source, $isp);
-            return $this->redirect(['view', 'id' => $sync->id]);
-        }
-
-        return $this->render('create', [
-            'servers' => $servers,
-            'serverId' => (int)$request->get('server') ?: null,
-        ]);
+        return $this->redirect(['index']);
     }
 
-    public function actionView(int $id): string
+    public function actionView(): Response
     {
-        $sync = DnsSync::findById($id);
-
-        return $this->render('view', [
-            'model' => $sync,
-            'zones' => $sync->getZones()->with(['item.childs', 'item.serverUser'])->all(),
-        ]);
+        return $this->redirect(['index']);
     }
 
-    public function actionLoadIsp(int $id, int $zone): array
+    public function actionLoadIsp(int $server, int $zone, string $domain): array
     {
-        $model = $this->findZone($id, $zone);
+        $model = $this->findZone($server, $zone, $domain);
         ZoneSync::configured()->loadIsp($model);
         return $this->row($model);
     }
 
-    public function actionLoadNs(int $id, int $zone): array
+    public function actionLoadNs(int $server, int $zone, string $domain): array
     {
-        $model = $this->findZone($id, $zone);
+        $model = $this->findZone($server, $zone, $domain);
         ZoneSync::configured()->loadNs($model);
         return $this->row($model);
     }
 
-    public function actionLoadBefore(int $id, int $zone): array
+    public function actionLoadBefore(int $server, int $zone, string $domain): array
     {
-        $model = $this->findZone($id, $zone);
+        $model = $this->findZone($server, $zone, $domain);
         ZoneSync::configured()->loadBefore($model);
         return $this->row($model);
     }
 
-    public function actionToggle(int $id, int $zone): array
+    public function actionToggle(int $server, int $zone, string $domain): array
     {
-        $model = $this->findZone($id, $zone);
+        $model = $this->findZone($server, $zone, $domain);
         $model->selected = (int)Yii::$app->request->post('selected') === 1 ? 1 : 0;
         $model->save(false, ['selected']);
         return $this->row($model);
     }
 
-    public function actionRun(int $id, int $zone): array
+    public function actionRun(int $server, int $zone, string $domain): array
     {
-        $model = $this->findZone($id, $zone);
+        $model = $this->findZone($server, $zone, $domain);
         set_time_limit(120);
         // Do not hold the session lock: other tabs must get "Зона уже выполняется", not wait.
         Yii::$app->session->close();
@@ -124,58 +99,25 @@ class DnsSyncController extends Controller
         return $this->row($model);
     }
 
-    public function actionLoadAfter(int $id, int $zone): array
+    public function actionLoadAfter(int $server, int $zone, string $domain): array
     {
-        $model = $this->findZone($id, $zone);
+        $model = $this->findZone($server, $zone, $domain);
         ZoneSync::configured()->loadAfter($model);
         return $this->row($model);
     }
 
-    public function actionAddZone(int $id, int $zone): array
+    public function actionAddZone(int $server, int $zone, string $domain): array
     {
-        $model = $this->findZone($id, $zone);
+        $model = $this->findZone($server, $zone, $domain);
         Yii::$app->session->close();
         ZoneSync::configured()->addZone($model, (string)Yii::$app->request->post('account'));
         return $this->row($model);
     }
 
-    /** All non-archived sites of the server (published, drafts and demo), one row per zone. */
-    private function createSync(Server $source, Server $isp): DnsSync
-    {
-        $transaction = DnsSync::getDb()->beginTransaction();
-        try {
-            $sync = new DnsSync([
-                'title' => $source->ip . ' → ' . $isp->ip . ' ' . date('Y-m-d H:i'),
-                'source_server_id' => $source->id,
-                'isp_server_id' => $isp->id,
-                'created_by' => Yii::$app->user->id,
-                'created_at' => date('Y-m-d H:i:s'),
-            ]);
-            $sync->save(false);
-            // The provider paginates by 20: take the whole query.
-            $items = $source->getItems(true)->query->orderBy(['parent_id' => SORT_ASC, 'id' => SORT_ASC])->all();
-            $domains = [];
-            /** @var Item $item */
-            foreach ($items as $item) {
-                $domain = RecordMapper::normalizeName((string)$item->domain);
-                if ($domain === '' || isset($domains[$domain])) {
-                    continue;
-                }
-                $domains[$domain] = true;
-                (new DnsSyncZone(['sync_id' => $sync->id, 'item_id' => $item->id, 'domain' => $domain]))->save(false);
-            }
-            $transaction->commit();
-            return $sync;
-        } catch (\Throwable $exception) {
-            $transaction->rollBack();
-            throw $exception;
-        }
-    }
-
-    private function findZone(int $id, int $zone): DnsSyncZone
+    private function findZone(int $server, int $zone, string $domain): DnsSyncZone
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
-        return DnsSyncZone::findInSync($id, $zone);
+        return DnsSyncZone::findForServer($server, $zone, $domain);
     }
 
     private function row(DnsSyncZone $zone): array

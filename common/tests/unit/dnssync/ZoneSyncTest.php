@@ -7,7 +7,7 @@ use common\components\dnssync\NameServers;
 use common\components\dnssync\ZoneSync;
 use common\components\ispmanager\DnsZone;
 use common\components\ispmanager\ZoneNotFound;
-use common\models\DnsSync;
+use common\models\Item;
 use common\models\DnsSyncZone;
 use common\models\Server;
 use PHPUnit\Framework\TestCase;
@@ -19,9 +19,11 @@ class FakeIsp extends DnsZone
 {
     /** @var array|\Throwable */
     public $records = [];
+    public ?string $serverIp = null;
 
     public function records(Server $server, string $zone): array
     {
+        $this->serverIp = $server->ip;
         if ($this->records instanceof \Throwable) {
             throw $this->records;
         }
@@ -144,7 +146,7 @@ class ZoneSyncTest extends TestCase
         ]);
         \Yii::$app->db->createCommand('CREATE TABLE server (id INTEGER PRIMARY KEY, title TEXT, ip TEXT, password TEXT)')->execute();
         \Yii::$app->db->createCommand()->insert('server', ['id' => 1, 'title' => 's', 'ip' => '127.0.0.1', 'password' => 'x'])->execute();
-        \Yii::$app->db->createCommand('CREATE TABLE item (id INTEGER PRIMARY KEY, parent_id INTEGER, domain TEXT, alias TEXT, publish_status TEXT)')->execute();
+        \Yii::$app->db->createCommand('CREATE TABLE item (id INTEGER PRIMARY KEY, parent_id INTEGER, domain TEXT, alias TEXT, publish_status TEXT DEFAULT \'draft\', server_id INTEGER DEFAULT 1, is_archived INTEGER DEFAULT 0, server_user_id INTEGER, protocol TEXT)')->execute();
         \Yii::$app->db->createCommand()->batchInsert('item', ['id', 'parent_id', 'domain'], [[1, null, 'a.com'], [2, 1, 'sub.a.com']])->execute();
         require_once dirname(__DIR__, 4) . '/console/migrations/m261024_120000_create_dns_sync_tables.php';
         $migration = new class extends \m261024_120000_create_dns_sync_tables {
@@ -158,13 +160,11 @@ class ZoneSyncTest extends TestCase
             $migration->safeUp();
             require_once dirname(__DIR__, 4) . '/console/migrations/m261025_120000_add_ns_to_dns_sync_zone.php';
             (new \m261025_120000_add_ns_to_dns_sync_zone())->safeUp();
+            require_once dirname(__DIR__, 4) . '/console/migrations/m261027_120000_dns_sync_current_sites.php';
+            (new \m261027_120000_dns_sync_current_sites())->safeUp();
         } finally {
             ob_end_clean();
         }
-        \Yii::$app->db->createCommand()->insert('dns_sync', [
-            'id' => 1, 'title' => 't', 'source_server_id' => 1, 'isp_server_id' => 1, 'created_at' => '2026-10-24 00:00:00',
-        ])->execute();
-
         FakeMutex::$held = [];
         $this->isp = new FakeIsp();
         $this->isp->records = $this->ispRecords('a.com');
@@ -191,7 +191,12 @@ class ZoneSyncTest extends TestCase
 
     private function zone(string $domain = 'a.com', array $attributes = []): DnsSyncZone
     {
-        $zone = new DnsSyncZone(['sync_id' => 1, 'domain' => $domain] + $attributes);
+        $itemId = $attributes['item_id'] ?? Item::find()->select('id')->where(['domain' => $domain])->scalar();
+        if (!$itemId) {
+            \Yii::$app->db->createCommand()->insert('item', ['domain' => $domain])->execute();
+            $itemId = \Yii::$app->db->getLastInsertID();
+        }
+        $zone = new DnsSyncZone($attributes + ['item_id' => $itemId, 'domain' => $domain]);
         $zone->save(false);
         return DnsSyncZone::findOne($zone->id);
     }
@@ -238,19 +243,17 @@ class ZoneSyncTest extends TestCase
         self::assertSame(['n1', 'n2'], $zone->getJson('cf_name_servers'));
         self::assertCount(2, $zone->getJson('cf_before'));
 
-        // Reload does not overwrite before.
+        // Reload replaces before, including an empty snapshot, and may bind a new zone.
         $this->cloudflare->lists = [[]];
         $this->sync()->loadBefore($zone);
-        self::assertCount(2, DnsSyncZone::findOne($zone->id)->getJson('cf_before'));
-        self::assertFalse($zone->saveBeforeOnce([], 'a', 'z1'));
-        self::assertCount(2, $zone->getJson('cf_before'));
-
-        // Another Cloudflare zone with the same name: binding stays, state is error.
+        self::assertSame([], DnsSyncZone::findOne($zone->id)->getJson('cf_before'));
         $this->cloudflare->found['zone_id'] = 'z2';
+        $this->cloudflare->lists = [[$this->cfRecord('new')]];
         $this->sync()->loadBefore($zone);
         $zone = DnsSyncZone::findOne($zone->id);
-        self::assertSame(['error', 'z1'], [$zone->cf_state, $zone->cf_zone_id]);
-        self::assertSame('Зона в Cloudflare сменилась после сохранения before', array_slice($this->texts($zone), -1)[0]);
+        self::assertSame(['found', 'z2'], [$zone->cf_state, $zone->cf_zone_id]);
+        self::assertSame('new', $zone->getJson('cf_before')[0]['id']);
+        self::assertSame('new', $zone->status);
     }
 
     public function testNameServerSnapshot(): void
@@ -310,7 +313,7 @@ class ZoneSyncTest extends TestCase
         [$account, $zoneId, $deletes, $posts] = $this->cloudflare->batches[0];
         self::assertSame(['a', 'z1', ['old1', 'old2', 'old3']], [$account, $zoneId, $deletes]);
         self::assertCount(9, $posts);
-        self::assertCount(2, $zone->getJson('cf_before'), 'before is the snapshot from loadBefore');
+        self::assertCount(3, $zone->getJson('cf_before'), 'before is read immediately before the batch');
         self::assertCount(3, $zone->getJson('batch_result')['deletes']);
         self::assertCount(9, $zone->getJson('cf_after'));
         self::assertContains('Удалено 3, создано 9', $this->texts($zone));
@@ -318,19 +321,19 @@ class ZoneSyncTest extends TestCase
         self::assertSame([], FakeMutex::$held);
     }
 
-    public function testRunSavesBeforeWhenMissingAndKeepsEmptySnapshot(): void
+    public function testRunReplacesBeforeIncludingAnEmptySnapshot(): void
     {
         $zone = $this->zone('a.com', ['cf_state' => 'found', 'cf_account' => 'a', 'cf_zone_id' => 'z1']);
         $this->cloudflare->lists = [[$this->cfRecord('old1')], []];
         $this->sync()->run($zone);
         self::assertCount(1, DnsSyncZone::findOne($zone->id)->getJson('cf_before'));
 
-        // A saved empty snapshot ([]) is not replaced on restart.
+        // A saved empty snapshot is replaced by the latest pre-sync records.
         $empty = $this->zone('b.com', ['cf_state' => 'found', 'cf_account' => 'a', 'cf_zone_id' => 'z2', 'cf_before' => '[]']);
         $this->isp->records = $this->ispRecords('b.com');
         $this->cloudflare->lists = [[$this->cfRecord('x', 'A', 'b.com')], []];
         $this->sync()->run($empty);
-        self::assertSame([], DnsSyncZone::findOne($empty->id)->getJson('cf_before'));
+        self::assertSame('x', DnsSyncZone::findOne($empty->id)->getJson('cf_before')[0]['id']);
     }
 
     public function testBatchErrorStillReadsAfter(): void
@@ -520,7 +523,198 @@ class ZoneSyncTest extends TestCase
     public function testSyncRelations(): void
     {
         $zone = $this->zone();
-        self::assertSame('1', (string)$zone->sync->ispServer->id);
-        self::assertCount(1, DnsSync::findOne(1)->zones);
+        self::assertSame('1', (string)$zone->item->server->id);
+        self::assertNull(\Yii::$app->db->schema->getTableSchema('dns_sync', true));
     }
+
+    public function testCurrentSitesFollowServerMembershipAndDeduplicateDomains(): void
+    {
+        $db = \Yii::$app->db;
+        $server = Server::findOne(1);
+        $initial = DnsSyncZone::forItems(DnsSyncZone::currentItems($server));
+        self::assertCount(2, $initial);
+        $db->createCommand()->insert('item', ['domain' => 'A.COM.'])->execute();
+        $db->createCommand()->insert('item', ['domain' => 'new.com', 'publish_status' => 'demo'])->execute();
+        $db->createCommand()->insert('item', ['domain' => ''])->execute();
+        $current = DnsSyncZone::forItems(DnsSyncZone::currentItems($server));
+        self::assertSame(['a.com', 'new.com', 'sub.a.com'], array_column($current, 'domain'));
+        self::assertSame($initial[0]->id, $current[0]->id);
+        self::assertCount(3, DnsSyncZone::forItems(DnsSyncZone::currentItems($server)), 'reopening does not duplicate state');
+
+        $db->createCommand()->insert('server', ['id' => 2, 'title' => 'other'])->execute();
+        $db->createCommand()->update('item', ['server_id' => 2], ['domain' => 'new.com'])->execute();
+        $db->createCommand()->update('item', ['is_archived' => 1], ['id' => 2])->execute();
+        self::assertCount(1, DnsSyncZone::currentItems($server));
+        self::assertCount(1, DnsSyncZone::currentItems(Server::findOne(2)));
+        self::assertSame('new.com', DnsSyncZone::forItems(DnsSyncZone::currentItems(Server::findOne(2)))[0]->domain);
+    }
+
+    public function testDomainChangeResetsStateAndRejectsOldTab(): void
+    {
+        $zone = $this->foundZone();
+        $this->sync()->loadIsp($zone);
+        \Yii::$app->db->createCommand()->update('item', ['domain' => 'renamed.com'], ['id' => $zone->item_id])->execute();
+        try {
+            DnsSyncZone::findForServer(1, $zone->id, 'a.com');
+            self::fail('A renamed domain must reject old requests');
+        } catch (\yii\web\NotFoundHttpException $expected) {
+        }
+        $states = DnsSyncZone::forItems(DnsSyncZone::currentItems(Server::findOne(1)));
+        $reset = array_values(array_filter($states, static fn($state) => $state->item_id === $zone->item_id))[0];
+        self::assertSame('renamed.com', $reset->domain);
+        self::assertNull($reset->isp_records);
+        self::assertNull($reset->cf_before);
+        self::assertNull($reset->cf_account);
+        self::assertNull($reset->messages);
+        self::assertSame('new', $reset->status);
+        self::assertSame($reset->id, DnsSyncZone::findForServer(1, $reset->id, 'renamed.com')->id);
+        $this->expectException(\yii\web\NotFoundHttpException::class);
+        DnsSyncZone::findForServer(1, $reset->id, 'a.com');
+    }
+
+    public function testMovedAndArchivedSitesRejectOldTab(): void
+    {
+        $zone = $this->zone();
+        foreach ([['server_id' => 2], ['server_id' => 1, 'is_archived' => 1]] as $changes) {
+            \Yii::$app->db->createCommand()->update('item', $changes, ['id' => $zone->item_id])->execute();
+            try {
+                DnsSyncZone::findForServer(1, $zone->id, 'a.com');
+                self::fail('A moved or archived site must reject old requests');
+            } catch (\yii\web\NotFoundHttpException $expected) {
+                self::assertStringContainsString('Обновите страницу', $expected->getMessage());
+            }
+        }
+    }
+
+    public function testIspUsesUpdatedServerSettings(): void
+    {
+        $zone = $this->zone();
+        \Yii::$app->db->createCommand()->update('server', ['ip' => '192.0.2.9'], ['id' => 1])->execute();
+        $this->sync()->loadIsp($zone);
+        self::assertSame('192.0.2.9', $this->isp->serverIp);
+    }
+
+    public function testBeforeCannotReloadDuringRun(): void
+    {
+        $zone = $this->foundZone();
+        $calls = $this->cloudflare->listCalls;
+        self::assertTrue($zone->tryLock());
+        $this->cloudflare->lists = [[]];
+        $this->sync()->loadBefore(DnsSyncZone::findOne($zone->id));
+        self::assertSame($calls, $this->cloudflare->listCalls);
+        self::assertCount(2, DnsSyncZone::findOne($zone->id)->getJson('cf_before'));
+        self::assertSame('running', DnsSyncZone::findOne($zone->id)->status);
+    }
+
+    public function testBeforeReflectsEachRunAndReadFailureStopsBatch(): void
+    {
+        $zone = $this->foundZone();
+        foreach (['first', 'second'] as $id) {
+            $this->cloudflare->lists = [[$this->cfRecord($id)], []];
+            $this->sync()->run($zone);
+            $zone->refresh();
+            self::assertSame($id, $zone->getJson('cf_before')[0]['id']);
+            self::assertSame('done', $zone->status);
+        }
+        self::assertCount(2, $this->cloudflare->batches);
+        $this->cloudflare->lists = [new \RuntimeException('read failed')];
+        $this->sync()->run($zone);
+        $zone->refresh();
+        self::assertCount(2, $this->cloudflare->batches);
+        self::assertSame('error', $zone->status);
+        self::assertSame('second', $zone->getJson('cf_before')[0]['id']);
+        self::assertSame([], FakeMutex::$held);
+    }
+
+    public function testMigrationKeepsOnlyLatestApplicableSiteState(): void
+    {
+        $db = \Yii::$app->db;
+        ob_start();
+        try {
+            $db->createCommand()->dropTable('dns_sync_zone')->execute();
+            $old = new class extends \m261024_120000_create_dns_sync_tables {
+                public function addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete = null, $update = null)
+                {
+                }
+            };
+            $old->safeUp();
+            (new \m261025_120000_add_ns_to_dns_sync_zone())->safeUp();
+            foreach ([1, 2, 3] as $id) {
+                $db->createCommand()->insert('dns_sync', [
+                    'id' => $id, 'title' => 'old', 'source_server_id' => 1,
+                    'isp_server_id' => $id === 3 ? 2 : 1, 'created_at' => '2026-10-24 00:00:00',
+                ])->execute();
+            }
+            $db->createCommand()->insert('item', ['id' => 3, 'domain' => 'archived.com', 'is_archived' => 1])->execute();
+            foreach ([
+                [1, 1, 1, 'a.com', 'old'],
+                [2, 2, 1, 'A.COM.', 'latest'],
+                [3, 2, 1, 'a.com', 'latest-row'],
+                [4, 2, 1, 'wrong.com', 'wrong-domain'],
+                [5, 3, 1, 'a.com', 'wrong-server'],
+                [6, 2, 3, 'archived.com', 'archived'],
+                [7, 2, null, 'orphan.com', 'orphan'],
+                [8, 2, 99, 'deleted.com', 'deleted'],
+            ] as [$id, $sync, $item, $domain, $message]) {
+                $db->createCommand()->insert('dns_sync_zone', [
+                    'id' => $id, 'sync_id' => $sync, 'item_id' => $item, 'domain' => $domain,
+                    'messages' => $message, 'selected' => 1, 'status' => 'running',
+                ])->execute();
+            }
+            (new \m261027_120000_dns_sync_current_sites())->safeUp();
+        } finally {
+            ob_end_clean();
+        }
+        $db->schema->refresh();
+        $rows = (new \yii\db\Query())->from('dns_sync_zone')->all();
+        self::assertCount(1, $rows);
+        self::assertSame('latest-row', $rows[0]['messages']);
+        self::assertSame('a.com', $rows[0]['domain']);
+        self::assertEquals(0, $rows[0]['selected']);
+        self::assertSame('new', $rows[0]['status']);
+        self::assertNull($db->schema->getTableSchema('dns_sync', true));
+        $db->createCommand('PRAGMA foreign_keys = ON')->execute();
+        $db->createCommand()->delete('item', ['id' => 1])->execute();
+        self::assertSame(0, (int)(new \yii\db\Query())->from('dns_sync_zone')->count(), 'deleting a site cascades to its DNS state');
+    }
+
+
+    public function testPageRendersCurrentSitesAndServerScopedActionUrls(): void
+    {
+        $previous = \Yii::$app;
+        try {
+            $app = new \yii\web\Application([
+                'id' => 'dns-view-test',
+                'basePath' => dirname(__DIR__, 4) . '/frontend',
+                'components' => [
+                    'db' => $previous->db,
+                    'request' => [
+                        'scriptUrl' => '/index.php', 'baseUrl' => '', 'hostInfo' => 'http://localhost',
+                        'cookieValidationKey' => 'test', 'enableCsrfValidation' => false,
+                    ],
+                    'urlManager' => ['enablePrettyUrl' => true, 'showScriptName' => false],
+                    'assetManager' => [
+                        'basePath' => '/tmp', 'baseUrl' => '/assets',
+                        'bundles' => [\yii\web\YiiAsset::class => ['sourcePath' => null, 'js' => [], 'depends' => []]],
+                    ],
+                ],
+                'params' => ['dnsSync' => self::CONFIG],
+            ]);
+            $controller = new \frontend\controllers\DnsSyncController('dns-sync', $app);
+            $app->controller = $controller;
+            $server = Server::findOne(1);
+            $zones = DnsSyncZone::forItems(DnsSyncZone::currentItems($server));
+            $html = $controller->renderPartial('index', ['servers' => [$server], 'server' => $server, 'zones' => $zones]);
+            self::assertStringContainsString('data-domain="a.com"', $html);
+            self::assertStringContainsString('data-domain="sub.a.com"', $html);
+            self::assertStringContainsString('load-before?server=1', $html);
+            self::assertStringNotContainsString('isp_server_id', $html);
+            self::assertStringContainsString('data-queue="run"', $html);
+            $empty = $controller->renderPartial('index', ['servers' => [$server], 'server' => null, 'zones' => []]);
+            self::assertStringNotContainsString('id="dns-sync"', $empty);
+        } finally {
+            \Yii::$app = $previous;
+        }
+    }
+
 }

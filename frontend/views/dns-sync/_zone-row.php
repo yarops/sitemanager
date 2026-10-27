@@ -55,7 +55,7 @@ $message = static fn(array $m): string => Html::tag('div',
     ['class' => 'small ' . ($levelClass[$m['level']] ?? '')]
 );
 ?>
-<tbody data-zone-id="<?= (int)$zone->id ?>" data-status="<?= Html::encode($zone->status) ?>">
+<tbody data-domain="<?= Html::encode($zone->domain) ?>" data-zone-id="<?= (int)$zone->id ?>" data-status="<?= Html::encode($zone->status) ?>">
 <tr class="<?= $childs ? 'table-warning' : '' ?> <?= $dimmed ? 'dns-sync-dimmed' : '' ?>">
     <td>
         <?php if ($item && $item->serverUser): ?>

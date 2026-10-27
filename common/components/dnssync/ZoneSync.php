@@ -38,7 +38,7 @@ class ZoneSync
     {
         $records = null;
         try {
-            $server = $zone->sync->ispServer;
+            $server = $zone->item ? $zone->item->server : null;
             if ($server === null) {
                 throw new \RuntimeException('Сервер ISPmanager не найден');
             }
@@ -77,6 +77,12 @@ class ZoneSync
 
     public function loadBefore(DnsSyncZone $zone): void
     {
+        $previous = $zone->getAttributes(['status', 'started_at', 'finished_at']);
+        if (!$zone->tryLock()) {
+            $zone->addMessage('error', 'Зона уже выполняется');
+            $zone->save(false, ['messages']);
+            return;
+        }
         try {
             $found = $this->cloudflare->findZone($zone->domain);
             if ($found['state'] !== DnsSyncZone::CF_FOUND) {
@@ -87,31 +93,23 @@ class ZoneSync
                 );
                 return;
             }
-            if ($zone->cf_before !== null
-                && ($zone->cf_account !== $found['account'] || $zone->cf_zone_id !== $found['zone_id'])
-            ) {
-                // before belongs to another zone: keep the binding, the user decides.
-                $zone->cf_state = DnsSyncZone::CF_ERROR;
-                $zone->addMessage('error', 'Зона в Cloudflare сменилась после сохранения before');
-                return;
-            }
             $zone->cf_state = DnsSyncZone::CF_FOUND;
             $zone->cf_account = $found['account'];
             $zone->cf_zone_id = $found['zone_id'];
             $zone->cf_zone_status = $found['status'];
             $zone->setJson('cf_name_servers', $found['name_servers']);
-            if ($zone->cf_before !== null) {
-                $zone->addMessage('info', 'before уже сохранён');
-                return;
-            }
             $records = $this->cloudflare->list($found['account'], $found['zone_id']);
-            $zone->addMessage('info', $zone->saveBeforeOnce($records, $found['account'], $found['zone_id'])
-                ? 'Cloudflare before: ' . count($records) . ' записей'
-                : 'before уже сохранён');
+            $zone->saveBefore($records, $found['account'], $found['zone_id']);
+            $zone->addMessage('info', 'Cloudflare before: ' . count($records) . ' записей');
         } catch (\Throwable $exception) {
+            $zone->cf_state = DnsSyncZone::CF_ERROR;
             $zone->addMessage('error', 'Cloudflare: ' . $exception->getMessage());
         } finally {
-            $zone->save(false);
+            try {
+                $zone->save(false);
+            } finally {
+                $zone->updateAttributes($previous);
+            }
         }
     }
 
@@ -149,14 +147,14 @@ class ZoneSync
             $mutexName = $name;
 
             $current = $this->cloudflare->list($zone->cf_account, $zone->cf_zone_id);
-            if ($zone->cf_before === null && $zone->saveBeforeOnce($current, $zone->cf_account, $zone->cf_zone_id)) {
-                $zone->addMessage('info', 'Cloudflare before: ' . count($current) . ' записей');
-            }
             $operations = count($current) + count($posts);
             if ($operations > (int)$this->config['maxBatchOperations']) {
                 $zone->addMessage('error', "Batch: $operations операций, лимит {$this->config['maxBatchOperations']}");
                 return;
             }
+
+            $zone->saveBefore($current, $zone->cf_account, $zone->cf_zone_id);
+            $zone->addMessage('info', 'Cloudflare before: ' . count($current) . ' записей');
 
             try {
                 $result = $this->cloudflare->batch($zone->cf_account, $zone->cf_zone_id, array_column($current, 'id'), $posts);
@@ -239,9 +237,7 @@ class ZoneSync
             $zone->cf_zone_status = $created['status'];
             $zone->setJson('cf_name_servers', $created['name_servers']);
             // A new zone is empty: the empty snapshot is its before.
-            if (!$zone->saveBeforeOnce([], $account, $created['zone_id'])) {
-                $zone->addMessage('warning', 'before был сохранён раньше и не перезаписан');
-            }
+            $zone->saveBefore([], $account, $created['zone_id']);
             $zone->cf_account = $account;
             $zone->cf_zone_id = $created['zone_id'];
             $zone->addMessage('info', 'Зона создана, NS: ' . implode(', ', $created['name_servers']));

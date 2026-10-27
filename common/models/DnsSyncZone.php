@@ -2,21 +2,23 @@
 
 namespace common\models;
 
+use common\components\dnssync\RecordMapper;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\web\NotFoundHttpException;
 
 /**
- * One zone of a DNS sync: ISP records, Cloudflare before/after, run state and messages.
+ * Current DNS state of a site: ISP records, Cloudflare before/after, run state and messages.
  * JSON columns hold arrays; cf_before NULL means "not loaded", [] is a saved empty snapshot.
  *
  * @property int $id
- * @property int $sync_id
- * @property int|null $item_id
+ * @property int $item_id
  * @property string $domain
  * @property int $selected
  * @property string|null $isp_records
  * @property string|null $isp_loaded_at
+ * @property string|null $ns_current
+ * @property string|null $ns_loaded_at
  * @property string|null $cf_state
  * @property string|null $cf_zone_id
  * @property string|null $cf_account
@@ -32,7 +34,6 @@ use yii\web\NotFoundHttpException;
  * @property string|null $finished_at
  * @property string|null $messages
  *
- * @property DnsSync $sync
  * @property Item|null $item
  */
 class DnsSyncZone extends ActiveRecord
@@ -59,16 +60,13 @@ class DnsSyncZone extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['sync_id', 'domain'], 'required'],
-            [['sync_id', 'item_id'], 'integer'],
+            [['item_id', 'domain'], 'required'],
+            [['item_id'], 'integer'],
+            [['item_id'], 'unique'],
+            [['item_id'], 'exist', 'targetClass' => Item::class, 'targetAttribute' => 'id'],
             [['selected'], 'boolean'],
             [['domain'], 'string', 'max' => 255],
         ];
-    }
-
-    public function getSync(): ActiveQuery
-    {
-        return $this->hasOne(DnsSync::class, ['id' => 'sync_id']);
     }
 
     public function getItem(): ActiveQuery
@@ -76,16 +74,71 @@ class DnsSyncZone extends ActiveRecord
         return $this->hasOne(Item::class, ['id' => 'item_id']);
     }
 
-    /**
-     * @throws NotFoundHttpException
-     */
-    public static function findInSync(int $syncId, int $id): DnsSyncZone
+    /** Reject requests from tabs whose site has moved, changed domain or been archived. */
+    public static function findForServer(int $serverId, int $id, string $domain): self
     {
-        if (($model = DnsSyncZone::findOne(['id' => $id, 'sync_id' => $syncId])) !== null) {
-            return $model;
+        $model = static::find()->with('item.server')->where(['id' => $id])->one();
+        $item = $model ? $model->item : null;
+        if ($item === null || $item->server === null || $item->is_archived || (int)$item->server_id !== $serverId
+            || $model->domain !== $domain || $domain !== RecordMapper::normalizeName((string)$item->domain)
+        ) {
+            throw new NotFoundHttpException('Список сайтов изменился. Обновите страницу DNS.');
         }
+        return $model;
+    }
 
-        throw new NotFoundHttpException('The requested zone does not exist.');
+    /** Use the same representative and domain deduplication as the former report builder. */
+    public static function currentItems(Server $server): array
+    {
+        $items = $server->getItems(true)->query->with(['childs', 'serverUser', 'server'])
+            ->orderBy(['parent_id' => SORT_ASC, 'id' => SORT_ASC])->all();
+        $domains = [];
+        $result = [];
+        foreach ($items as $item) {
+            $domain = RecordMapper::normalizeName((string)$item->domain);
+            if ($domain !== '' && !isset($domains[$domain])) {
+                $domains[$domain] = true;
+                $result[] = $item;
+            }
+        }
+        return $result;
+    }
+
+    /** Lazily initialize site state; a unique item_id makes simultaneous opens safe. */
+    public static function forItems(array $items): array
+    {
+        $states = static::find()->where(['item_id' => array_map(static fn(Item $item) => $item->id, $items)])
+            ->indexBy('item_id')->all();
+        $result = [];
+        foreach ($items as $item) {
+            $domain = RecordMapper::normalizeName((string)$item->domain);
+            $model = $states[$item->id] ?? null;
+            if ($model === null) {
+                static::getDb()->createCommand()->upsert(static::tableName(), [
+                    'item_id' => $item->id, 'domain' => $domain,
+                ], false)->execute();
+                $model = static::findOne(['item_id' => $item->id]);
+            }
+            if ($model->domain !== $domain) {
+                // Do not erase a live operation; the next refresh can reset it after it finishes.
+                $values = array_fill_keys(array_keys($model->getAttributes(null, ['id', 'item_id'])), null);
+                $values['domain'] = $domain;
+                $values['selected'] = 0;
+                $values['status'] = self::STATUS_NEW;
+                static::updateAll($values, ['and', ['id' => $model->id, 'domain' => $model->domain], ['or',
+                    ['!=', 'status', self::STATUS_RUNNING], ['started_at' => null],
+                    ['<', 'started_at', date('Y-m-d H:i:s', time() - self::LOCK_TIMEOUT)],
+                ]]);
+                $model->refresh();
+                if ($model->domain !== $domain) {
+                    continue;
+                }
+            }
+            $model->populateRelation('item', $item);
+            $result[] = $model;
+        }
+        usort($result, static fn(self $a, self $b) => strcmp($a->domain, $b->domain));
+        return $result;
     }
 
     public function getJson(string $attribute): ?array
@@ -117,14 +170,14 @@ class DnsSyncZone extends ActiveRecord
         $now = date('Y-m-d H:i:s');
         $locked = static::updateAll(
             ['status' => self::STATUS_RUNNING, 'started_at' => $now, 'finished_at' => null],
-            ['and', ['id' => $this->id], ['or',
+            ['and', ['id' => $this->id, 'domain' => $this->domain], ['or',
                 ['!=', 'status', self::STATUS_RUNNING],
                 ['started_at' => null],
                 ['<', 'started_at', date('Y-m-d H:i:s', time() - self::LOCK_TIMEOUT)],
             ]]
         ) === 1;
         if ($locked) {
-            $this->assignSaved(['status' => self::STATUS_RUNNING, 'started_at' => $now, 'finished_at' => null]);
+            $this->refresh();
         }
         return $locked;
     }
@@ -136,11 +189,8 @@ class DnsSyncZone extends ActiveRecord
         $this->assignSaved($values);
     }
 
-    /**
-     * Saves the Cloudflare snapshot before the first change, once per zone row.
-     * Binds the row to the Cloudflare zone the snapshot belongs to.
-     */
-    public function saveBeforeOnce(array $records, string $account, string $zoneId): bool
+    /** Replace the last Cloudflare snapshot while holding the zone operation lock. */
+    public function saveBefore(array $records, string $account, string $zoneId): void
     {
         $values = [
             'cf_before' => json_encode($records, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
@@ -148,12 +198,8 @@ class DnsSyncZone extends ActiveRecord
             'cf_account' => $account,
             'cf_zone_id' => $zoneId,
         ];
-        if (static::updateAll($values, ['id' => $this->id, 'cf_before' => null]) !== 1) {
-            $this->assignSaved(static::find()->select(array_keys($values))->where(['id' => $this->id])->asArray()->one() ?: []);
-            return false;
-        }
+        static::updateAll($values, ['id' => $this->id]);
         $this->assignSaved($values);
-        return true;
     }
 
     /** Updates attributes already written by updateAll so they are not saved again as dirty. */

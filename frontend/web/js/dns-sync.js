@@ -46,6 +46,7 @@
         var body = new URLSearchParams(params || {});
         var url = urls[action] + (urls[action].indexOf('?') === -1 ? '?' : '&') + 'zone=' + encodeURIComponent(id);
         var tbody = zoneBody(id);
+        url += '&domain=' + encodeURIComponent(tbody.dataset.domain);
         tbody.setAttribute('data-busy', '1');
         return fetch(url, {
             method: 'POST',
