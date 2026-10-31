@@ -107,9 +107,9 @@ $message = static fn(array $m): string => Html::tag('div',
             <?= $this->render('_ns-block', ['title' => 'Cloudflare NS', 'servers' => $nameServers, 'empty' => 'нет', 'class' => $nsClass]) ?>
         <?php endif; ?>
     </td>
-    <td><?= $records($ispLines, $zone->isp_loaded_at) ?></td>
-    <td><?= $records($before === null ? null : RecordMapper::formatForDisplay($before, $zone->domain), $zone->cf_before_loaded_at) ?></td>
-    <td><?= $records($after === null ? null : RecordMapper::formatForDisplay($after, $zone->domain), $zone->cf_after_loaded_at) ?></td>
+    <td class="dns-sync-records"><?= $records($ispLines, $zone->isp_loaded_at) ?></td>
+    <td class="dns-sync-records"><?= $records($before === null ? null : RecordMapper::formatForDisplay($before, $zone->domain), $zone->cf_before_loaded_at) ?></td>
+    <td class="dns-sync-records"><?= $records($after === null ? null : RecordMapper::formatForDisplay($after, $zone->domain), $zone->cf_after_loaded_at) ?></td>
     <td class="dns-sync-status">
         <div class="mb-1">
             <?= $zone->cf_state ? $badge('CF: ' . $zone->cf_state, $cfClass[$zone->cf_state] ?? 'secondary') : '' ?>

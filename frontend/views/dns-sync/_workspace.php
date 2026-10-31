@@ -95,7 +95,8 @@ foreach (['load-isp' => 'loadIsp', 'load-ns' => 'loadNs', 'load-before' => 'load
     .dns-sync-table > thead > tr > :first-child:not([colspan]) { z-index: 3; }
     .dns-sync-table .dns-sync-sticky-text { position: sticky; left: 0.5rem; }
     .dns-sync-table td { font-size: 0.875rem; }
-    .dns-sync-table .dns-sync-record { white-space: nowrap; font-family: var(--bs-font-monospace); font-size: 0.8rem; }
+    .dns-sync-table .dns-sync-records { max-width: 360px; }
+    .dns-sync-table .dns-sync-record { overflow-wrap: anywhere; font-family: var(--bs-font-monospace); font-size: 0.8rem; }
     .dns-sync-table .dns-sync-status { min-width: 260px; }
     .dns-sync-table .dns-sync-actions { white-space: nowrap; }
     /* Fade content, not cells: a translucent sticky cell would show rows scrolling under it. */
